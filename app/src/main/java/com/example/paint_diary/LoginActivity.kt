@@ -1,5 +1,6 @@
 package com.example.paint_diary
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -17,17 +18,22 @@ class LoginActivity : AppCompatActivity() {
         var login_password : EditText = findViewById(R.id.login_password);
         var login_btn : Button = findViewById(R.id.login_btn);
         var login_find_password : TextView = findViewById(R.id.login_find_password);
-        var login_to_signup : TextView = findViewById(R.id.login_to_signup);
+        var login_to_join : TextView = findViewById(R.id.login_to_join);
 
 
         login_btn.setOnClickListener{
             Toast.makeText(this@LoginActivity,"로그인",Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, MainActivity::class.java) // 인텐트를 생성
+            startActivity(intent)
+
         }
         login_find_password.setOnClickListener{
             Toast.makeText(this@LoginActivity,"비번찾기",Toast.LENGTH_SHORT).show()
         }
-        login_to_signup.setOnClickListener{
+        login_to_join.setOnClickListener{
             Toast.makeText(this@LoginActivity,"회원가입",Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, JoinMemebershipActivity::class.java) // 인텐트를 생성
+            startActivity(intent)
         }
 
     }

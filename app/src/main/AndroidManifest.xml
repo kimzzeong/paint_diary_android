@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".JoinMemebershipActivity"></activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".WriteActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
