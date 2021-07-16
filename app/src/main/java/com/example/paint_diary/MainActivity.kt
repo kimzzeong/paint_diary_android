@@ -27,11 +27,6 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         setContentView(R.layout.activity_main)
         Log.d(TAG,"MainActivity = onCreate() called")
 
-//        var write_btn : FloatingActionButton = findViewById(R.id.write_btn);
-//        val intent = Intent(this, LoginActivity::class.java) // 인텐트를 생성
-//        write_btn.setOnClickListener{
-//            startActivity(intent)
-//        }
         bottom_nav.setOnNavigationItemSelectedListener(this)
 
         homeFragment = HomeFragment.newInstance()
