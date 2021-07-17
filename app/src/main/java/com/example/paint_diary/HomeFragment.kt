@@ -44,6 +44,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         write_btn.setOnClickListener{
+            //프래그먼트 -> 액티비티 화면 이동
             activity?.let{
                 val intent = Intent(context, LoginActivity::class.java)
                 startActivity(intent)
@@ -52,4 +53,6 @@ class HomeFragment : Fragment() {
         }
 
     }
+
+
 }
