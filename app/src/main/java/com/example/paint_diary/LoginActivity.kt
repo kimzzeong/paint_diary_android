@@ -8,8 +8,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Call
@@ -39,15 +37,16 @@ class LoginActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-        var loginService = retrofit.create(LoginService::class.java)
+        var loginService = retrofit.create(IRetrofit::class.java)
 
 
         login_btn.setOnClickListener{
 
+
             loginService.requestLogin(login_email.text.toString(),login_password.text.toString()).enqueue(object: Callback<Login>{
                 //웹 통신 성공, 응답값을 받아옴
                 override fun onResponse(call: Call<Login>, response: Response<Login>) {
-                    var test = response.body()
+                    //var test = response.body()
                     Toast.makeText(this@LoginActivity,"성공",Toast.LENGTH_SHORT).show()
                 }
 
