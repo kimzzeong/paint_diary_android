@@ -22,11 +22,11 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        var login_email : EditText = findViewById(R.id.login_email);
-        var login_password : EditText = findViewById(R.id.login_password);
-        var login_btn : Button = findViewById(R.id.login_btn);
-        var login_find_password : TextView = findViewById(R.id.login_find_password);
-        var login_to_join : TextView = findViewById(R.id.login_to_join);
+        var login_email : EditText = findViewById(R.id.login_email)
+        var login_password : EditText = findViewById(R.id.login_password)
+        var login_btn : Button = findViewById(R.id.login_btn)
+        var login_find_password : TextView = findViewById(R.id.login_find_password)
+        var login_to_join : TextView = findViewById(R.id.login_to_join)
 
         var gson: Gson = GsonBuilder()
             .setLenient()
@@ -46,8 +46,8 @@ class LoginActivity : AppCompatActivity() {
             loginService.requestLogin(login_email.text.toString(),login_password.text.toString()).enqueue(object: Callback<Login>{
                 //웹 통신 성공, 응답값을 받아옴
                 override fun onResponse(call: Call<Login>, response: Response<Login>) {
-                    //var test = response.body()
-                    Toast.makeText(this@LoginActivity,"성공",Toast.LENGTH_SHORT).show()
+                    var test = response.body()
+                    Toast.makeText(this@LoginActivity,test?.code,Toast.LENGTH_SHORT).show()
                 }
 
                 //웹 통신 실패

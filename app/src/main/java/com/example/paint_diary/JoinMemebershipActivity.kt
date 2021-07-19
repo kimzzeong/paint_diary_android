@@ -62,20 +62,5 @@ class JoinMemebershipActivity : AppCompatActivity() {
             }
 
         }
-
-//        join_btn.setOnClickListener{
-//            //유저정보 저장
-//            saveUserInfo()
-//            Toast.makeText(this,"클릭",Toast.LENGTH_SHORT).show()
-//        }
-    }
-
-    private fun saveUserInfo() {
-        //progressDialog.show()
-        //프로그래스 바 추가하기
-
-
-
-
     }
 }

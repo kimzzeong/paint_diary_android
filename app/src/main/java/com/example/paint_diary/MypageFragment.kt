@@ -2,6 +2,7 @@ package com.example.paint_diary
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,7 +11,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_mypage.*
 
 class MypageFragment : Fragment() {
     companion object {
@@ -23,6 +26,7 @@ class MypageFragment : Fragment() {
     //메모리에 올라갔을 때
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         Log.d(TAG,"MypageFragment = onCreate() called")
     }
 
@@ -42,5 +46,14 @@ class MypageFragment : Fragment() {
         Log.d(TAG,"MypageFragment = onCreateView() called")
         val view = inflater.inflate(R.layout.fragment_mypage,container,false)
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //메뉴이름 변경 해야함
+        //mypage_toolbar.inflateMenu(R.menu.home_menu)
+        mypage_toolbar.setTitleTextColor(Color.WHITE)
+        mypage_toolbar.setTitle("마이페이지")
     }
 }
