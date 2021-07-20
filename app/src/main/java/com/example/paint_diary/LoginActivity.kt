@@ -53,16 +53,20 @@ class LoginActivity : AppCompatActivity() {
                 //웹 통신 성공, 응답값을 받아옴
                 override fun onResponse(call: Call<Login>, response: Response<Login>) {
                     var login = response.body()
-
-                    editor.putString("user_idx", login?.user_idx)
-                    editor.putString("user_nickname", login?.user_nickname)
-                    editor.apply()
-                    Log.e("TAG", "쉐어드에 저장된 아이디 = " + sharedPreferences.getString("user_idx", ""))
-                    Log.e("TAG", "쉐어드에 저장된 닉네임 = " + sharedPreferences.getString("user_nickname", ""))
-                    val intent = Intent(this@LoginActivity,MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                    Toast.makeText(this@LoginActivity,login?.user_nickname+"님 반갑습니다.",Toast.LENGTH_SHORT).show()
+                    if(login?.user_idx != null){
+                        editor.putString("user_idx", login?.user_idx)
+                        editor.putString("user_nickname", login?.user_nickname)
+                        editor.apply()
+                        Log.e("TAG", "쉐어드에 저장된 아이디 = " + sharedPreferences.getString("user_idx", ""))
+                        Log.e("TAG", "쉐어드에 저장된 닉네임 = " + sharedPreferences.getString("user_nickname", ""))
+                        val intent = Intent(this@LoginActivity,MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                        Toast.makeText(this@LoginActivity,login?.user_nickname+"님 반갑습니다.",Toast.LENGTH_SHORT).show()
+                    }else{
+                        //null값 올 때 처리, 여기서는 예외처리 부분
+                        Toast.makeText(this@LoginActivity,"null",Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 //웹 통신 실패

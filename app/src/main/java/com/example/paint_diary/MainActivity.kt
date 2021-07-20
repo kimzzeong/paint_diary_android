@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         bottom_nav.setOnNavigationItemSelectedListener(this)
 
         homeFragment = HomeFragment.newInstance()
-        supportFragmentManager.beginTransaction().add(R.id.main_fragment,homeFragment).commit()
+        supportFragmentManager.beginTransaction().add(R.id.main_fragment,homeFragment,"home").commit()
 
     }
 
@@ -44,17 +44,17 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
             R.id.bottom_nav_home -> {
                 Log.d(TAG,"MainActivity = 홈")
                 homeFragment = HomeFragment.newInstance()
-                supportFragmentManager.beginTransaction().replace(R.id.main_fragment,homeFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.main_fragment,homeFragment,"home").commit()
             }
             R.id.bottom_nav_chat -> {
                 Log.d(TAG,"MainActivity = 채팅")
                 chatFragment = ChatFragment.newInstance()
-                supportFragmentManager.beginTransaction().replace(R.id.main_fragment,chatFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.main_fragment,chatFragment,"chat").commit()
             }
             R.id.bottom_nav_mypage -> {
                 Log.d(TAG,"MainActivity = 마이페이지")
                 mypageFragment = MypageFragment.newInstance()
-                supportFragmentManager.beginTransaction().replace(R.id.main_fragment,mypageFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.main_fragment,mypageFragment,"mypage").commit()
             }
         }
         return true
