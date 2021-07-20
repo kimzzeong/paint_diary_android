@@ -1,6 +1,7 @@
 package com.example.paint_diary
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,11 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        //쉐어드 프리퍼런스(자동로그인 위함)
+        val sharedPreferences = this.getSharedPreferences("user",0)
+        val editor = sharedPreferences.edit()
+
+        Log.e("TAG", "쉐어드에 저장된 아이디 = " + sharedPreferences.getString("user_idx", ""))
         var login_email : EditText = findViewById(R.id.login_email)
         var login_password : EditText = findViewById(R.id.login_password)
         var login_btn : Button = findViewById(R.id.login_btn)
@@ -47,7 +53,16 @@ class LoginActivity : AppCompatActivity() {
                 //웹 통신 성공, 응답값을 받아옴
                 override fun onResponse(call: Call<Login>, response: Response<Login>) {
                     var login = response.body()
-                    Toast.makeText(this@LoginActivity,login?.user_idx,Toast.LENGTH_SHORT).show()
+
+                    editor.putString("user_idx", login?.user_idx)
+                    editor.putString("user_nickname", login?.user_nickname)
+                    editor.apply()
+                    Log.e("TAG", "쉐어드에 저장된 아이디 = " + sharedPreferences.getString("user_idx", ""))
+                    Log.e("TAG", "쉐어드에 저장된 닉네임 = " + sharedPreferences.getString("user_nickname", ""))
+                    val intent = Intent(this@LoginActivity,MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    Toast.makeText(this@LoginActivity,login?.user_nickname+"님 반갑습니다.",Toast.LENGTH_SHORT).show()
                 }
 
                 //웹 통신 실패

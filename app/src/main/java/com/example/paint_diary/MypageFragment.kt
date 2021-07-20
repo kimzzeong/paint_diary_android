@@ -9,10 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_chat.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 
 class MypageFragment : Fragment() {
@@ -27,13 +25,43 @@ class MypageFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        Log.d(TAG,"MypageFragment = onCreate() called")
+        Log.d(TAG, "MypageFragment = onCreate() called")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "MypageFragment = onStart() called")
+        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        var test : String? = sharedPreferences?.getString("user_idx", "")
+
+
+        if( test!= null){
+            Log.e("TAG", "쉐어드에 저장된 아이디 = " + test)
+            val builder = AlertDialog.Builder(requireActivity())
+            builder.setMessage("내용")
+            builder.setPositiveButton("네"){ dialog, id ->
+                //perform some tasks here
+                Toast.makeText(activity, "Yes", Toast.LENGTH_SHORT).show()
+            }
+            builder.setNegativeButton("아니오"){ dialog, id ->
+                //perform some tasks here
+                android.widget.Toast.makeText(activity, "No", android.widget.Toast.LENGTH_SHORT).show()
+            }
+            builder.show()
+        }else{
+            //val dialog = AlertDialog.Builder(context!!)
+            //dialog.setTitle("title")
+//                val intent = Intent(context, LoginActivity::class.java)
+//                startActivity(intent)
+
+        }
     }
 
     //프래그먼트를 안고 있는 엑티비티에 붙었을 때
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.d(TAG,"MypageFragment = onAttach() called")
+        Log.d(TAG, "MypageFragment = onAttach() called")
     }
 
     //뷰가 생성 되었을 때
@@ -43,8 +71,8 @@ class MypageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d(TAG,"MypageFragment = onCreateView() called")
-        val view = inflater.inflate(R.layout.fragment_mypage,container,false)
+        Log.d(TAG, "MypageFragment = onCreateView() called")
+        val view = inflater.inflate(R.layout.fragment_mypage, container, false)
         return view
     }
 

@@ -1,6 +1,8 @@
 package com.example.paint_diary
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSelectedListener {
-
     private lateinit var homeFragment: HomeFragment
     private lateinit var chatFragment: ChatFragment
     private lateinit var mypageFragment: MypageFragment
@@ -25,7 +26,10 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val sharedPreferences = this.getSharedPreferences("user",0)
+        val editor = sharedPreferences.edit()
         Log.d(TAG,"MainActivity = onCreate() called")
+        Log.e("TAG", "쉐어드에 저장된 아이디 = " + sharedPreferences?.getString("user_idx", ""))
 
         bottom_nav.setOnNavigationItemSelectedListener(this)
 

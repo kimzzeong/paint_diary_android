@@ -1,5 +1,7 @@
 package com.example.paint_diary
 
+import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -40,7 +42,6 @@ class JoinMemebershipActivity : AppCompatActivity() {
                 .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
-
         join_btn.setOnClickListener {
             if(join_password.text.toString().equals(join_password_check.text.toString())){ //비밀번호와 비밀번호 확인 값이 일치하면
                 var joinMembership = retrofit.create(IRetrofit::class.java)
@@ -48,7 +49,8 @@ class JoinMemebershipActivity : AppCompatActivity() {
                     //웹 통신 성공, 응답값을 받아옴
                     override fun onResponse(call: Call<JoinMembership>, response: Response<JoinMembership>) {
                         //var test = response.body()
-                        Toast.makeText(this@JoinMemebershipActivity,"성공",Toast.LENGTH_SHORT).show()
+                        finish()
+                        Toast.makeText(this@JoinMemebershipActivity,"회원가입이 완료되었습니다.",Toast.LENGTH_SHORT).show()
                     }
 
                     //웹 통신 실패
