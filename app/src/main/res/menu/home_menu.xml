@@ -7,6 +7,7 @@
         android:icon="@drawable/ic_baseline_calendar_today_24"
         android:title="날짜"
         app:showAsAction="always"
+        android:iconTint="@color/white"
         />
 
 </menu>

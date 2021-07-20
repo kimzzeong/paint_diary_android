@@ -46,8 +46,8 @@ class LoginActivity : AppCompatActivity() {
             loginService.requestLogin(login_email.text.toString(),login_password.text.toString()).enqueue(object: Callback<Login>{
                 //웹 통신 성공, 응답값을 받아옴
                 override fun onResponse(call: Call<Login>, response: Response<Login>) {
-                    var test = response.body()
-                    Toast.makeText(this@LoginActivity,test?.code,Toast.LENGTH_SHORT).show()
+                    var login = response.body()
+                    Toast.makeText(this@LoginActivity,login?.user_idx,Toast.LENGTH_SHORT).show()
                 }
 
                 //웹 통신 실패

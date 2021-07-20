@@ -9,10 +9,10 @@ import retrofit2.http.POST
 interface IRetrofit {
 
     @FormUrlEncoded
-    @POST("retrofit_test.php")
+    @POST("loginProcess.php")
     fun requestLogin(
-            @Field("userid") userid:String,
-            @Field("userpw") userpw:String
+            @Field("user_email") user_email:String,
+            @Field("user_password") user_password:String
     ) : Call<Login> //output 정의
 
     @FormUrlEncoded
