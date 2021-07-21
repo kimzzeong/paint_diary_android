@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
                 //웹 통신 성공, 응답값을 받아옴
                 override fun onResponse(call: Call<Login>, response: Response<Login>) {
                     var login = response.body()
-                    if(login?.user_idx != null){
+                    if(login?.status != null){ // 로그인 성공
                         editor.putString("user_idx", login?.user_idx)
                         editor.putString("user_nickname", login?.user_nickname)
                         editor.apply()
@@ -63,9 +63,8 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                         Toast.makeText(this@LoginActivity,login?.user_nickname+"님 반갑습니다.",Toast.LENGTH_SHORT).show()
-                    }else{
-                        //null값 올 때 처리, 여기서는 예외처리 부분
-                        Toast.makeText(this@LoginActivity,"null",Toast.LENGTH_SHORT).show()
+                    }else{ //로그인 실패
+                        Toast.makeText(this@LoginActivity,"이메일이나 비밀번호를 확인해주세요.",Toast.LENGTH_SHORT).show()
                     }
                 }
 
