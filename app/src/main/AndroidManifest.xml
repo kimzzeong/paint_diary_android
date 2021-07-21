@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ProfileModifyActivity"></activity>
         <activity
             android:name=".JoinMemebershipActivity"
-            android:windowSoftInputMode="adjustPan"
-            ></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".WriteActivity" />
         <activity android:name=".MainActivity">

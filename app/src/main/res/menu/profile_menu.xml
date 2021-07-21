@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/profile_camera"
+        android:title="카메라"
+        />
+    <item
+        android:id="@+id/profile_gallery"
+        android:title="갤러리"
+        />
+    <item
+        android:id="@+id/profile_basic"
+        android:title="기본프로필로 변경"
+        />
+
+</menu>
