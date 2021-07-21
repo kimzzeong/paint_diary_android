@@ -2,6 +2,7 @@ package com.example.paint_diary
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatDialog
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_join_memebership.*
+import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +35,9 @@ class JoinMemebershipActivity : AppCompatActivity() {
         var join_btn : Button = findViewById(R.id.join_btn)
 
         //progressDialog.setMessage("잠시만 기다려주세요...")
+        join_toolbar.setTitleTextColor(Color.WHITE)
+        join_toolbar.setTitle("회원가입")
+
 
         var gson: Gson = GsonBuilder()
                 .setLenient()

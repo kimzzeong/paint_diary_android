@@ -95,9 +95,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/mypage_attendance_btn"
-            app:layout_constraintRight_toRightOf="@id/mypage_introduction"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mypage_check"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
             android:text="출석체크"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

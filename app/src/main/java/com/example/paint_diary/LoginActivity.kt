@@ -2,6 +2,7 @@ package com.example.paint_diary
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,6 +29,8 @@ class LoginActivity : AppCompatActivity() {
         //쉐어드 프리퍼런스(자동로그인 위함)
         val sharedPreferences = this.getSharedPreferences("user",0)
         val editor = sharedPreferences.edit()
+        login_toolbar.setTitleTextColor(Color.WHITE)
+        login_toolbar.setTitle("로그인")
 
         Log.e("TAG", "쉐어드에 저장된 아이디 = " + sharedPreferences.getString("user_idx", ""))
         var login_email : EditText = findViewById(R.id.login_email)
