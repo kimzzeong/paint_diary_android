@@ -44,7 +44,7 @@ class MypageFragment : Fragment() {
         val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
         var user_idx : String? = sharedPreferences?.getString("user_idx", "")
         mypage_introduction.setVisibility(View.GONE)
-        if( user_idx != "" ){ //shared에 user_idx가 존재하면=>"로그인 상태라면"
+        //if( user_idx != "" ){ //shared에 user_idx가 존재하면=>"로그인 상태라면"
             //retrofit으로 프로필 불러오기
             var gson: Gson = GsonBuilder()
                 .setLenient()
@@ -79,26 +79,26 @@ class MypageFragment : Fragment() {
                 })
             }
 
-        }else{//로그인 상태가 아니면 다이얼로그를 이용해 로그인 페이지로 이동
-            Log.e("TAG", "쉐어드에 저장된 아이디 = " + user_idx)
-            val dialog = AlertDialog.Builder(requireActivity())
-            dialog.setMessage("로그인을 하셔야 이용 가능한 서비스입니다.\n지금 바로 로그인하시겠습니까?")
-            dialog.setCancelable(false);
-            dialog.setPositiveButton("네"){ dialog, id ->
-                val intent = Intent(context, LoginActivity::class.java)
-                startActivity(intent)
-            }
-            dialog.setNegativeButton("아니오"){ dialog, id ->
-                //프래그먼트->프래그먼트 이동
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.main_fragment,HomeFragment.newInstance())?.commit()
-                //프래그먼트 이동 시 바텀네비게이션 메뉴 활성화
-                val bnv = activity?.findViewById<View>(R.id.bottom_nav) as BottomNavigationView
-                bnv.setSelectedItemId(R.id.bottom_nav_home);
-
-            }
-            dialog.show()
-        }
+        //}else{//로그인 상태가 아니면 다이얼로그를 이용해 로그인 페이지로 이동
+//            Log.e("TAG", "쉐어드에 저장된 아이디 = " + user_idx)
+//            val dialog = AlertDialog.Builder(requireActivity())
+//            dialog.setMessage("로그인을 하셔야 이용 가능한 서비스입니다.\n지금 바로 로그인하시겠습니까?")
+//            dialog.setCancelable(false);
+//            dialog.setPositiveButton("네"){ dialog, id ->
+//                val intent = Intent(context, LoginActivity::class.java)
+//                startActivity(intent)
+//            }
+//            dialog.setNegativeButton("아니오"){ dialog, id ->
+//                //프래그먼트->프래그먼트 이동
+//                activity?.supportFragmentManager?.beginTransaction()
+//                    ?.replace(R.id.main_fragment,HomeFragment.newInstance())?.commit()
+//                //프래그먼트 이동 시 바텀네비게이션 메뉴 활성화
+//                val bnv = activity?.findViewById<View>(R.id.bottom_nav) as BottomNavigationView
+//                bnv.setSelectedItemId(R.id.bottom_nav_home);
+//
+//            }
+//            dialog.show()
+      //  }
 
     }
 
