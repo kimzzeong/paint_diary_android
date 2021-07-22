@@ -18,9 +18,21 @@ interface IRetrofit {
     @FormUrlEncoded
     @POST("joinMembershipSave.php")
     fun requestJoinMembership(
-            @Field("user_email") user_email:String,
-            @Field("user_password") user_password:String,
-            @Field("user_nickname") user_nickname:String
+        @Field("user_email") user_email:String,
+        @Field("user_password") user_password:String,
+        @Field("user_nickname") user_nickname:String
     ) : Call<JoinMembership> //output 정의
+
+    @FormUrlEncoded
+    @POST("callProfile.php")
+    fun requestProfile(
+        @Field("user_idx") user_idx:String
+    ) : Call<Profile> //output 정의
+
+    @FormUrlEncoded
+    @POST("userWithdrawal.php")
+    fun requestwithdrawal(
+        @Field("user_idx") user_idx:String
+    ) : Call<Withdrawal> //output 정의
 }
 

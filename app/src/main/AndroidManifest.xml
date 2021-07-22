@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ProfileModifyActivity"></activity>
+        <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".ProfileModifyActivity" />
         <activity
             android:name=".JoinMemebershipActivity"
             android:windowSoftInputMode="adjustPan" />

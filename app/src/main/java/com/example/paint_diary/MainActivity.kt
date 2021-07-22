@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         Log.e("TAG", "쉐어드에 저장된 아이디 = " + sharedPreferences?.getString("user_idx", ""))
 
         bottom_nav.setOnNavigationItemSelectedListener(this)
-
         homeFragment = HomeFragment.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.main_fragment,homeFragment,"home").commit()
 
@@ -42,19 +41,25 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         Log.d(TAG,"MainActivity = onNavigationItemSelected() called")
         when(item.itemId){
             R.id.bottom_nav_home -> {
-                Log.d(TAG,"MainActivity = 홈")
-                homeFragment = HomeFragment.newInstance()
-                supportFragmentManager.beginTransaction().replace(R.id.main_fragment,homeFragment,"home").commit()
+                if(!bottom_nav.menu.findItem(R.id.bottom_nav_home).isChecked){
+                    Log.d(TAG,"MainActivity = 홈")
+                    homeFragment = HomeFragment.newInstance()
+                    supportFragmentManager.beginTransaction().replace(R.id.main_fragment,homeFragment,"home").commit()
+                }
             }
             R.id.bottom_nav_chat -> {
-                Log.d(TAG,"MainActivity = 채팅")
-                chatFragment = ChatFragment.newInstance()
-                supportFragmentManager.beginTransaction().replace(R.id.main_fragment,chatFragment,"chat").commit()
+                if(!bottom_nav.menu.findItem(R.id.bottom_nav_chat).isChecked){
+                    Log.d(TAG,"MainActivity = 채팅")
+                    chatFragment = ChatFragment.newInstance()
+                    supportFragmentManager.beginTransaction().replace(R.id.main_fragment,chatFragment,"chat").commit()
+                }
             }
             R.id.bottom_nav_mypage -> {
-                Log.d(TAG,"MainActivity = 마이페이지")
-                mypageFragment = MypageFragment.newInstance()
-                supportFragmentManager.beginTransaction().replace(R.id.main_fragment,mypageFragment,"mypage").commit()
+                if(!bottom_nav.menu.findItem(R.id.bottom_nav_mypage).isChecked){
+                    Log.d(TAG,"MainActivity = 마이페이지")
+                    mypageFragment = MypageFragment.newInstance()
+                    supportFragmentManager.beginTransaction().replace(R.id.main_fragment,mypageFragment,"mypage").commit()
+                }
             }
         }
         return true
