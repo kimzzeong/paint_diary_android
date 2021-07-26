@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
     private lateinit var homeFragment: HomeFragment
     private lateinit var chatFragment: ChatFragment
     private lateinit var mypageFragment: MypageFragment
-    var btn: String? = "null"
+    var btn: String? = "bottom_nav_home"
 
     //val editor = sharedPreferences.edit()
 
@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
                     dialog.setPositiveButton("네"){ dialog, id ->
                         val intent = Intent(this, LoginActivity::class.java)
                         startActivity(intent)
-                        finish()
                     }
                     dialog.setNegativeButton("아니오"){ dialog, id ->
                         //아니오 클릭 시 이전 프래그먼트로 이동

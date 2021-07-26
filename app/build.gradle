@@ -63,10 +63,10 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     //sharedPreference
     implementation 'androidx.preference:preference-ktx:1.1.1'
-    //PreferenceScreen
-    implementation("androidx.preference:preference-ktx:1.1.1")
     //user permission
     implementation 'com.karumi:dexter:6.2.2'
     //coil
     implementation("io.coil-kt:coil:1.1.1")
+    //이미지 크롭
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 }

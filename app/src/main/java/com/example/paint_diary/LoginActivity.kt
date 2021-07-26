@@ -58,17 +58,18 @@ class LoginActivity : AppCompatActivity() {
                 //웹 통신 성공, 응답값을 받아옴
                 override fun onResponse(call: Call<Login>, response: Response<Login>) {
                     var login = response.body()
-                    if(login?.status == "success"){ // 로그인 성공
+                    if(login?.status.equals("success")){ // 로그인 성공
                         editor.putString("user_idx", login?.user_idx)
                         editor.putString("user_nickname", login?.user_nickname)
                         editor.apply()
                         Log.e("TAG", "쉐어드에 저장된 아이디 = " + sharedPreferences.getString("user_idx", ""))
                         Log.e("TAG", "쉐어드에 저장된 닉네임 = " + sharedPreferences.getString("user_nickname", ""))
                         val intent = Intent(this@LoginActivity,MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
                         Toast.makeText(this@LoginActivity,login?.user_nickname+"님 반갑습니다.",Toast.LENGTH_SHORT).show()
-                    }else if(login?.status == "fail"){ //로그인 실패
+                    }else if(login?.status.equals("fail")){ //로그인 실패
                         Toast.makeText(this@LoginActivity,"이메일이나 비밀번호를 확인해 주세요.",Toast.LENGTH_SHORT).show()
                     }else{
                         Toast.makeText(this@LoginActivity,"존재하지 않는 회원입니다.",Toast.LENGTH_SHORT).show()

@@ -53,9 +53,13 @@ class JoinMemebershipActivity : AppCompatActivity() {
                 joinMembership.requestJoinMembership(join_email.text.toString(),join_nickname.text.toString(),join_password.text.toString()).enqueue(object: Callback<JoinMembership> {
                     //웹 통신 성공, 응답값을 받아옴
                     override fun onResponse(call: Call<JoinMembership>, response: Response<JoinMembership>) {
-                        //var test = response.body()
-                        finish()
-                        Toast.makeText(this@JoinMemebershipActivity,"회원가입이 완료되었습니다.",Toast.LENGTH_SHORT).show()
+                        var join = response.body()
+                        if(join?.status.equals("success")){
+                            finish()
+                            Toast.makeText(this@JoinMemebershipActivity,"회원가입이 완료되었습니다.",Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(this@JoinMemebershipActivity,"회원가입에 실패했습니다.",Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                     //웹 통신 실패
