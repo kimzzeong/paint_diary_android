@@ -119,10 +119,10 @@ class ProfileModifyActivity : AppCompatActivity() {
     private fun cameraCheckPermission() {
 
         Dexter.withContext(this)
-                .withPermissions(
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                    android.Manifest.permission.CAMERA
-                ).withListener(
+            .withPermissions(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA
+            ).withListener(
 
                 object : MultiplePermissionsListener {
                     override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
@@ -154,10 +154,10 @@ class ProfileModifyActivity : AppCompatActivity() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { cameraIntent ->
             cameraIntent.resolveActivity(packageManager)?.also {
                 val photoFile : File? = try{
-                       createImageFile()
-                     }catch (e: IOException){
-                         null
-                     }
+                    createImageFile()
+                }catch (e: IOException){
+                    null
+                }
                 photoFile?.also {
                     val photoURI : Uri = FileProvider.getUriForFile(
                         this,
@@ -203,6 +203,8 @@ class ProfileModifyActivity : AppCompatActivity() {
                     //val bitmap = data?.extras?.get("data") as Bitmap
                     val bitmap: Bitmap
                     val file = File(curPhotoPath)
+                    //cropImageCamera(data?.data) //이미지를 선택하면 여기가 실행됨
+
                     if (Build.VERSION.SDK_INT < 28) {
                         bitmap = MediaStore.Images.Media.getBitmap(
                             contentResolver, Uri.fromFile(
@@ -220,9 +222,9 @@ class ProfileModifyActivity : AppCompatActivity() {
                         binding.profilePhoto.load(bitmap)
                     }
 
-                    data?.data?.let { uri ->
-                        cropImage(uri) //이미지를 선택하면 여기가 실행됨
-                    }
+                       // cropImage(data?.data) //이미지를 선택하면 여기가 실행됨
+
+                    cropImage(Uri.fromFile(file)) //이미지를 선택하면 여기가 실행됨
                     savePhoto(bitmap)
 
                     //we are using coroutine image loader (coil)
@@ -239,7 +241,7 @@ class ProfileModifyActivity : AppCompatActivity() {
                     data?.data?.let { uri ->
                         cropImage(uri) //이미지를 선택하면 여기가 실행됨
                     }
-                    binding.profilePhoto.load(data?.data)
+                    //binding.profilePhoto.load(data?.data)
 //                    {
 //                        crossfade(true)
 //                        crossfade(1000)
@@ -267,6 +269,12 @@ class ProfileModifyActivity : AppCompatActivity() {
             .setAspectRatio(1, 1)
             .setCropShape(CropImageView.CropShape.RECTANGLE)
             //사각형 모양으로 자른다
+            .start(this)
+    }
+    private fun cropImageCamera(){
+        Log.e("cropImage", "cropImage")
+        CropImage.activity().setAspectRatio(1,1)
+            .setCropShape(CropImageView.CropShape.RECTANGLE)
             .start(this)
     }
 
@@ -299,24 +307,24 @@ class ProfileModifyActivity : AppCompatActivity() {
 
     private fun showRotationalDialogForPermission() {
         AlertDialog.Builder(this)
-                .setMessage("앱 설정에서 권한을 허용해 주세요")
+            .setMessage("앱 설정에서 권한을 허용해 주세요")
 
-                .setPositiveButton("설정") { _, _ ->
+            .setPositiveButton("설정") { _, _ ->
 
-                    try {
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        val uri = Uri.fromParts("package", packageName, null)
-                        intent.data = uri
-                        startActivity(intent)
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
 
-                    } catch (e: ActivityNotFoundException) {
-                        e.printStackTrace()
-                    }
+                } catch (e: ActivityNotFoundException) {
+                    e.printStackTrace()
                 }
+            }
 
-                .setNegativeButton("취소") { dialog, _ ->
-                    dialog.dismiss()
-                }.show()
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }.show()
     }
 
 }

@@ -129,8 +129,13 @@ class MypageFragment : Fragment() {
         mypage_toolbar.setTitle("마이페이지")
 
         mypage_profile_modify.setOnClickListener {
+
+            val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
+            var user_idx : String? = sharedPreferences?.getString("user_idx", "")
             //프래그먼트 -> 액티비티 화면 이동
             val intent = Intent(context, ProfileModifyActivity::class.java)
+            intent.putExtra("user_idx",user_idx)
+            Log.e("user_idx", user_idx.toString())
             startActivity(intent)
 //            var intent = Intent(this, RegisterActivity::class.java)
 //            startActivityForResult(intent, REQUEST_CODE)

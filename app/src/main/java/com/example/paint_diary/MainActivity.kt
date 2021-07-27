@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         Log.d("TAG","MainActivity = onNavigationItemSelected() called")
         val sharedPreferences = this.getSharedPreferences("user",0)
         var user_idx : String? = sharedPreferences?.getString("user_idx", "")
+
         when(item.itemId){
             R.id.bottom_nav_home -> {
                 if(!bottom_nav.menu.findItem(R.id.bottom_nav_home).isChecked){
