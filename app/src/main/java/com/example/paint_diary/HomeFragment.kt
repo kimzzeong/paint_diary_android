@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -57,11 +58,21 @@ class HomeFragment : Fragment() {
         }
 
     }
+    override fun onResume() {
+        super.onResume()
+        activity?.invalidateOptionsMenu()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.date_pick -> {
-                // navigate to settings screen
-                true
+                Toast.makeText(activity,"클릭", Toast.LENGTH_SHORT).show()
+                return true
             }
             R.id.home -> {
 

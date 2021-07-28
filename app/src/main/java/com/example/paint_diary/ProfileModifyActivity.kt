@@ -14,13 +14,18 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import coil.load
+import com.bumptech.glide.Glide
 import com.example.paint_diary.databinding.ActivityProfileModifyBinding
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -32,7 +37,15 @@ import com.karumi.dexter.listener.single.PermissionListener
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_profile_modify.*
-import java.io.ByteArrayOutputStream
+import kotlinx.android.synthetic.main.fragment_mypage.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -45,6 +58,13 @@ class ProfileModifyActivity : AppCompatActivity() {
     private val CAMERA_REQUEST_CODE = 1
     private val GALLERY_REQUEST_CODE = 2
     lateinit var curPhotoPath : String //문자열 형태의 사진 경로 값
+    //유저 인덱스값
+    var user_idx : String? = null
+    var user_nickname : String? = null
+    var user_introduction : String? = null
+    var user_profile : String? = null
+    var uriPath : String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileModifyBinding.inflate(layoutInflater)
@@ -53,13 +73,26 @@ class ProfileModifyActivity : AppCompatActivity() {
         profile_toolbar.inflateMenu(R.menu.profile_save_menu)
         profile_toolbar.setTitleTextColor(Color.BLACK)
         profile_toolbar.setTitle("프로필 수정")
-
-        profile_nickname.setText(intent.getStringExtra("user_nickname"))
-        profile_photo.setImageResource(R.drawable.basic_profile)
+        //profile_photo.setImageResource(R.drawable.basic_profile)
         //profile_nickname.setText(intent.getStringExtra("user_introduction"))
 
         val cameraPopup = PopupMenu(this, profile_photo)
         menuInflater?.inflate(R.menu.profile_menu, cameraPopup.menu)
+        user_idx = intent.getStringExtra("user_idx")
+        user_nickname = intent.getStringExtra("user_nickname")
+        user_introduction = intent.getStringExtra("user_introduction")
+        user_profile = intent.getStringExtra("profile_photo")
+
+        Log.e("onCreate", user_idx!!)
+
+        binding.profileNickname.setText(user_nickname)
+        binding.profileIntro.setText(user_introduction)
+        Glide.with(this) // context
+            .load(user_profile) // 이미지 url
+            .into(binding.profilePhoto) // 붙일 imageView
+
+        setSupportActionBar(binding.profileToolbar)
+
         profile_photo?.setOnClickListener {
 
             cameraPopup.setOnMenuItemClickListener { menuItem ->
@@ -72,8 +105,11 @@ class ProfileModifyActivity : AppCompatActivity() {
                     R.id.profile_gallery -> {
                         galleryCheckPermission()
                     }
-                    R.id.profile_basic ->
+                    R.id.profile_basic ->{
                         profile_photo.setImageResource(R.drawable.basic_profile)
+                        uriPath = "basic"
+                    }
+
                 }
                 false
             }
@@ -257,6 +293,8 @@ class ProfileModifyActivity : AppCompatActivity() {
                         binding.profilePhoto.setImageURI(result.uri)
 
                     }
+
+                    uriPath = result.uri.toString()
                 }
             }
 
@@ -270,12 +308,7 @@ class ProfileModifyActivity : AppCompatActivity() {
             .setCropShape(CropImageView.CropShape.RECTANGLE)
             //사각형 모양으로 자른다
             .start(this)
-    }
-    private fun cropImageCamera(){
-        Log.e("cropImage", "cropImage")
-        CropImage.activity().setAspectRatio(1,1)
-            .setCropShape(CropImageView.CropShape.RECTANGLE)
-            .start(this)
+
     }
 
     private fun galleryAddPic() {
@@ -326,5 +359,94 @@ class ProfileModifyActivity : AppCompatActivity() {
                 dialog.dismiss()
             }.show()
     }
+    //
+    private fun updateProfileImage() {
+        var gson: Gson = GsonBuilder()
+            .setLenient()
+            .create()
 
+        var retrofit = Retrofit.Builder()
+            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        var profilePhotoChange = retrofit.create(IRetrofit::class.java)
+
+        if(uriPath.equals(null)){
+            profilePhotoChange.profileChange(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString()).enqueue(object : Callback<Test>{
+                override fun onResponse(call: Call<Test>, response: Response<Test>) {
+                    var profile = response.body()
+                    if (profile != null) {
+                        Toast.makeText(this@ProfileModifyActivity,profile.message,Toast.LENGTH_SHORT).show()
+                    }
+                    finish()
+                }
+                override fun onFailure(call: Call<Test>, t: Throwable) {
+                    Toast.makeText(this@ProfileModifyActivity,"다시 시도해 주세요.",Toast.LENGTH_SHORT).show()
+                }
+
+            })
+
+        }else if(uriPath.equals("basic")){
+            profilePhotoChange.profileBasic(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString(),uriPath!!).enqueue(object : Callback<Test>{
+                override fun onResponse(call: Call<Test>, response: Response<Test>) {
+                    var profile = response.body()
+                    if (profile != null) {
+                        Toast.makeText(this@ProfileModifyActivity,profile.message,Toast.LENGTH_SHORT).show()
+                    }
+                    finish()
+                }
+                override fun onFailure(call: Call<Test>, t: Throwable) {
+                    Toast.makeText(this@ProfileModifyActivity,"다시 시도해 주세요.",Toast.LENGTH_SHORT).show()
+                }
+
+            })
+
+        }
+        else{
+            //creating a file
+            val split_uriPath = uriPath!!.split("file://")
+            Log.e("uriPath",split_uriPath[1])
+            // Log.e("curPhotoPath",curPhotoPath)
+            val file = File(split_uriPath[1])	// 경로 예시 : /storage/emulated/0/Download/filename.pdf
+            Log.e("uploadProfile","2")
+            var requestBody : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(),file)
+
+            Log.e("uploadProfile","3")
+
+            var body : MultipartBody.Part = MultipartBody.Part.createFormData("profilePhoto",file.name,requestBody)
+
+
+            if (user_idx != null) {
+                profilePhotoChange.profilePhoto(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString(),body).enqueue(object: Callback<Test> {
+                    override fun onResponse(call: Call<Test>, response: Response<Test>) {
+                        var profile = response.body()
+                        Toast.makeText(this@ProfileModifyActivity,profile?.message,Toast.LENGTH_SHORT).show()
+                        Log.e("onResponse", profile?.user_idx!!)
+                        finish()
+                    }
+
+                    override fun onFailure(call: Call<Test>, t: Throwable) {
+                        Toast.makeText(this@ProfileModifyActivity,"다시 시도해 주세요.",Toast.LENGTH_SHORT).show()
+                        Log.e("onFailure",t.localizedMessage)
+                    }
+
+                })
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.profile_save -> {
+                updateProfileImage()
+                return super.onOptionsItemSelected(item)
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.profile_save_menu, menu)
+        return true
+    }
 }

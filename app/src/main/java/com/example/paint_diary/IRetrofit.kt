@@ -40,12 +40,33 @@ interface IRetrofit {
         @Field("user_idx") user_idx: String
     ) : Call<Withdrawal> //output 정의
 
-    //프로필사진
+    //프로필사진이 포함된 변경
     @Multipart
-    @POST("test.php")
+    @POST("profilePhotoChange.php")
     fun profilePhoto(
         @Part("user_idx") user_idx: String,
+        @Part("user_nickname") user_nickname: String,
+        @Part("user_introduction") user_introduction: String,
         @Part imageFile : MultipartBody.Part
+    ): Call<Test>
+
+    //프로필 사진이 포함되지 않은 변경
+    @FormUrlEncoded
+    @POST("profileChange.php")
+    fun profileChange(
+        @Field("user_idx") user_idx: String,
+        @Field("user_nickname") user_nickname: String,
+        @Field("user_introduction") user_introduction: String
+    ): Call<Test>
+
+    //프로필 사진이 기본사진
+    @FormUrlEncoded
+    @POST("profilePhotoChange.php")
+    fun profileBasic(
+        @Field("user_idx") user_idx: String,
+        @Field("user_nickname") user_nickname: String,
+        @Field("user_introduction") user_introduction: String,
+        @Field("user_profile") user_profile:String
     ): Call<Test>
 
 }
