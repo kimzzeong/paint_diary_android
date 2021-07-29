@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
 
         write_btn.setOnClickListener{
             //프래그먼트 -> 액티비티 화면 이동
-            val intent = Intent(context, LoginActivity::class.java)
+            val intent = Intent(context, PaintActivity::class.java)
             startActivity(intent)
 
         }

@@ -2,7 +2,6 @@ package com.example.paint_diary
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -372,30 +371,30 @@ class ProfileModifyActivity : AppCompatActivity() {
         var profilePhotoChange = retrofit.create(IRetrofit::class.java)
 
         if(uriPath.equals(null)){
-            profilePhotoChange.profileChange(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString()).enqueue(object : Callback<Test>{
-                override fun onResponse(call: Call<Test>, response: Response<Test>) {
+            profilePhotoChange.profileChange(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString()).enqueue(object : Callback<ProfileChange>{
+                override fun onResponse(call: Call<ProfileChange>, response: Response<ProfileChange>) {
                     var profile = response.body()
                     if (profile != null) {
                         Toast.makeText(this@ProfileModifyActivity,profile.message,Toast.LENGTH_SHORT).show()
                     }
                     finish()
                 }
-                override fun onFailure(call: Call<Test>, t: Throwable) {
+                override fun onFailure(call: Call<ProfileChange>, t: Throwable) {
                     Toast.makeText(this@ProfileModifyActivity,"다시 시도해 주세요.",Toast.LENGTH_SHORT).show()
                 }
 
             })
 
         }else if(uriPath.equals("basic")){
-            profilePhotoChange.profileBasic(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString(),uriPath!!).enqueue(object : Callback<Test>{
-                override fun onResponse(call: Call<Test>, response: Response<Test>) {
+            profilePhotoChange.profileBasic(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString(),uriPath!!).enqueue(object : Callback<ProfileChange>{
+                override fun onResponse(call: Call<ProfileChange>, response: Response<ProfileChange>) {
                     var profile = response.body()
                     if (profile != null) {
                         Toast.makeText(this@ProfileModifyActivity,profile.message,Toast.LENGTH_SHORT).show()
                     }
                     finish()
                 }
-                override fun onFailure(call: Call<Test>, t: Throwable) {
+                override fun onFailure(call: Call<ProfileChange>, t: Throwable) {
                     Toast.makeText(this@ProfileModifyActivity,"다시 시도해 주세요.",Toast.LENGTH_SHORT).show()
                 }
 
@@ -417,15 +416,15 @@ class ProfileModifyActivity : AppCompatActivity() {
 
 
             if (user_idx != null) {
-                profilePhotoChange.profilePhoto(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString(),body).enqueue(object: Callback<Test> {
-                    override fun onResponse(call: Call<Test>, response: Response<Test>) {
+                profilePhotoChange.profilePhoto(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString(),body).enqueue(object: Callback<ProfileChange> {
+                    override fun onResponse(call: Call<ProfileChange>, response: Response<ProfileChange>) {
                         var profile = response.body()
                         Toast.makeText(this@ProfileModifyActivity,profile?.message,Toast.LENGTH_SHORT).show()
                         Log.e("onResponse", profile?.user_idx!!)
                         finish()
                     }
 
-                    override fun onFailure(call: Call<Test>, t: Throwable) {
+                    override fun onFailure(call: Call<ProfileChange>, t: Throwable) {
                         Toast.makeText(this@ProfileModifyActivity,"다시 시도해 주세요.",Toast.LENGTH_SHORT).show()
                         Log.e("onFailure",t.localizedMessage)
                     }

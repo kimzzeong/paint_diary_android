@@ -1,7 +1,6 @@
 package com.example.paint_diary
 
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -48,7 +47,7 @@ interface IRetrofit {
         @Part("user_nickname") user_nickname: String,
         @Part("user_introduction") user_introduction: String,
         @Part imageFile : MultipartBody.Part
-    ): Call<Test>
+    ): Call<ProfileChange>
 
     //프로필 사진이 포함되지 않은 변경
     @FormUrlEncoded
@@ -57,7 +56,7 @@ interface IRetrofit {
         @Field("user_idx") user_idx: String,
         @Field("user_nickname") user_nickname: String,
         @Field("user_introduction") user_introduction: String
-    ): Call<Test>
+    ): Call<ProfileChange>
 
     //프로필 사진이 기본사진
     @FormUrlEncoded
@@ -67,7 +66,7 @@ interface IRetrofit {
         @Field("user_nickname") user_nickname: String,
         @Field("user_introduction") user_introduction: String,
         @Field("user_profile") user_profile:String
-    ): Call<Test>
+    ): Call<ProfileChange>
 
 }
 

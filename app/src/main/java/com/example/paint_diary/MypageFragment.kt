@@ -72,7 +72,8 @@ class MypageFragment : Fragment() {
                     }else{
                         var uriToString : String = profile?.user_profile
                         var uri : Uri = Uri.parse(uriToString)
-                        profile_photo = "/data/user/0/com.example.paint_diary/cache/"+uri
+                        profile_photo = "http://3.36.52.195/profile/"+uri
+                        //profile_photo = "/data/user/0/com.example.paint_diary/cache/"+uri
                         Glide.with(activity!!) // context
                             .load(profile_photo) // 이미지 url
                             .into(mypage_profile_photo); // 붙일 imageView
