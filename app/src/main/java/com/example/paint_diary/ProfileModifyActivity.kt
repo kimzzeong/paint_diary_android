@@ -86,9 +86,13 @@ class ProfileModifyActivity : AppCompatActivity() {
 
         binding.profileNickname.setText(user_nickname)
         binding.profileIntro.setText(user_introduction)
-        Glide.with(this) // context
-            .load(user_profile) // 이미지 url
-            .into(binding.profilePhoto) // 붙일 imageView
+        if(user_profile != null){
+            Glide.with(this) // context
+                .load(user_profile) // 이미지 url
+                .into(binding.profilePhoto) // 붙일 imageView
+        }else{
+            binding.profilePhoto.setImageResource(R.drawable.basic_profile)
+        }
 
         setSupportActionBar(binding.profileToolbar)
 
@@ -409,10 +413,12 @@ class ProfileModifyActivity : AppCompatActivity() {
             val file = File(split_uriPath[1])	// 경로 예시 : /storage/emulated/0/Download/filename.pdf
             Log.e("uploadProfile","2")
             var requestBody : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(),file)
+           // var text : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(),user_idx!!)
 
             Log.e("uploadProfile","3")
 
             var body : MultipartBody.Part = MultipartBody.Part.createFormData("profilePhoto",file.name,requestBody)
+
 
 
             if (user_idx != null) {

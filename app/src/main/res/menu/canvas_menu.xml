@@ -4,9 +4,9 @@
         android:id="@+id/canvas_clear"
         android:title="전체 삭제"
         />
-<!--    <item-->
-<!--        android:id="@+id/canvas_eraser"-->
-<!--        android:title="일부 삭제"-->
-<!--        />-->
+    <item
+        android:id="@+id/canvas_eraser"
+        android:title="일부 삭제"
+        />
 
 </menu>

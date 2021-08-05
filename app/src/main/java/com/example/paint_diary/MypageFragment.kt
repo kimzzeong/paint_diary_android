@@ -69,6 +69,7 @@ class MypageFragment : Fragment() {
                     user_nickname = profile?.user_nickname
                     if(profile?.user_profile == null){
                         mypage_profile_photo.setImageResource(R.drawable.basic_profile)
+                        profile_photo = null;
                     }else{
                         var uriToString : String = profile?.user_profile
                         var uri : Uri = Uri.parse(uriToString)
