@@ -5,13 +5,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DiaryActivity">
-
-    <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:id="@+id/image"
+    <androidx.appcompat.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/diary_toolbar"
+        android:elevation="2dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/image_background"
+        android:background="@color/sub"
+        app:layout_constraintTop_toBottomOf="@+id/diary_toolbar"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:id="@+id/image"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/diary_title"
+        app:layout_constraintTop_toBottomOf="@+id/image_background"
+        android:hint="제목"
+        android:maxLength="50"
+        android:maxLines="3"
+        />
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_weather"
+        app:layout_constraintTop_toBottomOf="@+id/diary_title"
+        android:spinnerMode="dialog"
+        android:gravity="center"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

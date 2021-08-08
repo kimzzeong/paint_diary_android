@@ -1,6 +1,7 @@
 package com.example.paint_diary
 
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -43,10 +44,10 @@ interface IRetrofit {
     @Multipart
     @POST("profilePhotoChange.php")
     fun profilePhoto(
-        @Part("user_idx") user_idx: String,
-        @Part("user_nickname") user_nickname: String,
-        @Part("user_introduction") user_introduction: String,
-        @Part imageFile : MultipartBody.Part
+            @Part("user_idx") user_idx: RequestBody,
+            @Part("user_nickname") user_nickname: RequestBody,
+            @Part("user_introduction") user_introduction: RequestBody,
+            @Part imageFile: MultipartBody.Part
     ): Call<ProfileChange>
 
     //프로필 사진이 포함되지 않은 변경

@@ -413,7 +413,9 @@ class ProfileModifyActivity : AppCompatActivity() {
             val file = File(split_uriPath[1])	// 경로 예시 : /storage/emulated/0/Download/filename.pdf
             Log.e("uploadProfile","2")
             var requestBody : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(),file)
-           // var text : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(),user_idx!!)
+            var user_idx_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(),user_idx!!)
+            var user_nickname_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(),binding.profileNickname.text.toString())
+            var user_intro_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(),binding.profileIntro.text.toString())
 
             Log.e("uploadProfile","3")
 
@@ -422,11 +424,11 @@ class ProfileModifyActivity : AppCompatActivity() {
 
 
             if (user_idx != null) {
-                profilePhotoChange.profilePhoto(user_idx!!,binding.profileNickname.text.toString(),binding.profileIntro.text.toString(),body).enqueue(object: Callback<ProfileChange> {
+                profilePhotoChange.profilePhoto(user_idx_request,user_nickname_request,user_intro_request,body).enqueue(object: Callback<ProfileChange> {
                     override fun onResponse(call: Call<ProfileChange>, response: Response<ProfileChange>) {
                         var profile = response.body()
                         Toast.makeText(this@ProfileModifyActivity,profile?.message,Toast.LENGTH_SHORT).show()
-                        Log.e("onResponse", profile?.user_idx!!)
+                      //  Log.e("onResponse", profile?.user_idx!!)
                         finish()
                     }
 

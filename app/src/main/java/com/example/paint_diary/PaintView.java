@@ -49,7 +49,8 @@ public class PaintView extends View {
     }
 
     public void init(DisplayMetrics metrics){
-        int height = metrics.heightPixels;
+        //canvas크기 1:1
+        int height = metrics.widthPixels;
         int width = metrics.widthPixels;
 
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);

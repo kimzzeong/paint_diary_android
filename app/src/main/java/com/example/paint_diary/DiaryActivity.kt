@@ -1,12 +1,13 @@
 package com.example.paint_diary
 
+import android.R
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
+import com.example.paint_diary.User.initUsers
 import com.example.paint_diary.databinding.ActivityDiaryBinding
-import com.example.paint_diary.databinding.ActivityPaintBinding
+
 
 class DiaryActivity : AppCompatActivity() {
 
@@ -22,5 +23,9 @@ class DiaryActivity : AppCompatActivity() {
         bitmap = BitmapFactory.decodeByteArray(arr, 0, arr!!.size)
 
         binding.image.setImageBitmap(bitmap)
+
+        initUsers()
+        val spinnerAdapter = SpinnerAdapter(this, com.example.paint_diary.R.layout.custom_spinner_adapter, User.getUserArrayList())
+        binding.spinnerWeather.setAdapter(spinnerAdapter)
     }
 }

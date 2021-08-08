@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/sub"
     tools:context=".PaintActivity" >
     <androidx.appcompat.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,9 +14,7 @@
         android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/paint_toolbar"
-        android:elevation="2dp">
-        >
-    </androidx.appcompat.widget.Toolbar>
+        android:elevation="2dp"/>
 
 
 
@@ -27,6 +26,7 @@
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/paint_toolbar"
         android:weightSum="3"
+        android:background="@color/white"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,6 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/optionsHolder"
+        android:layout_marginTop="100dp"
         app:layout_constraintBottom_toTopOf="@+id/undo"/>
 
     <ImageButton
@@ -99,7 +100,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="160dp"
         android:padding="5dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="70dp"
         />
     <ImageButton
         android:id="@+id/redo"
