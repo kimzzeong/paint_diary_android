@@ -146,8 +146,6 @@ public class PaintView extends View {
             invalidate();
         }
         else {
-
-            //toast the user
         }
 
     }
@@ -158,7 +156,6 @@ public class PaintView extends View {
             invalidate();
         }
         else{
-            //toast the user
         }
     }
 }

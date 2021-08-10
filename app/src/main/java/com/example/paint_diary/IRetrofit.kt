@@ -69,5 +69,17 @@ interface IRetrofit {
         @Field("user_profile") user_profile:String
     ): Call<ProfileChange>
 
+    //다이어리 업로드
+    @Multipart
+    @POST("test.php")
+    fun diaryUpload(
+            @Part("user_idx") user_idx: RequestBody,
+            @Part("diary_title") diary_title: RequestBody,
+            @Part("diary_weather") diary_weather: RequestBody,
+            @Part("diary_range") diary_range: RequestBody,
+            @Part("diary_content") diary_content: RequestBody,
+            @Part("diary_secret") diary_secret: RequestBody,
+            @Part imageFile: MultipartBody.Part //diary_painting
+    ): Call<DiaryInfo>
 }
 

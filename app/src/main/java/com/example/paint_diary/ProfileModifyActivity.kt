@@ -325,10 +325,7 @@ class ProfileModifyActivity : AppCompatActivity() {
 
     //갤러리에 저장
     private fun savePhoto(bitmap: Bitmap) {
-        print("dddddddddddddddddddddd")
-        //val folderPath = Environment.getExternalStorageDirectory().absolutePath + "/Pictures/" //사진저장 경로
         val folderPath = Environment.getExternalStorageDirectory().absolutePath + "/Pictures/" //사진저장 경로
-        print("dddddddddddddddddddddd")
         val timestamp : String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val fileName = "${timestamp}.jpeg"
         val folder = File(folderPath)
@@ -338,6 +335,7 @@ class ProfileModifyActivity : AppCompatActivity() {
         //실제적인 저장 처리
         val out = FileOutputStream(folderPath + fileName)
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+
         //Toast.makeText(this,"사진이 저장되었습니다.",Toast.LENGTH_SHORT).show()
     }
 

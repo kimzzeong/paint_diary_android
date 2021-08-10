@@ -163,17 +163,6 @@ class PaintActivity : AppCompatActivity(){
             }
         }
     }
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.paint_save -> {
-
-//                Toast.makeText(this,"클릭",Toast.LENGTH_SHORT).show()
-//                Log.e("dd","zz")
-//                return super.onOptionsItemSelected(item)
-//            }
-//            else -> return super.onOptionsItemSelected(item)
-//        }
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val menuInflater = menuInflater

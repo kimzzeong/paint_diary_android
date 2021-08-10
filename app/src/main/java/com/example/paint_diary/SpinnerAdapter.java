@@ -11,19 +11,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SpinnerAdapter extends ArrayAdapter<User> {
 
     LayoutInflater layoutInflater;
-
+    String id;
 
     public SpinnerAdapter(@NonNull Context context, int resource, @NonNull List<User> users) {
         super(context, resource, users);
         layoutInflater = LayoutInflater.from(context);
 
     }
+
 
     @NonNull
     @Override
@@ -46,6 +46,7 @@ public class SpinnerAdapter extends ArrayAdapter<User> {
         ImageView imageView = (ImageView)convertView.findViewById(R.id.imageIcon);
         textView.setText(user.getName());
         imageView.setImageResource(user.getImage());
+        id = user.getName();
         return convertView;
     }
 }

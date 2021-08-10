@@ -25,7 +25,7 @@
         >
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="400dp"
+            android:layout_height="100dp"
             android:id="@+id/image"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -49,5 +49,74 @@
         android:spinnerMode="dialog"
         android:gravity="center"
         />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/diary_content"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_weather"
+        app:layout_constraintBottom_toTopOf="@+id/align_layout"
+        android:hint="내용을 입력해주세요."
+        android:maxLength="500"
+        android:maxLines="7"
+        android:gravity="top"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/sub"
+        android:id="@+id/align_layout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            >
+            <ImageButton
+                android:id="@+id/align_left"
+                android:background="#00E6DCD3"
+                android:scaleType="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_baseline_format_align_left_24"/>
+            <ImageButton
+                android:id="@+id/align_center"
+                android:background="#00E6DCD3"
+                android:scaleType="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_baseline_format_align_center_24"/>
+            <ImageButton
+                android:id="@+id/align_right"
+                android:background="#00E6DCD3"
+                android:scaleType="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:src="@drawable/ic_baseline_format_align_right_24"/>
+        </LinearLayout>
+        <ImageButton
+            android:id="@+id/diary_secret"
+            android:background="#00E6DCD3"
+            android:scaleType="center"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:src="@drawable/ic_baseline_lock_open_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DiaryActivity"></activity>
+        <activity android:name=".DiaryInfoActivity"></activity>
+        <activity android:name=".DiaryActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

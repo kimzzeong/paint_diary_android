@@ -10,4 +10,8 @@
         name="hidden"
         path="/Pictures/paint"
         />
+    <external-path
+    name="hidden"
+    path="/Pictures/Drawing"
+    />
 </paths>
