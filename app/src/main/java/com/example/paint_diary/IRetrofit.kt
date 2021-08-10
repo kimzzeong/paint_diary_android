@@ -71,7 +71,7 @@ interface IRetrofit {
 
     //다이어리 업로드
     @Multipart
-    @POST("test.php")
+    @POST("diaryupload.php")
     fun diaryUpload(
             @Part("user_idx") user_idx: RequestBody,
             @Part("diary_title") diary_title: RequestBody,
