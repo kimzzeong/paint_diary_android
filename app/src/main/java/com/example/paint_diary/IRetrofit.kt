@@ -83,7 +83,7 @@ interface IRetrofit {
     ): Call<DiaryInfo>
 
     //다이어리 불러오기
-    @GET("test.php")
+    @GET("diary_request.php")
     fun requestDiary(): Call<ArrayList<DiaryRequest>>
 
 }
