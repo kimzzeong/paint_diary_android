@@ -62,7 +62,9 @@ dependencies {
     // Scalars 변환기 라이브러리
     implementation 'com.squareup.retrofit2:converter-scalars:2.8.1'
     //리사이클러뷰
-    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    // 카드뷰
+    implementation "androidx.cardview:cardview:1.0.0"
     //리사이클러뷰 셀렉션
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     //sharedPreference
@@ -80,5 +82,7 @@ dependencies {
     implementation 'com.kyanogen.signatureview:signature-view:1.2'
     //Color Picker
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
+    //당겨서 새로고침
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
 }

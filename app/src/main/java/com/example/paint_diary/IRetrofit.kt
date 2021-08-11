@@ -44,10 +44,10 @@ interface IRetrofit {
     @Multipart
     @POST("profilePhotoChange.php")
     fun profilePhoto(
-            @Part("user_idx") user_idx: RequestBody,
-            @Part("user_nickname") user_nickname: RequestBody,
-            @Part("user_introduction") user_introduction: RequestBody,
-            @Part imageFile: MultipartBody.Part
+        @Part("user_idx") user_idx: RequestBody,
+        @Part("user_nickname") user_nickname: RequestBody,
+        @Part("user_introduction") user_introduction: RequestBody,
+        @Part imageFile: MultipartBody.Part
     ): Call<ProfileChange>
 
     //프로필 사진이 포함되지 않은 변경
@@ -66,20 +66,25 @@ interface IRetrofit {
         @Field("user_idx") user_idx: String,
         @Field("user_nickname") user_nickname: String,
         @Field("user_introduction") user_introduction: String,
-        @Field("user_profile") user_profile:String
+        @Field("user_profile") user_profile: String
     ): Call<ProfileChange>
 
     //다이어리 업로드
     @Multipart
     @POST("diaryupload.php")
     fun diaryUpload(
-            @Part("user_idx") user_idx: RequestBody,
-            @Part("diary_title") diary_title: RequestBody,
-            @Part("diary_weather") diary_weather: RequestBody,
-            @Part("diary_range") diary_range: RequestBody,
-            @Part("diary_content") diary_content: RequestBody,
-            @Part("diary_secret") diary_secret: RequestBody,
-            @Part imageFile: MultipartBody.Part //diary_painting
+        @Part("user_idx") user_idx: RequestBody,
+        @Part("diary_title") diary_title: RequestBody,
+        @Part("diary_weather") diary_weather: RequestBody,
+        @Part("diary_range") diary_range: RequestBody,
+        @Part("diary_content") diary_content: RequestBody,
+        @Part("diary_secret") diary_secret: RequestBody,
+        @Part imageFile: MultipartBody.Part //diary_painting
     ): Call<DiaryInfo>
+
+    //다이어리 불러오기
+    @GET("test.php")
+    fun requestDiary(): Call<ArrayList<DiaryRequest>>
+
 }
 

@@ -74,6 +74,7 @@ class DiaryActivity : AppCompatActivity() {
         val spinnerAdapter = SpinnerAdapter(this, R.layout.custom_spinner_adapter, userArrayList)
         binding.spinnerWeather.setAdapter(spinnerAdapter)
 
+        //스피너 값 받아옴
         binding.spinnerWeather.setOnItemSelectedListener(object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
                 id_value = position
@@ -82,26 +83,30 @@ class DiaryActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {} // 스피너 쓰기위한 어뎁터 메소드 선언부
         })
 
+        //왼쪽정렬
         binding.alignLeft.setOnClickListener {
             binding.diaryContent.gravity = Gravity.LEFT
-            align = 0;
+            align = 0
         }
+        //가운데 정렬
         binding.alignCenter.setOnClickListener {
             binding.diaryContent.gravity = Gravity.CENTER_HORIZONTAL
-            align = 1;
+            align = 1
         }
+        //오른쪽 정렬
         binding.alignRight.setOnClickListener {
             binding.diaryContent.gravity = Gravity.RIGHT
-            align = 2;
+            align = 2
         }
 
+        //비밀글
         binding.diarySecret.setOnClickListener {
-            if(secret == 1){
+            if(secret == 0){
                 binding.diarySecret.setImageResource(R.drawable.ic_baseline_lock_24)
-                secret = 0
+                secret = 1
             }else{
                 binding.diarySecret.setImageResource(R.drawable.ic_baseline_lock_open_24)
-                secret = 1
+                secret = 0
             }
         }
     }

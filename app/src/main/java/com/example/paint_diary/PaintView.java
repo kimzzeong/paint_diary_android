@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
@@ -68,6 +69,7 @@ public class PaintView extends View {
 
     public void clear(){
         paths.clear();
+        undoList.clear();
         invalidate();
     }
 
@@ -144,8 +146,10 @@ public class PaintView extends View {
         if (paths.size()>0) {
             undoList.add(paths.remove(paths.size()-1));
             invalidate();
-        }
-        else {
+            Log.e("undoList", String.valueOf(undoList.size()));
+            Log.e("paths", String.valueOf(paths.size()));
+        }else{
+
         }
 
     }
@@ -153,9 +157,11 @@ public class PaintView extends View {
     public void onClickRedo (){
         if (undoList.size()>0) {
             paths.add(undoList.remove(undoList.size()-1));
+            Log.e("undoList", String.valueOf(undoList.size()));
+            Log.e("paths", String.valueOf(paths.size()));
             invalidate();
-        }
-        else{
+        }else{
+
         }
     }
 }
