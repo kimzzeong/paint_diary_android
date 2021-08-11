@@ -2,8 +2,10 @@ package com.example.paint_diary;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -11,6 +13,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -21,6 +25,7 @@ public class PaintView extends View {
     public static final int COLOR_ERASER = Color.WHITE;
     public static final int DEFAULT_BG_COLOR = Color.WHITE;
     private static final float TOUCH_TOLERANCE = 4;
+    private MaskFilter lastMaskFilter;
 
     private float mX, mY;
     private Path mPath;
@@ -38,15 +43,16 @@ public class PaintView extends View {
 
         mPaint = new Paint();
         mPath = new Path();
-
+        lastMaskFilter = idToMaskFilter(3,10);
+      //  BlurMaskFilter blurFilter = new BlurMaskFilter(28, BlurMaskFilter.Blur.NORMAL);
         mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
+        //mPaint.setDither(true);
         mPaint.setColor(COLOR_PEN);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setXfermode(null);
-        mPaint.setAlpha(0xff);
+        //mPaint.setXfermode(null);
+       // mPaint.setAlpha(0xff);
     }
 
     public void init(DisplayMetrics metrics){
@@ -82,7 +88,8 @@ public class PaintView extends View {
         for (FingerPath fp : paths){
             mPaint.setColor(fp.getColor());
             mPaint.setStrokeWidth(fp.getStrokeWidth());
-            mPaint.setMaskFilter(null);
+            //mPaint.setMaskFilter(null);
+            mPaint.setMaskFilter(lastMaskFilter);
 
             mCanvas.drawPath(fp.getPath(), mPaint);
 
@@ -94,8 +101,9 @@ public class PaintView extends View {
     }
 
     private void touchStart(float x, float y){
+
         mPath = new Path();
-        FingerPath fp = new FingerPath(currentColor, BRUSH_SIZE, mPath);
+        FingerPath fp = new FingerPath(currentColor, BRUSH_SIZE, mPath,lastMaskFilter);
         paths.add(fp);
 
         mPath.reset();
@@ -161,6 +169,37 @@ public class PaintView extends View {
             Log.e("paths", String.valueOf(paths.size()));
             invalidate();
         }else{
+
+        }
+    }
+
+//    public void setBrushType(int id){
+//        if(colorPickerChanged!=null)colorPickerChanged.onBrushChanged(id);
+//        lastMaskFilter=idToMaskFilter(id,radius);
+//        mPaint.setMaskFilter(lastMaskFilter);
+//        undoPaint=mPaint;
+//        getContext().getSharedPreferences("paint",Context.MODE_PRIVATE).edit().putInt("id",id).commit();
+//    }
+    private MaskFilter idToMaskFilter(int id, float radius){
+        switch (id){
+
+            case BrushType.BRUSH_NEON:
+                Toast.makeText(getContext(),"BRUSH_NEON",Toast.LENGTH_SHORT).show();
+                return Brush.setNeonBrush(radius);
+            case BrushType.BRUSH_BLUR:
+                Toast.makeText(getContext(),"BRUSH_BLUR",Toast.LENGTH_SHORT).show();
+                return Brush.setBlurBrush(radius);
+            case BrushType.BRUSH_INNER:
+                Toast.makeText(getContext(),"BRUSH_INNER",Toast.LENGTH_SHORT).show();
+                return Brush.setInnerBrush(radius);
+            case BrushType.BRUSH_EMBOSS:
+                Toast.makeText(getContext(),"BRUSH_EMBOSS",Toast.LENGTH_SHORT).show();
+                return Brush.setEmbossBrush();
+            case BrushType.BRUSH_DEBOSS:
+                Toast.makeText(getContext(),"BRUSH_DEBOSS",Toast.LENGTH_SHORT).show();
+                return Brush.setDebossBrush();
+            default:
+                return Brush.setSolidBrush(radius);
 
         }
     }

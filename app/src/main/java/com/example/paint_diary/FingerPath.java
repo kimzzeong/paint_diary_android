@@ -1,16 +1,18 @@
 package com.example.paint_diary;
 
+import android.graphics.MaskFilter;
 import android.graphics.Path;
 
 public class FingerPath {
     private int color;
     private int strokeWidth;
     private Path path;
-
-    public FingerPath(int color, int strokeWidth, Path path) {
+    private MaskFilter filter;
+    public FingerPath(int color, int strokeWidth, Path path, MaskFilter filter) {
         this.color = color;
         this.strokeWidth = strokeWidth;
         this.path = path;
+        this.filter = filter;
     }
 
     public int getColor() {
@@ -36,4 +38,13 @@ public class FingerPath {
     public void setPath(Path path) {
         this.path = path;
     }
+
+    public MaskFilter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(MaskFilter filter) {
+        this.filter = filter;
+    }
+
 }

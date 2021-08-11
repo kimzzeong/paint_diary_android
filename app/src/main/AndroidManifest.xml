@@ -32,7 +32,9 @@
             android:name=".JoinMemebershipActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".PaintActivity" />
+        <activity
+            android:name=".PaintActivity"
+            android:hardwareAccelerated="false"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
