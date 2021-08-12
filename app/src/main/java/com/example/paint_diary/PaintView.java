@@ -43,7 +43,7 @@ public class PaintView extends View {
 
         mPaint = new Paint();
         mPath = new Path();
-        lastMaskFilter = idToMaskFilter(3,10);
+        lastMaskFilter = idToMaskFilter(0,28);
       //  BlurMaskFilter blurFilter = new BlurMaskFilter(28, BlurMaskFilter.Blur.NORMAL);
         mPaint.setAntiAlias(true);
         //mPaint.setDither(true);
@@ -173,16 +173,15 @@ public class PaintView extends View {
         }
     }
 
-//    public void setBrushType(int id){
-//        if(colorPickerChanged!=null)colorPickerChanged.onBrushChanged(id);
-//        lastMaskFilter=idToMaskFilter(id,radius);
-//        mPaint.setMaskFilter(lastMaskFilter);
-//        undoPaint=mPaint;
-//        getContext().getSharedPreferences("paint",Context.MODE_PRIVATE).edit().putInt("id",id).commit();
-//    }
+    public void setBrushType(int id, float radius){
+        lastMaskFilter=idToMaskFilter(id,radius);
+        mPaint.setMaskFilter(lastMaskFilter);
+    }
     private MaskFilter idToMaskFilter(int id, float radius){
         switch (id){
-
+            case BrushType.BRUSH_SOLID:
+            Toast.makeText(getContext(),"BRUSH_SOLID",Toast.LENGTH_SHORT).show();
+            return Brush.setSolidBrush(radius);
             case BrushType.BRUSH_NEON:
                 Toast.makeText(getContext(),"BRUSH_NEON",Toast.LENGTH_SHORT).show();
                 return Brush.setNeonBrush(radius);

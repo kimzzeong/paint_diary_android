@@ -1,5 +1,6 @@
 package com.example.paint_diary;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +14,4 @@ import java.io.OutputStream;
 import retrofit2.http.GET;
 
 public class dd {
-
-
 }

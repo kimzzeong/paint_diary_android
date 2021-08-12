@@ -12,6 +12,9 @@ public class Brush {
     public static MaskFilter setSolidBrush(float radius){
         return  new BlurMaskFilter(radius, BlurMaskFilter.Blur.SOLID);
     }
+    public static MaskFilter setDefaultBrush(){
+        return  new MaskFilter();
+    }
     public static MaskFilter setInnerBrush(float radius){
         return  new BlurMaskFilter(radius, BlurMaskFilter.Blur.INNER);
     }

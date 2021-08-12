@@ -1,14 +1,15 @@
 package com.example.paint_diary
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -16,8 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import com.example.paint_diary.databinding.ActivityPaintBinding
-import kotlinx.android.synthetic.main.activity_paint.*
-import kotlinx.android.synthetic.main.activity_profile_modify.*
+import kotlinx.android.synthetic.main.brush_dialog.*
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 import java.io.ByteArrayOutputStream
@@ -29,25 +29,13 @@ class PaintActivity : AppCompatActivity(){
 
     private var paintView: PaintView? = null
     var metrics = DisplayMetrics()
-
-//그림 저장은 나중에 상세 페이지 보여줄 때 할 것
-   // lateinit var PaintPath : String //문자열 형태의 그림 경로 값
-
-
-//    val path = File(
-//        Environment.getExternalStorageDirectory().toString() + "/Pictures",
-//        "paint"
-//    )
-
+    var switch_brush_option : Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPaintBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        paint_toolbar.inflateMenu(R.menu.paint_save_menu)
-//        paint_toolbar.setTitleTextColor(Color.BLACK)
-//        paint_toolbar.title = "그림그리기"
         setSupportActionBar(binding.paintToolbar)
         supportActionBar?.title = "그림그리기"
 //
@@ -65,10 +53,10 @@ class PaintActivity : AppCompatActivity(){
             paintView?.currentColor = defaultColor
             openColorPicker()
         }
+
         binding.penSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 binding.txtPenSize.text = progress.toString() + "dp"
-                //binding.signatureView.penSize = progress.toFloat()
                 paintView?.BRUSH_SIZE = progress
             }
 
@@ -100,6 +88,16 @@ class PaintActivity : AppCompatActivity(){
             canvasPopup.show()
         }
 
+        binding.btnBrush.setOnClickListener {
+            if(!switch_brush_option){
+                switch_brush_option = true
+                binding.brushOption.visibility = View.VISIBLE
+            }else{
+                switch_brush_option = false
+                binding.brushOption.visibility = View.INVISIBLE
+            }
+        }
+
         binding.undo.setOnClickListener {
             paintView?.onClickUndo()
         }
@@ -119,6 +117,7 @@ class PaintActivity : AppCompatActivity(){
             override fun onOk(dialog: AmbilWarnaDialog, color: Int) {
                 defaultColor = color
                 paintView?.currentColor = defaultColor
+                binding.btnColor.setColorFilter(defaultColor!!)
                 // binding.signatureView.penColor = color
             }
         })

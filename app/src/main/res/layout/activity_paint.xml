@@ -3,12 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:shader="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sub"
+    tools:ignore="NotSibling"
     tools:context=".PaintActivity" >
     <androidx.appcompat.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
@@ -16,103 +17,208 @@
         android:id="@+id/paint_toolbar"
         android:elevation="2dp"/>
 
-
-
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/optionsHolder"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/paint_toolbar"
-        android:weightSum="3"
-        android:background="@color/white"
+        card_view:cardCornerRadius="10dp"
+        android:elevation = "100dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintTop_toBottomOf="@id/optionsHolder"
+        android:id="@+id/brushOption"
+        android:visibility="invisible"
+        android:background="@color/main"
         >
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="4dp"
+            android:weightSum="5"
+            android:layout_height="100dip"
+            android:background="@color/main"
             >
-            <SeekBar
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:id="@+id/penSize"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/txtPenSize"
-                android:text="5dp"
-                android:textColor="@color/black"
+
+<!--            <com.example.paint_diary.ShaderTextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="@string/i"-->
+<!--                android:textStyle="bold"-->
+<!--                android:gravity="center"-->
+<!--                android:textSize="50sp"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:id="@+id/default_brush"-->
+<!--                shader:mask_id="normal"-->
+<!--                shader:mask_radius="0"-->
+<!--                android:background="?attr/selectableItemBackground" />-->
+            <com.example.paint_diary.ShaderTextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/i"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="50sp"
+                android:textColor="@color/black"
+                android:id="@+id/normal_brush"
+                shader:mask_id="normal"
+                shader:mask_radius="14"
+                android:background="?attr/selectableItemBackground"
+                />
+            <com.example.paint_diary.ShaderTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/i"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="50sp"
+                android:textColor="@color/black"
+                android:id="@+id/inner_brush"
+                shader:mask_id="neon"
+                shader:mask_radius="14"
+                android:background="?attr/selectableItemBackground"
+                />
+            <com.example.paint_diary.ShaderTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/i"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="50sp"
+                android:textColor="@color/black"
+                android:id="@+id/neon_brush"
+                shader:mask_id="inner"
+                shader:mask_radius="14"
+                android:background="?attr/selectableItemBackground"
+
+                />
+            <com.example.paint_diary.ShaderTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/i"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="50sp"
+                android:textColor="@color/black"
+                android:id="@+id/blur_brush"
+                shader:mask_id="blur"
+                shader:mask_radius="14"
+                android:background="?attr/selectableItemBackground"
+                />
         </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/optionsHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@+id/paint_toolbar"
+        tools:layout_editor_absoluteX="0dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:layout_margin="4dp"
-            android:gravity="end"
-            >
+            android:layout_weight="1">
+
+            <SeekBar
+                android:id="@+id/penSize"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@color/white" />
+
+            <TextView
+                android:id="@+id/txtPenSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5dp"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="2"
+            android:gravity="end">
+
             <ImageButton
                 android:id="@+id/btnEraser"
-                android:background="@color/white"
-                android:scaleType="center"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
-                android:src="@drawable/ic_eraser"/>
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:scaleType="center"
+                android:src="@drawable/ic_eraser" />
 
             <ImageButton
                 android:id="@+id/btnColor"
-                android:background="@color/white"
-                android:scaleType="center"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
-                android:src="@drawable/ic_color" />
-<!--            <ImageButton-->
-<!--                android:id="@+id/color"-->
-<!--                android:background="@color/white"-->
-<!--                android:scaleType="center"-->
-<!--                android:layout_weight="1"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="70dp"-->
-<!--                android:src="@drawable/ic_gestures" />-->
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:padding="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/paint" />
+
+            <ImageButton
+                android:id="@+id/btnBrush"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:scaleType="center"
+                android:src="@drawable/ic_baseline_brush_24" />
         </LinearLayout>
     </LinearLayout>
-    <com.example.paint_diary.PaintView
-        android:id="@+id/paint_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/optionsHolder"
-        android:layout_marginTop="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/undo"/>
-
-    <ImageButton
-        android:id="@+id/undo"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_weight="1"
-        android:src="@drawable/ic_baseline_undo_24"
-        android:background="@drawable/round_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="160dp"
-        android:padding="5dp"
-        android:layout_marginBottom="70dp"
-        />
-    <ImageButton
-        android:id="@+id/redo"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_weight="1"
-        android:src="@drawable/ic_baseline_redo_24"
-        android:background="@drawable/round_button"
-        app:layout_constraintBottom_toBottomOf="@+id/undo"
-        app:layout_constraintTop_toTopOf="@+id/undo"
-        android:layout_marginRight="160dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:padding="5dp"
-        />
+        android:background="@color/sub"
+        >
+
+        <com.example.paint_diary.PaintView
+            android:id="@+id/paint_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="100dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/undo"/>
+
+        <ImageButton
+            android:id="@+id/undo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_baseline_undo_24"
+            android:background="@drawable/round_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="160dp"
+            android:padding="5dp"
+            android:layout_marginBottom="70dp"
+            />
+        <ImageButton
+            android:id="@+id/redo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_baseline_redo_24"
+            android:background="@drawable/round_button"
+            app:layout_constraintBottom_toBottomOf="@+id/undo"
+            app:layout_constraintTop_toTopOf="@+id/undo"
+            android:layout_marginRight="160dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:padding="5dp"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
