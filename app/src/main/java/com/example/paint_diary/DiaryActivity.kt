@@ -161,12 +161,12 @@ class DiaryActivity : AppCompatActivity() {
                 var diary = response.body()
                 diary_idx = diary?.diary_idx
 
-                val intent = Intent(this@DiaryActivity, DiaryInfoActivity::class.java)
+                val intent = Intent(this@DiaryActivity, MainActivity::class.java)
                 intent.putExtra("diary_idx",diary_idx)
                 startActivity(intent)
                 finish()
 
-                Toast.makeText(this@DiaryActivity, diary_idx.toString(), Toast.LENGTH_SHORT).show()
+               // Toast.makeText(this@DiaryActivity, diary_idx.toString(), Toast.LENGTH_SHORT).show()
                 //  Log.e("onResponse", profile?.user_idx!!)
                // finish()
             }
