@@ -45,6 +45,7 @@ class DiaryActivity : AppCompatActivity() {
     val currentPath : String = folderPath+fileName
     var secret : Int = 0
     var align : Int = 0
+    var diary_idx : Int ? = null
     private val userArrayList = ArrayList<User>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,10 +120,6 @@ class DiaryActivity : AppCompatActivity() {
                     savePhoto(bitmap!!)
 
                     uploadDiary()
-
-                    val intent = Intent(this, DiaryInfoActivity::class.java)
-                    startActivity(intent)
-                    finish()
                 }
                 return super.onOptionsItemSelected(item)
             }
@@ -162,7 +159,14 @@ class DiaryActivity : AppCompatActivity() {
         diaryUpload.diaryUpload(user_idx_request, diaryTitle_request, id_value_request, diary_range_request, diary_content_request, diary_secret_request, body).enqueue(object : Callback<DiaryInfo> {
             override fun onResponse(call: Call<DiaryInfo>, response: Response<DiaryInfo>) {
                 var diary = response.body()
-                Toast.makeText(this@DiaryActivity, diary?.message, Toast.LENGTH_SHORT).show()
+                diary_idx = diary?.diary_idx
+
+                val intent = Intent(this@DiaryActivity, DiaryInfoActivity::class.java)
+                intent.putExtra("diary_idx",diary_idx)
+                startActivity(intent)
+                finish()
+
+                Toast.makeText(this@DiaryActivity, diary_idx.toString(), Toast.LENGTH_SHORT).show()
                 //  Log.e("onResponse", profile?.user_idx!!)
                // finish()
             }

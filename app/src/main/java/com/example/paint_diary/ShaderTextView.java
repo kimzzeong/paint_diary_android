@@ -41,7 +41,7 @@ public class ShaderTextView extends AppCompatTextView {
     private void init(Context context, AttributeSet attrs){
         setLayerType(View.LAYER_TYPE_SOFTWARE,null);
         final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShaderTextView);
-        filterId=typedArray.getInt(R.styleable.ShaderTextView_mask_id,BrushType.BRUSH_SOLID);
+        filterId=typedArray.getInt(R.styleable.ShaderTextView_mask_id,BrushType.BRUSH_DEFAULT);
         radius=typedArray.getInt(R.styleable.ShaderTextView_mask_radius,14);
 
         this.getPaint().setColor(Color.parseColor("#ff00cc"));

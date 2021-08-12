@@ -5,12 +5,9 @@ package com.example.paint_diary;
  */
 
 public class BrushType {
-    static final int BRUSH_SOLID=0;
+    static final int BRUSH_DEFAULT=0;
     static final int BRUSH_NEON=1;
     static final int BRUSH_INNER=2;
     static final int BRUSH_BLUR=3;
-    static final int BRUSH_EMBOSS=4;
-    static final int BRUSH_DEBOSS=5;
-    static final int BRUSH_DEFAULT=6;
 
 }

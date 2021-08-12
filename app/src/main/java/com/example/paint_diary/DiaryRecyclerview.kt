@@ -1,6 +1,7 @@
 package com.example.paint_diary
 
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,7 @@ class DiaryRecyclerview:RecyclerView.Adapter<DiaryRecyclerview.ViewHolder>(){
     }
 
     override fun getItemCount(): Int {
+        Log.e("getItemCount", diaryList!!.size.toString())
         return diaryList!!.size
     }
 
@@ -53,7 +55,7 @@ class DiaryRecyclerview:RecyclerView.Adapter<DiaryRecyclerview.ViewHolder>(){
 
         fun bind(item: DiaryRequest) {
             diaryTitle.text = item.diary_title
-            diaryWriter.text = item.user_idx.toString()
+            diaryWriter.text = item.user_nickname
             var uriToString : String = item.diary_painting
             var uri : Uri = Uri.parse(uriToString)
             var uri_diary = "http://3.36.52.195/diary/"+uri

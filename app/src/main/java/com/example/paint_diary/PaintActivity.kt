@@ -1,5 +1,6 @@
 package com.example.paint_diary
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -17,13 +18,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import com.example.paint_diary.databinding.ActivityPaintBinding
-import kotlinx.android.synthetic.main.brush_dialog.*
+import kotlinx.android.synthetic.main.activity_paint.*
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 import java.io.ByteArrayOutputStream
 
 class PaintActivity : AppCompatActivity(){
-    private lateinit var binding: ActivityPaintBinding
+   // private lateinit var binding: ActivityPaintBinding
     var defaultColor : Int? = null
 
 
@@ -34,42 +35,29 @@ class PaintActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityPaintBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setSupportActionBar(binding.paintToolbar)
+    //    binding = ActivityPaintBinding.inflate(layoutInflater)
+        setContentView(R.layout.activity_paint)
+        setSupportActionBar(paint_toolbar)
         supportActionBar?.title = "그림그리기"
-//
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics)
         paintView = findViewById(R.id.paint_view)
         if (paintView != null) {
             paintView!!.init(metrics)
         }
-        val canvasPopup = PopupMenu(this, binding.btnEraser)
+        val canvasPopup = PopupMenu(this, btnEraser)
         menuInflater.inflate(R.menu.canvas_menu, canvasPopup.menu)
         defaultColor = ContextCompat.getColor(this, R.color.black)
-        binding.btnColor.setOnClickListener {
+
+        //color picker
+        btnColor.setOnClickListener {
 
             paintView?.currentColor = defaultColor
             openColorPicker()
         }
 
-        binding.penSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                binding.txtPenSize.text = progress.toString() + "dp"
-                paintView?.BRUSH_SIZE = progress
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-        })
-
-        binding.btnEraser.setOnClickListener {
+        //지우개
+        btnEraser.setOnClickListener {
             canvasPopup.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.canvas_eraser -> {
@@ -88,20 +76,57 @@ class PaintActivity : AppCompatActivity(){
             canvasPopup.show()
         }
 
-        binding.btnBrush.setOnClickListener {
-            if(!switch_brush_option){
-                switch_brush_option = true
-                binding.brushOption.visibility = View.VISIBLE
-            }else{
+        //브러쉬 굵기
+        penSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            @SuppressLint("SetTextI18n")
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                paintView?.BRUSH_SIZE = progress
+                txtPenSize.setText(progress.toString() + "dp").toString()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+        })
+
+        //브러쉬 창 open/close
+        btnBrush.setOnClickListener {
+            if(switch_brush_option){
+                brushOption.visibility = View.INVISIBLE
                 switch_brush_option = false
-                binding.brushOption.visibility = View.INVISIBLE
+            }else{
+                brushOption.visibility = View.VISIBLE
+                switch_brush_option = true
             }
         }
+        //기본 브러쉬
+        default_brush.setOnClickListener {
+            paintView?.setBrushType(0, 1F)
+            brushOption.visibility = View.INVISIBLE
+        }
+        //네온 브러쉬
+        neon_brush.setOnClickListener {
+            paintView?.setBrushType(1, 28F)
+            brushOption.visibility = View.INVISIBLE
+        }
+        //투명도 브러쉬
+        inner_brush.setOnClickListener {
+            paintView?.setBrushType(2, 100F)
+            brushOption.visibility = View.INVISIBLE
+        }
+        //블러 브러쉬
+        blur_brush.setOnClickListener {
+            paintView?.setBrushType(3, 10F)
+            brushOption.visibility = View.INVISIBLE
+        }
 
-        binding.undo.setOnClickListener {
+        undo.setOnClickListener {
             paintView?.onClickUndo()
         }
-        binding.redo.setOnClickListener {
+        redo.setOnClickListener {
             paintView?.onClickRedo()
         }
     }
@@ -117,7 +142,7 @@ class PaintActivity : AppCompatActivity(){
             override fun onOk(dialog: AmbilWarnaDialog, color: Int) {
                 defaultColor = color
                 paintView?.currentColor = defaultColor
-                binding.btnColor.setColorFilter(defaultColor!!)
+                btnColor.setColorFilter(defaultColor!!)
                 // binding.signatureView.penColor = color
             }
         })

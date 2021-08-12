@@ -1,10 +1,13 @@
 package com.example.paint_diary
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -15,6 +18,12 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 
 class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSelectedListener {
     private lateinit var homeFragment: HomeFragment
@@ -34,6 +43,12 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         homeFragment = HomeFragment.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.main_fragment,homeFragment,"home").commit()
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        readCheckPermission()
+        writeCheckPermission()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -91,5 +106,74 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
             }
         }
         return true
+    }
+    private fun readCheckPermission() {
+
+        Dexter.withContext(this).withPermission(
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        ).withListener(object : PermissionListener {
+            override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+            }
+
+            override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "You have denied the storage permission to select image",
+                    Toast.LENGTH_SHORT
+                ).show()
+                showRotationalDialogForPermission()
+            }
+
+            override fun onPermissionRationaleShouldBeShown(
+                p0: PermissionRequest?, p1: PermissionToken?
+            ) {
+                showRotationalDialogForPermission()
+            }
+        }).onSameThread().check()
+    }
+    private fun writeCheckPermission() {
+
+        Dexter.withContext(this).withPermission(
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ).withListener(object : PermissionListener {
+            override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+            }
+
+            override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "You have denied the storage permission to select image",
+                    Toast.LENGTH_SHORT
+                ).show()
+                showRotationalDialogForPermission()
+            }
+
+            override fun onPermissionRationaleShouldBeShown(
+                p0: PermissionRequest?, p1: PermissionToken?
+            ) {
+                showRotationalDialogForPermission()
+            }
+        }).onSameThread().check()
+    }
+    private fun showRotationalDialogForPermission() {
+        AlertDialog.Builder(this)
+            .setMessage("앱 설정에서 권한을 허용해 주세요")
+
+            .setPositiveButton("설정") { _, _ ->
+
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+
+                } catch (e: ActivityNotFoundException) {
+                    e.printStackTrace()
+                }
+            }
+
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }.show()
     }
 }

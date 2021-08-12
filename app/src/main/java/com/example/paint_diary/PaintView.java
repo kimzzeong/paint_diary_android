@@ -43,7 +43,7 @@ public class PaintView extends View {
 
         mPaint = new Paint();
         mPath = new Path();
-        lastMaskFilter = idToMaskFilter(0,28);
+       // lastMaskFilter = idToMaskFilter(0,28);
       //  BlurMaskFilter blurFilter = new BlurMaskFilter(28, BlurMaskFilter.Blur.NORMAL);
         mPaint.setAntiAlias(true);
         //mPaint.setDither(true);
@@ -51,6 +51,7 @@ public class PaintView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
+        mPaint.setMaskFilter(null);
         //mPaint.setXfermode(null);
        // mPaint.setAlpha(0xff);
     }
@@ -88,8 +89,7 @@ public class PaintView extends View {
         for (FingerPath fp : paths){
             mPaint.setColor(fp.getColor());
             mPaint.setStrokeWidth(fp.getStrokeWidth());
-            //mPaint.setMaskFilter(null);
-            mPaint.setMaskFilter(lastMaskFilter);
+            mPaint.setMaskFilter(fp.getFilter());
 
             mCanvas.drawPath(fp.getPath(), mPaint);
 
@@ -179,24 +179,14 @@ public class PaintView extends View {
     }
     private MaskFilter idToMaskFilter(int id, float radius){
         switch (id){
-            case BrushType.BRUSH_SOLID:
-            Toast.makeText(getContext(),"BRUSH_SOLID",Toast.LENGTH_SHORT).show();
+            case BrushType.BRUSH_DEFAULT:
             return Brush.setSolidBrush(radius);
             case BrushType.BRUSH_NEON:
-                Toast.makeText(getContext(),"BRUSH_NEON",Toast.LENGTH_SHORT).show();
                 return Brush.setNeonBrush(radius);
             case BrushType.BRUSH_BLUR:
-                Toast.makeText(getContext(),"BRUSH_BLUR",Toast.LENGTH_SHORT).show();
                 return Brush.setBlurBrush(radius);
             case BrushType.BRUSH_INNER:
-                Toast.makeText(getContext(),"BRUSH_INNER",Toast.LENGTH_SHORT).show();
                 return Brush.setInnerBrush(radius);
-            case BrushType.BRUSH_EMBOSS:
-                Toast.makeText(getContext(),"BRUSH_EMBOSS",Toast.LENGTH_SHORT).show();
-                return Brush.setEmbossBrush();
-            case BrushType.BRUSH_DEBOSS:
-                Toast.makeText(getContext(),"BRUSH_DEBOSS",Toast.LENGTH_SHORT).show();
-                return Brush.setDebossBrush();
             default:
                 return Brush.setSolidBrush(radius);
 

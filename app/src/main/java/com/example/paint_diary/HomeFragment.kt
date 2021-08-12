@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class HomeFragment : Fragment() {
     lateinit var diaryRecyclerview: DiaryRecyclerview
-    var diary = ArrayList<DiaryRequest>()
+
     companion object {
         const val TAG : String = "로그"
         fun newInstance() : HomeFragment {
@@ -53,6 +53,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        requestDiary()
         return view
     }
 
@@ -76,7 +78,6 @@ class HomeFragment : Fragment() {
         val spaceDecoration = RecyclerDecoration(20)
         diary_list.addItemDecoration(spaceDecoration)
         diary_list.layoutManager = layoutManager
-        requestDiary()
 
         diaryRecyclerview.setItemClickListener(object : DiaryRecyclerview.ItemClickListener {
             override fun onClick(view: View, position: Int, title: String) {
@@ -91,7 +92,11 @@ class HomeFragment : Fragment() {
 
     }
 
+
     private fun requestDiary() {
+        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
+        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
+
         var gson: Gson = GsonBuilder()
             .setLenient()
             .create()
@@ -103,12 +108,11 @@ class HomeFragment : Fragment() {
 
         var diary_request = retrofit.create(IRetrofit::class.java)
 
-        diary_request.requestDiary().enqueue(object : Callback<ArrayList<DiaryRequest>> {
-            override fun onResponse(
-                call: Call<ArrayList<DiaryRequest>>,
-                response: Response<ArrayList<DiaryRequest>>
+        diary_request.requestDiary(user_idx!!).enqueue(object : Callback<ArrayList<DiaryRequest>> {
+            override fun onResponse(call: Call<ArrayList<DiaryRequest>>, response: Response<ArrayList<DiaryRequest>>
             ) {
-                diary = response.body()!!
+
+                var diary = response.body()!!
                 diary_list.adapter = diaryRecyclerview
 
                 diaryRecyclerview.diaryList = diary
