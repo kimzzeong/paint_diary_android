@@ -1,44 +1,44 @@
 package com.example.paint_diary
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
-import com.example.paint_diary.databinding.ActivityPaintBinding
 import kotlinx.android.synthetic.main.activity_paint.*
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 import java.io.ByteArrayOutputStream
 
+
 class PaintActivity : AppCompatActivity(){
    // private lateinit var binding: ActivityPaintBinding
     var defaultColor : Int? = null
-
 
     private var paintView: PaintView? = null
     var metrics = DisplayMetrics()
     var switch_brush_option : Boolean = false
 
-
+    companion object {
+        var activity: Activity? = null
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     //    binding = ActivityPaintBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_paint)
         setSupportActionBar(paint_toolbar)
         supportActionBar?.title = "그림그리기"
+        activity = this@PaintActivity
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics)
         paintView = findViewById(R.id.paint_view)
@@ -78,7 +78,6 @@ class PaintActivity : AppCompatActivity(){
 
         //브러쉬 굵기
         penSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            @SuppressLint("SetTextI18n")
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 paintView?.BRUSH_SIZE = progress
                 txtPenSize.setText(progress.toString() + "dp").toString()

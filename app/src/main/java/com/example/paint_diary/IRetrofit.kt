@@ -96,5 +96,14 @@ interface IRetrofit {
         @Field("diary_idx") diary_idx: String
     ): Call<DiaryInfoPage>
 
+    //비밀번호 변경
+    //@FormUrlEncoded
+    @GET("test.php")
+    fun updatePW(
+        @Query("user_idx") user_idx: String,
+        @Query("password") password: String,
+        @Query("change_password") change_password: String,
+        @Query("change_password_check") change_password_check: String
+    ) : Call<ChanePW> //output 정의
 }
 

@@ -46,6 +46,13 @@ class SettingActivity : AppCompatActivity() {
             }
             dialog.show()
         }
+
+        setting_change_PW.setOnClickListener {
+            val intent = Intent(this, ChangePWActivity::class.java)
+            intent.putExtra("user_idx",user_idx)
+            startActivity(intent)
+        }
+
         //회원탈퇴
         setting_withdrawal.setOnClickListener {
             val dialog = AlertDialog.Builder(this)

@@ -146,15 +146,15 @@ class DiaryActivity : AppCompatActivity() {
         val file = File(uriPath)
         Log.e("uriPath", uriPath!!)
 
-        var requestBody : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(),file)
-        var user_idx_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), user_idx!!)
-        var diaryTitle_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), binding.diaryTitle.text.toString())
-        var id_value_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), id_value.toString())
-        var diary_range_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), align.toString())
-        var diary_content_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), binding.diaryContent.text.toString())
-        var diary_secret_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), secret.toString())
+        val requestBody : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(),file)
+        val user_idx_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), user_idx!!)
+        val diaryTitle_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), binding.diaryTitle.text.toString())
+        val id_value_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), id_value.toString())
+        val diary_range_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), align.toString())
+        val diary_content_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), binding.diaryContent.text.toString())
+        val diary_secret_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), secret.toString())
 
-        var body : MultipartBody.Part = MultipartBody.Part.createFormData("diaryBitmap",file.name,requestBody)
+        val body : MultipartBody.Part = MultipartBody.Part.createFormData("diaryBitmap",file.name,requestBody)
 
         diaryUpload.diaryUpload(user_idx_request, diaryTitle_request, id_value_request, diary_range_request, diary_content_request, diary_secret_request, body).enqueue(object : Callback<DiaryInfo> {
             override fun onResponse(call: Call<DiaryInfo>, response: Response<DiaryInfo>) {
@@ -163,12 +163,12 @@ class DiaryActivity : AppCompatActivity() {
 
                 val intent = Intent(this@DiaryActivity, MainActivity::class.java)
                 intent.putExtra("diary_idx",diary_idx)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                val paintActivity:PaintActivity? = null
+                paintActivity?.finish()
                 startActivity(intent)
+                Toast.makeText(this@DiaryActivity,"글이 정상적으로 등록되었습니다.",Toast.LENGTH_SHORT).show()
                 finish()
-
-               // Toast.makeText(this@DiaryActivity, diary_idx.toString(), Toast.LENGTH_SHORT).show()
-                //  Log.e("onResponse", profile?.user_idx!!)
-               // finish()
             }
 
             override fun onFailure(call: Call<DiaryInfo>, t: Throwable) {

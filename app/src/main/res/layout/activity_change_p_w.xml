@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChangePWActivity"
+    tools:ignore="NotSibling">
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/main"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/changePW_toolbar">
+    </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:id="@+id/join_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="비밀번호 변경"
+        app:layout_constraintTop_toBottomOf="@+id/changePW_toolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/main"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="50dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"/>
+    <EditText
+        android:id="@+id/nowPW"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/join_title"
+        android:layout_marginTop="80dp"
+        android:hint="현재 비밀번호"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:inputType="textPassword" />
+    <EditText
+        android:id="@+id/change_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/nowPW"
+        android:layout_marginTop="30dp"
+        android:hint="변경할 비밀번호"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:inputType="textPassword" />
+    <EditText
+        android:id="@+id/change_password_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/change_password"
+        android:layout_marginTop="30dp"
+        android:hint="변경할 비밀번호 확인"
+        android:inputType="textPassword"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_changePW"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/change_password_check"
+        android:layout_marginTop="80dp"
+        android:text="확인"
+        android:textSize="25dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
