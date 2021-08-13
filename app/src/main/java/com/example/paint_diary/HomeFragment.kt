@@ -75,8 +75,7 @@ class HomeFragment : Fragment() {
         diaryRecyclerview = DiaryRecyclerview()
 
         val layoutManager = GridLayoutManager(activity, 2)
-        val spaceDecoration = RecyclerDecoration(20)
-        diary_list.addItemDecoration(spaceDecoration)
+
         diary_list.layoutManager = layoutManager
 
         diaryRecyclerview.setItemClickListener(object : DiaryRecyclerview.ItemClickListener {

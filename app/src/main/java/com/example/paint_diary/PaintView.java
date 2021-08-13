@@ -43,8 +43,6 @@ public class PaintView extends View {
 
         mPaint = new Paint();
         mPath = new Path();
-       // lastMaskFilter = idToMaskFilter(0,28);
-      //  BlurMaskFilter blurFilter = new BlurMaskFilter(28, BlurMaskFilter.Blur.NORMAL);
         mPaint.setAntiAlias(true);
         //mPaint.setDither(true);
         mPaint.setColor(COLOR_PEN);
