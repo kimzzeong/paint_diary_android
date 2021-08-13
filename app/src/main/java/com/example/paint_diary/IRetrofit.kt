@@ -98,7 +98,7 @@ interface IRetrofit {
 
     //비밀번호 변경
     //@FormUrlEncoded
-    @GET("test.php")
+    @GET("changePW.php")
     fun updatePW(
         @Query("user_idx") user_idx: String,
         @Query("password") password: String,
