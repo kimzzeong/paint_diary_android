@@ -100,7 +100,7 @@ interface IRetrofit {
 
     //다이어리 상세 불러오기
     @FormUrlEncoded
-    @POST("test.php")
+    @POST("diaryInfo.php")
     fun requestDiaryInfo(
         @Field("diary_idx") diary_idx: Int,
         @Field("diary_writer") diary_writer: Int

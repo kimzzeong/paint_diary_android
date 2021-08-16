@@ -80,6 +80,7 @@ class DiaryInfoActivity : AppCompatActivity() {
                         .into(diaryInfo_painting)
                     diaryInfo_date.text = diaryInfo.diary_date
                     diaryInfo_title.text = diaryInfo.diary_title
+                    //날씨
                     when (diaryInfo.diary_weather) {
                         0 -> diaryInfo_weather.setImageResource(R.drawable.sun)
                         1 -> diaryInfo_weather.setImageResource(R.drawable.cloudy)
@@ -88,12 +89,14 @@ class DiaryInfoActivity : AppCompatActivity() {
                         4 -> diaryInfo_weather.setImageResource(R.drawable.snowflake)
                     }
                     diaryInfo_content.text = diaryInfo.diary_content
+                    //정렬
                     when (diaryInfo.diary_range) {
                         0 -> diaryInfo_content.gravity = Gravity.START
                         1 -> diaryInfo_content.gravity = Gravity.CENTER_HORIZONTAL
                         2 -> diaryInfo_content.gravity = Gravity.END
                     }
                 }
+                //프로필이 없으면 기본 프로필
                 if(diaryInfo?.user_profile != null){
                     user_profile += diaryInfo.user_profile
                     Glide.with(applicationContext)
