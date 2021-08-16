@@ -1,4 +1,4 @@
-package com.example.paint_diary
+package com.example.paint_diary.Activity
 
 import android.content.Context
 import android.content.Intent
@@ -16,6 +16,8 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.paint_diary.*
+import com.example.paint_diary.Adapter.SpinnerAdapter
 import com.example.paint_diary.databinding.ActivityDiaryBinding
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -72,7 +74,11 @@ class DiaryActivity : AppCompatActivity() {
         val user5 = User("4", "눈")
         userArrayList.add(user5)
 
-        val spinnerAdapter = SpinnerAdapter(this, R.layout.custom_spinner_adapter, userArrayList)
+        val spinnerAdapter = SpinnerAdapter(
+            this,
+            R.layout.custom_spinner_adapter,
+            userArrayList
+        )
         binding.spinnerWeather.setAdapter(spinnerAdapter)
 
         //스피너 값 받아옴
@@ -156,22 +162,22 @@ class DiaryActivity : AppCompatActivity() {
 
         val body : MultipartBody.Part = MultipartBody.Part.createFormData("diaryBitmap",file.name,requestBody)
 
-        diaryUpload.diaryUpload(user_idx_request, diaryTitle_request, id_value_request, diary_range_request, diary_content_request, diary_secret_request, body).enqueue(object : Callback<DiaryInfo> {
-            override fun onResponse(call: Call<DiaryInfo>, response: Response<DiaryInfo>) {
+        diaryUpload.diaryUpload(user_idx_request, diaryTitle_request, id_value_request, diary_range_request, diary_content_request, diary_secret_request, body).enqueue(object : Callback<DiaryUpload> {
+            override fun onResponse(call: Call<DiaryUpload>, response: Response<DiaryUpload>) {
                 var diary = response.body()
                 diary_idx = diary?.diary_idx
 
                 val intent = Intent(this@DiaryActivity, MainActivity::class.java)
                 intent.putExtra("diary_idx",diary_idx)
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                val paintActivity:PaintActivity? = null
+                val paintActivity: PaintActivity? = null
                 paintActivity?.finish()
                 startActivity(intent)
                 Toast.makeText(this@DiaryActivity,"글이 정상적으로 등록되었습니다.",Toast.LENGTH_SHORT).show()
                 finish()
             }
 
-            override fun onFailure(call: Call<DiaryInfo>, t: Throwable) {
+            override fun onFailure(call: Call<DiaryUpload>, t: Throwable) {
                 Toast.makeText(this@DiaryActivity, "다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
                 Log.e("onFailure", t.localizedMessage)
             }

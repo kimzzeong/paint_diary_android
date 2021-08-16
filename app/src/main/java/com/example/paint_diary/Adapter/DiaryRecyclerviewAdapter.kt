@@ -1,5 +1,6 @@
-package com.example.paint_diary
+package com.example.paint_diary.Adapter
 
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,16 +10,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.paint_diary.DiaryRequest
+import com.example.paint_diary.R
 
-class DiaryRecyclerview:RecyclerView.Adapter<DiaryRecyclerview.ViewHolder>(){
+class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.ViewHolder>(){
 
     var diaryList: ArrayList<DiaryRequest>? = null
 
     interface ItemClickListener {
-        fun onClick(view: View, position: Int, title: String)
+        fun onClick(view: View, position: Int, diary_idx :Int, diary_wirter : Int)
     }
 
-    fun DiaryRecyclerview(list: ArrayList<DiaryRequest>) {
+    fun DiaryRecyclerviewAdapter(list: ArrayList<DiaryRequest>) {
         diaryList = list
     }
 
@@ -30,20 +33,19 @@ class DiaryRecyclerview:RecyclerView.Adapter<DiaryRecyclerview.ViewHolder>(){
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryRecyclerview.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.diary_item, parent, false)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: DiaryRecyclerview.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(diaryList!!.get(position))
         holder.itemView.setOnClickListener {
-            itemClickListner.onClick(it, position, diaryList!!.get(position).diary_title)
+            itemClickListner.onClick(it, position,diaryList!!.get(position).diary_idx,diaryList!!.get(position).diary_writer)
         }
     }
 
     override fun getItemCount(): Int {
-        Log.e("getItemCount", diaryList!!.size.toString())
         return diaryList!!.size
     }
 

@@ -1,4 +1,4 @@
-package com.example.paint_diary;
+package com.example.paint_diary.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.paint_diary.R;
+import com.example.paint_diary.User;
 
 import java.util.List;
 

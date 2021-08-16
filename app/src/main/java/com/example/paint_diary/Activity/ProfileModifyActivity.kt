@@ -1,4 +1,4 @@
-package com.example.paint_diary
+package com.example.paint_diary.Activity
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -22,6 +22,9 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import coil.load
 import com.bumptech.glide.Glide
+import com.example.paint_diary.IRetrofit
+import com.example.paint_diary.ProfileChange
+import com.example.paint_diary.R
 import com.example.paint_diary.databinding.ActivityProfileModifyBinding
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

@@ -21,22 +21,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChangePWActivity"></activity>
-        <activity android:name=".DiaryInfoActivity" />
-        <activity android:name=".DiaryActivity" />
+        <activity android:name=".Activity.ChangePWActivity"></activity>
+        <activity android:name=".Activity.DiaryInfoActivity" />
+        <activity android:name=".Activity.DiaryActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".SettingActivity" />
-        <activity android:name=".ProfileModifyActivity" />
+        <activity android:name=".Activity.SettingActivity" />
+        <activity android:name=".Activity.ProfileModifyActivity" />
         <activity
-            android:name=".JoinMemebershipActivity"
+            android:name=".Activity.JoinMemebershipActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".Activity.LoginActivity" />
         <activity
-            android:name=".PaintActivity"
+            android:name=".Activity.PaintActivity"
             android:hardwareAccelerated="false" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

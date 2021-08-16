@@ -1,7 +1,6 @@
-package com.example.paint_diary
+package com.example.paint_diary.Activity
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +9,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.paint_diary.IRetrofit
+import com.example.paint_diary.Login
+import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_login.*
@@ -64,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
                         editor.apply()
                         Log.e("TAG", "쉐어드에 저장된 아이디 = " + sharedPreferences.getString("user_idx", ""))
                         Log.e("TAG", "쉐어드에 저장된 닉네임 = " + sharedPreferences.getString("user_nickname", ""))
-                        val intent = Intent(this@LoginActivity,MainActivity::class.java)
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()

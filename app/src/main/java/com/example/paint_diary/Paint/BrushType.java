@@ -1,4 +1,4 @@
-package com.example.paint_diary;
+package com.example.paint_diary.Paint;
 
 /**
  * Created by INFIi on 1/21/2017.

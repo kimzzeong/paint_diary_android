@@ -1,4 +1,4 @@
-package com.example.paint_diary;
+package com.example.paint_diary.Paint;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,6 +8,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import androidx.appcompat.widget.AppCompatTextView;
+
+import com.example.paint_diary.Paint.Brush;
+import com.example.paint_diary.Paint.BrushType;
+import com.example.paint_diary.R;
 
 
 public class ShaderTextView extends AppCompatTextView {
@@ -41,7 +45,7 @@ public class ShaderTextView extends AppCompatTextView {
     private void init(Context context, AttributeSet attrs){
         setLayerType(View.LAYER_TYPE_SOFTWARE,null);
         final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShaderTextView);
-        filterId=typedArray.getInt(R.styleable.ShaderTextView_mask_id,BrushType.BRUSH_DEFAULT);
+        filterId=typedArray.getInt(R.styleable.ShaderTextView_mask_id, BrushType.BRUSH_DEFAULT);
         radius=typedArray.getInt(R.styleable.ShaderTextView_mask_radius,14);
 
         this.getPaint().setColor(Color.parseColor("#ff00cc"));

@@ -1,4 +1,4 @@
-package com.example.paint_diary;
+package com.example.paint_diary.Paint;
 
 import android.graphics.BlurMaskFilter;
 import android.graphics.EmbossMaskFilter;

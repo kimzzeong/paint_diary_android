@@ -1,17 +1,15 @@
-package com.example.paint_diary
+package com.example.paint_diary.Fragment
 
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.paint_diary.R
 import kotlinx.android.synthetic.main.fragment_chat.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.home_toolbar
 
 class ChatFragment : Fragment() {
     companion object {

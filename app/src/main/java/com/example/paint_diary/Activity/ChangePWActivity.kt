@@ -1,11 +1,13 @@
-package com.example.paint_diary
+package com.example.paint_diary.Activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import android.widget.Toast.makeText
 import androidx.appcompat.app.AppCompatActivity
+import com.example.paint_diary.ChangePW
+import com.example.paint_diary.IRetrofit
+import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_change_p_w.*
@@ -44,12 +46,12 @@ class ChangePWActivity : AppCompatActivity() {
         var changePW = retrofit.create(IRetrofit::class.java)
 
         if (user_idx != null) {
-            changePW.updatePW(user_idx!!,nowPW.text.toString(),change_password.text.toString(),change_password_check.text.toString()).enqueue(object: Callback<ChanePW> {
-                override fun onResponse(call: Call<ChanePW>, response: Response<ChanePW>) {
+            changePW.updatePW(user_idx!!,nowPW.text.toString(),change_password.text.toString(),change_password_check.text.toString()).enqueue(object: Callback<ChangePW> {
+                override fun onResponse(call: Call<ChangePW>, response: Response<ChangePW>) {
                     var password = response.body()
                     if(password?.status == 1){
                         Toast.makeText(this@ChangePWActivity,password?.message,Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@ChangePWActivity,MainActivity::class.java)
+                        val intent = Intent(this@ChangePWActivity, MainActivity::class.java)
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
@@ -58,7 +60,7 @@ class ChangePWActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<ChanePW>, t: Throwable) {
+                override fun onFailure(call: Call<ChangePW>, t: Throwable) {
                 }
 
             })

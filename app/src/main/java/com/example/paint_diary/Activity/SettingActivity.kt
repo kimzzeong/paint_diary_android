@@ -1,14 +1,14 @@
-package com.example.paint_diary
+package com.example.paint_diary.Activity
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.paint_diary.IRetrofit
+import com.example.paint_diary.R
+import com.example.paint_diary.Withdrawal
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_setting.*
@@ -75,7 +75,7 @@ class SettingActivity : AppCompatActivity() {
                             var withdrawal = response.body()
                             if(withdrawal?.message.equals("success")){
                                 Toast.makeText(this@SettingActivity,"회원탈퇴가 완료되었습니다.",Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this@SettingActivity,MainActivity::class.java)
+                                val intent = Intent(this@SettingActivity, MainActivity::class.java)
                                 editor.remove("user_idx")
                                 editor.commit()
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

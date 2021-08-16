@@ -80,30 +80,31 @@ interface IRetrofit {
         @Part("diary_content") diary_content: RequestBody,
         @Part("diary_secret") diary_secret: RequestBody,
         @Part imageFile: MultipartBody.Part //diary_painting
-    ): Call<DiaryInfo>
+    ): Call<DiaryUpload>
 
     //다이어리 불러오기
-    @FormUrlEncoded
+   // @FormUrlEncoded
     @POST("diary_request.php")
     fun requestDiary(
-        @Field("user_idx") user_idx: String
+//        @Field("user_idx") user_idx: String
     ): Call<ArrayList<DiaryRequest>>
 
-    //다이어리 상세 불러오기
-    @FormUrlEncoded
-    @POST("test.php")
-    fun requestDiaryInfo(
-        @Field("diary_idx") diary_idx: String
-    ): Call<DiaryInfoPage>
-
     //비밀번호 변경
-    //@FormUrlEncoded
     @GET("changePW.php")
     fun updatePW(
         @Query("user_idx") user_idx: String,
         @Query("password") password: String,
         @Query("change_password") change_password: String,
         @Query("change_password_check") change_password_check: String
-    ) : Call<ChanePW> //output 정의
+    ) : Call<ChangePW> //output 정의Diary> //output 정의
+
+    //다이어리 상세 불러오기
+    @FormUrlEncoded
+    @POST("test.php")
+    fun requestDiaryInfo(
+        @Field("diary_idx") diary_idx: Int,
+        @Field("diary_writer") diary_writer: Int
+
+    ): Call<DiaryInfoPage>
 }
 

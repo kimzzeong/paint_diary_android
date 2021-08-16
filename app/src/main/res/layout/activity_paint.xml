@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:ignore="NotSibling"
-    tools:context=".PaintActivity" >
+    tools:context=".Activity.PaintActivity" >
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -109,7 +109,7 @@
             android:visibility="invisible"
             >
 
-            <com.example.paint_diary.ShaderTextView
+            <com.example.paint_diary.Paint.ShaderTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -122,7 +122,7 @@
                 shader:mask_id="normal"
                 shader:mask_radius="1"
                 android:background="?attr/selectableItemBackground" />
-            <com.example.paint_diary.ShaderTextView
+            <com.example.paint_diary.Paint.ShaderTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -136,7 +136,7 @@
                 shader:mask_radius="14"
                 android:background="?attr/selectableItemBackground"
                 />
-            <com.example.paint_diary.ShaderTextView
+            <com.example.paint_diary.Paint.ShaderTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -151,7 +151,7 @@
                 android:background="?attr/selectableItemBackground"
 
                 />
-            <com.example.paint_diary.ShaderTextView
+            <com.example.paint_diary.Paint.ShaderTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -167,7 +167,7 @@
                 />
         </LinearLayout>
 
-        <com.example.paint_diary.PaintView
+        <com.example.paint_diary.Paint.PaintView
             android:id="@+id/paint_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"

@@ -1,6 +1,5 @@
-package com.example.paint_diary
+package com.example.paint_diary.Activity
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -15,6 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
+import com.example.paint_diary.Paint.PaintView
+import com.example.paint_diary.R
 import kotlinx.android.synthetic.main.activity_paint.*
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener

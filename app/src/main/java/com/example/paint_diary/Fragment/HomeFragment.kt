@@ -1,4 +1,4 @@
-package com.example.paint_diary
+package com.example.paint_diary.Fragment
 
 import android.content.Context
 import android.content.Intent
@@ -9,11 +9,16 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.paint_diary.Activity.DiaryInfoActivity
+import com.example.paint_diary.Activity.LoginActivity
+import com.example.paint_diary.Activity.PaintActivity
+import com.example.paint_diary.Adapter.DiaryRecyclerviewAdapter
+import com.example.paint_diary.DiaryRequest
+import com.example.paint_diary.IRetrofit
+import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.diary_item.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_mypage.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class HomeFragment : Fragment() {
-    lateinit var diaryRecyclerview: DiaryRecyclerview
+    lateinit var diaryRecyclerview: DiaryRecyclerviewAdapter
 
     companion object {
         const val TAG : String = "로그"
@@ -72,15 +77,19 @@ class HomeFragment : Fragment() {
 
         }
 
-        diaryRecyclerview = DiaryRecyclerview()
+        diaryRecyclerview = DiaryRecyclerviewAdapter()
 
         val layoutManager = GridLayoutManager(activity, 2)
 
         diary_list.layoutManager = layoutManager
 
-        diaryRecyclerview.setItemClickListener(object : DiaryRecyclerview.ItemClickListener {
-            override fun onClick(view: View, position: Int, title: String) {
-                Toast.makeText(activity, title, Toast.LENGTH_SHORT).show()
+        diaryRecyclerview.setItemClickListener(object : DiaryRecyclerviewAdapter.ItemClickListener {
+            override fun onClick(view: View, position: Int, diary_idx :Int, diary_wirter : Int) {
+                val intent = Intent(context, DiaryInfoActivity::class.java)
+                intent.putExtra("diary_idx",diary_idx)
+                intent.putExtra("diary_wirter",diary_wirter)
+                Log.e("click",diary_wirter.toString())
+                startActivity(intent)
             }
         })
 
@@ -107,7 +116,7 @@ class HomeFragment : Fragment() {
 
         var diary_request = retrofit.create(IRetrofit::class.java)
 
-        diary_request.requestDiary(user_idx!!).enqueue(object : Callback<ArrayList<DiaryRequest>> {
+        diary_request.requestDiary().enqueue(object : Callback<ArrayList<DiaryRequest>> {
             override fun onResponse(call: Call<ArrayList<DiaryRequest>>, response: Response<ArrayList<DiaryRequest>>
             ) {
 
