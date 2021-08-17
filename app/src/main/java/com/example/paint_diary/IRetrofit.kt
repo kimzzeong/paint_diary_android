@@ -106,5 +106,10 @@ interface IRetrofit {
         @Field("diary_writer") diary_writer: Int
 
     ): Call<DiaryInfoPage>
+
+    //좋아요 기능
+    @GET("test.php")
+    fun requestContentLike(
+    ) : Call<Int> //output 정의Diary> //output 정의
 }
 

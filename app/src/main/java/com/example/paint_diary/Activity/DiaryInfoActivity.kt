@@ -24,11 +24,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class DiaryInfoActivity : AppCompatActivity() {
-    var diary_idx: Int? = null
-    var user_profile: String = "http://3.36.52.195/profile/"
-    var diary_writer : Int? = null //user_nickname
-    var diary_painting : String = "http://3.36.52.195/diary/"
-
+    private var diary_idx: Int? = null
+    private var user_profile: String = "http://3.36.52.195/profile/"
+    private var diary_writer : Int? = null //user_nickname
+    private var diary_painting : String = "http://3.36.52.195/diary/"
+    private var diary_like : Int = 1
+    private var diary_like_count : Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,17 +41,37 @@ class DiaryInfoActivity : AppCompatActivity() {
 
         setSupportActionBar(diaryInfo_toolbar)
         supportActionBar?.title = "제목"
+        diary_like_setting()
 
+        //좋아요
         diary_favorite.setOnClickListener {
-            Toast.makeText(this,"풰이보릿 클릭",Toast.LENGTH_SHORT).show()
+
+            diary_like_setting()
+            requestDiaryLike()
+            Toast.makeText(this,"favorite : "+diary_like,Toast.LENGTH_SHORT).show()
         }
 
+        //댓글
         diary_comment.setOnClickListener {
             Toast.makeText(this,"댓글 클릭",Toast.LENGTH_SHORT).show()
         }
         requestDiaryInfo() //일기 상세글 정보 불러오기
 
 
+    }
+
+    private fun requestDiaryLike() {
+        //여기에 리트로핏 좋아요 기능
+    }
+
+    private fun diary_like_setting() {
+        if(diary_like == 1){
+            diary_favorite_icon.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+            diary_like = 0
+        }else{
+            diary_favorite_icon.setImageResource(R.drawable.ic_baseline_favorite_24)
+            diary_like = 1
+        }
     }
 
     private fun requestDiaryInfo() {
@@ -69,17 +90,36 @@ class DiaryInfoActivity : AppCompatActivity() {
             override fun onResponse(call: Call<DiaryInfoPage>, response: Response<DiaryInfoPage>) {
                 val diaryInfo = response.body()
                 if (diaryInfo != null) {
-                    //툴바에 글쓴이 정보
+
+                    //글쓴이 소개글
                     diaryInfo_intro.text = diaryInfo.user_intro
+
+                    //글쓴이 닉네임
                     diaryInfo_nickname.text = diaryInfo.diary_nickname
 
-                    //본문 내용 일기 정보
+                    //글쓴이 프로필, 프로필이 없으면 기본 사진
+                    if(diaryInfo?.user_profile != null){
+                        user_profile += diaryInfo.user_profile
+                        Glide.with(applicationContext)
+                            .load(user_profile)
+                            .circleCrop()
+                            .into(diaryInfo_profile)
+                    }else{
+                        diaryInfo_profile.setImageResource(R.drawable.basic_profile)
+                    }
+
+                    //일기 그림
                     diary_painting += diaryInfo.diary_painting
                     Glide.with(applicationContext)
                         .load(diary_painting)
                         .into(diaryInfo_painting)
+
+                    //날짜
                     diaryInfo_date.text = diaryInfo.diary_date
+
+                    //제목
                     diaryInfo_title.text = diaryInfo.diary_title
+
                     //날씨
                     when (diaryInfo.diary_weather) {
                         0 -> diaryInfo_weather.setImageResource(R.drawable.sun)
@@ -88,23 +128,16 @@ class DiaryInfoActivity : AppCompatActivity() {
                         3 -> diaryInfo_weather.setImageResource(R.drawable.rainy)
                         4 -> diaryInfo_weather.setImageResource(R.drawable.snowflake)
                     }
+
+                    //내용
                     diaryInfo_content.text = diaryInfo.diary_content
-                    //정렬
+
+                    //내용 정렬
                     when (diaryInfo.diary_range) {
                         0 -> diaryInfo_content.gravity = Gravity.START
                         1 -> diaryInfo_content.gravity = Gravity.CENTER_HORIZONTAL
                         2 -> diaryInfo_content.gravity = Gravity.END
                     }
-                }
-                //프로필이 없으면 기본 프로필
-                if(diaryInfo?.user_profile != null){
-                    user_profile += diaryInfo.user_profile
-                    Glide.with(applicationContext)
-                        .load(user_profile)
-                        .circleCrop()
-                        .into(diaryInfo_profile)
-                }else{
-                    diaryInfo_profile.setImageResource(R.drawable.basic_profile)
                 }
 
             }
