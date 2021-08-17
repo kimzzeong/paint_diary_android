@@ -110,6 +110,10 @@ interface IRetrofit {
     //좋아요 기능
     @GET("test.php")
     fun requestContentLike(
+        @Query("user_idx") user_idx: Int,
+        @Query("diary_idx") diary_idx: Int,
+        @Query("like_status") like_status: Int,
+
     ) : Call<Int> //output 정의Diary> //output 정의
 }
 

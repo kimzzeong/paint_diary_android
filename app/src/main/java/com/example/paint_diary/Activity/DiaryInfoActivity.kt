@@ -1,11 +1,6 @@
 package com.example.paint_diary.Activity
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
-import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -61,7 +56,25 @@ class DiaryInfoActivity : AppCompatActivity() {
     }
 
     private fun requestDiaryLike() {
-        //여기에 리트로핏 좋아요 기능
+        var gson: Gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        var retrofit = Retrofit.Builder()
+            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+        var request_like = retrofit.create(IRetrofit::class.java)
+        request_like.requestContentLike(diary_writer!!,diary_idx!!,diary_like).enqueue(object : Callback<Int>{
+            override fun onResponse(call: Call<Int>, response: Response<Int>) {
+
+            }
+
+            override fun onFailure(call: Call<Int>, t: Throwable) {
+            }
+
+        })
     }
 
     private fun diary_like_setting() {
