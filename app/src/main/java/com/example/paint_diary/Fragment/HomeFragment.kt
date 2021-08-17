@@ -88,7 +88,7 @@ class HomeFragment : Fragment() {
                 val intent = Intent(context, DiaryInfoActivity::class.java)
                 intent.putExtra("diary_idx",diary_idx)
                 intent.putExtra("diary_wirter",diary_wirter)
-                Log.e("click",diary_wirter.toString())
+                Log.e("click",diary_idx.toString())
                 startActivity(intent)
             }
         })

@@ -107,13 +107,20 @@ interface IRetrofit {
 
     ): Call<DiaryInfoPage>
 
-    //좋아요 기능
-    @GET("test.php")
+    //좋아요 클릭 시 기능
+    @GET("diary_like_process.php")
     fun requestContentLike(
         @Query("user_idx") user_idx: Int,
         @Query("diary_idx") diary_idx: Int,
-        @Query("like_status") like_status: Int,
+        @Query("like_status") like_status: Int
 
-    ) : Call<Int> //output 정의Diary> //output 정의
+        ) : Call<like_data> //output 정의Diary> //output 정의
+
+    //좋아요 불러오기
+    @GET("diary_like_request.php")
+    fun requestLikeInfo(
+        @Query("diary_idx") diary_idx: Int,
+        @Query("user_idx") user_idx: Int
+        ) : Call<like_data> //output 정의Diary> //output 정의
 }
 

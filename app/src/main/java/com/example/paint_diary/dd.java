@@ -14,5 +14,4 @@ import java.io.OutputStream;
 import retrofit2.http.GET;
 
 public class dd {
-
 }
