@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
+    android:background="@color/sub"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -44,7 +45,7 @@
         app:layout_constraintTop_toTopOf="@+id/profile_diary_painting"
         app:layout_constraintBottom_toBottomOf="@+id/profile_diary_painting"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_margin="10dp"
+        android:layout_marginRight="20dp"
         android:gravity="center"
         >
         <TextView
@@ -53,7 +54,7 @@
             android:id="@+id/profile_diary_date_day_num"
             android:text="18"
             android:textSize="20dp"
-            android:textStyle="bold"
+            android:textColor="@color/black"
             />
         <TextView
             android:layout_width="wrap_content"

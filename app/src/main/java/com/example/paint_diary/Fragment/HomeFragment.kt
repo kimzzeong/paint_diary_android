@@ -102,8 +102,8 @@ class HomeFragment : Fragment() {
 
 
     private fun requestDiary() {
-        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
-        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
+//        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
+//        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
 
         var gson: Gson = GsonBuilder()
             .setLenient()

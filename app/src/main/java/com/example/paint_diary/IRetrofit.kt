@@ -122,5 +122,12 @@ interface IRetrofit {
         @Query("diary_idx") diary_idx: Int,
         @Query("user_idx") user_idx: Int
         ) : Call<like_data> //output 정의Diary> //output 정의
+
+    //다이어리 불러오기
+    // @FormUrlEncoded
+    @POST("test.php")
+    fun requestUserProfile(
+//        @Field("user_idx") user_idx: String
+    ): Call<ArrayList<DiaryList>>
 }
 

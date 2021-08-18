@@ -21,10 +21,6 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
         fun onClick(view: View, position: Int, diary_idx :Int, diary_wirter : Int)
     }
 
-    fun DiaryRecyclerviewAdapter(list: ArrayList<DiaryRequest>) {
-        diaryList = list
-    }
-
 
     private lateinit var itemClickListner: ItemClickListener
 

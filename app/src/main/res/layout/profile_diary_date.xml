@@ -12,13 +12,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:textStyle="bold"
         android:textColor="@color/gray"
-        android:text="AUG 2021"
+        android:text="2021 8월"
         />
     <View
     app:layout_constraintBottom_toBottomOf="parent"
