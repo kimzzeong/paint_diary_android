@@ -1,5 +1,6 @@
 package com.example.paint_diary.Activity
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -62,6 +63,14 @@ class DiaryInfoActivity : AppCompatActivity() {
         diary_comment.setOnClickListener {
             Toast.makeText(this,"댓글 클릭",Toast.LENGTH_SHORT).show()
         }
+        //프로필 사진 클릭 시 유저프로필 액티비티로 이동
+        diaryInfo_profile.setOnClickListener {
+            val intent = Intent(this, UserProfileActivity::class.java)
+            intent.putExtra("diary_writer",diary_writer)
+            startActivity(intent)
+        }
+
+
 
 
     }
