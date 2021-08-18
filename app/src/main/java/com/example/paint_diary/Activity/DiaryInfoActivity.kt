@@ -1,5 +1,6 @@
 package com.example.paint_diary.Activity
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -88,7 +89,6 @@ class DiaryInfoActivity : AppCompatActivity() {
                     diary_favorite_text.text = diary_like_count.toString()
                     diary_like_setting()
 
-                    Toast.makeText(this@DiaryInfoActivity,""+diary_like,Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -116,16 +116,10 @@ class DiaryInfoActivity : AppCompatActivity() {
         var request_like = retrofit.create(IRetrofit::class.java)
         request_like.requestContentLike(user_idx!!,diary_idx!!,diary_like!!).enqueue(object : Callback<like_data>{
             override fun onResponse(call: Call<like_data>, response: Response<like_data>) {
-                Toast.makeText(this@DiaryInfoActivity,"좋아요 성공.",Toast.LENGTH_SHORT).show()
-//                val like = response.body()
-//                if (like != null) {
-//                    diary_like = like.like_status
-//                    Log.e("diary_like",diary_like.toString())
-//                    diary_favorite_text.text = like.like_count.toString()
-//                    Log.e("like_count",like.like_count.toString())
-//                    Toast.makeText(this@DiaryInfoActivity,"좋아요"+like.like_status,Toast.LENGTH_SHORT).show()
-//                    diary_like_setting()
-//                }
+                val like = response.body()
+                if (like != null) {
+                    likeProcess()
+                }
             }
 
             override fun onFailure(call: Call<like_data>, t: Throwable) {
@@ -198,6 +192,7 @@ class DiaryInfoActivity : AppCompatActivity() {
                         3 -> diaryInfo_weather.setImageResource(R.drawable.rainy)
                         4 -> diaryInfo_weather.setImageResource(R.drawable.snowflake)
                     }
+                    diaryInfo_weather.setColorFilter(Color.rgb(230,220,211))
 
                     //내용
                     diaryInfo_content.text = diaryInfo.diary_content
