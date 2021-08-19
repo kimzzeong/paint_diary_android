@@ -3,6 +3,7 @@ package com.example.paint_diary.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,15 +26,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class UserProfileActivity : AppCompatActivity() {
-    private var diary_wirter: Int? = null
+    private var diary_writer: Int? = null
     lateinit var userProfileDiaryListAdapter: UserProfileDiaryListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
         val intent = intent
-        diary_wirter = intent.getIntExtra("diary_wirter",0)
-        requestDiary()
+        diary_writer = intent.getIntExtra("diary_writer",0)
         userProfileDiaryListAdapter = UserProfileDiaryListAdapter()
         requestDiary()
         val layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -45,6 +45,7 @@ class UserProfileActivity : AppCompatActivity() {
     private fun requestDiary() {
 //        val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
 //        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
+        Toast.makeText(this,""+diary_writer,Toast.LENGTH_SHORT).show()
 
         var gson: Gson = GsonBuilder()
             .setLenient()
@@ -57,7 +58,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         var diary_request = retrofit.create(IRetrofit::class.java)
 
-        diary_request.requestUserProfile().enqueue(object : Callback<ArrayList<DiaryList>> {
+        diary_request.requestUserProfile(diary_writer!!).enqueue(object : Callback<ArrayList<DiaryList>> {
             override fun onResponse(call: Call<ArrayList<DiaryList>>, response: Response<ArrayList<DiaryList>>
             ) {
 

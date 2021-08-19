@@ -38,6 +38,7 @@ class DiaryInfoActivity : AppCompatActivity() {
         val intent = intent
         diary_idx = intent.getIntExtra("diary_idx",0)
         diary_writer = intent.getIntExtra("diary_wirter",0)
+        Toast.makeText(this,""+diary_writer,Toast.LENGTH_SHORT).show()
         val sharedPreferences = this.getSharedPreferences("user",0)
         var user_idx_str : String? = sharedPreferences?.getString("user_idx", "")
         user_idx = Integer.parseInt(user_idx_str)
