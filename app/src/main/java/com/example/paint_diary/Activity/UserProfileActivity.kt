@@ -45,7 +45,6 @@ class UserProfileActivity : AppCompatActivity() {
     private fun requestDiary() {
 //        val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
 //        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
-        Toast.makeText(this,""+diary_writer,Toast.LENGTH_SHORT).show()
 
         var gson: Gson = GsonBuilder()
             .setLenient()
@@ -58,7 +57,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         var diary_request = retrofit.create(IRetrofit::class.java)
 
-        diary_request.requestUserProfile(diary_writer!!).enqueue(object : Callback<ArrayList<DiaryList>> {
+        diary_request.requestUserProfileDiary(diary_writer!!).enqueue(object : Callback<ArrayList<DiaryList>> {
             override fun onResponse(call: Call<ArrayList<DiaryList>>, response: Response<ArrayList<DiaryList>>
             ) {
 
@@ -74,5 +73,7 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
         })
+        //diary_request.requestProfile()
+
     }
 }

@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import com.bumptech.glide.Glide
 import com.example.paint_diary.DiaryInfoPage
 import com.example.paint_diary.IRetrofit
@@ -15,6 +16,8 @@ import com.example.paint_diary.like_data
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_diary_info.*
+import kotlinx.android.synthetic.main.activity_profile_modify.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,9 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class DiaryInfoActivity : AppCompatActivity() {
     private var diary_idx: Int? = null
-    private var user_profile: String = "http://3.36.52.195/profile/"
     private var diary_writer : Int? = null //user_nickname
-    private var diary_painting : String = "http://3.36.52.195/diary/"
     private var diary_like : Int? = null
     private var diary_like_count : Int? = null
     private var user_idx : Int? = null
@@ -38,7 +39,6 @@ class DiaryInfoActivity : AppCompatActivity() {
         val intent = intent
         diary_idx = intent.getIntExtra("diary_idx",0)
         diary_writer = intent.getIntExtra("diary_wirter",0)
-        Toast.makeText(this,""+diary_writer,Toast.LENGTH_SHORT).show()
         val sharedPreferences = this.getSharedPreferences("user",0)
         var user_idx_str : String? = sharedPreferences?.getString("user_idx", "")
         user_idx = Integer.parseInt(user_idx_str)
@@ -71,9 +71,32 @@ class DiaryInfoActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        diaryInfo_refresh.setOnRefreshListener {
+            requestDiaryInfo() //일기 상세글 정보 불러오기
+            likeProcess()
+            diaryInfo_refresh.isRefreshing = false
+        }
 
+        diaryInfo_more_menu.setOnClickListener {
+            val dairyPopup = PopupMenu(this, diaryInfo_more_menu)
+            menuInflater?.inflate(R.menu.diary_modify_menu, dairyPopup.menu)
 
+            dairyPopup.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.diary_modify -> {
+                        Toast.makeText(this,"수정",Toast.LENGTH_SHORT).show()
+                    }
 
+                    R.id.diary_delete -> {
+                        Toast.makeText(this,"삭제",Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+                false
+            }
+
+            dairyPopup.show()
+        }
     }
 
     //좋아요 갯수 불러오기
@@ -164,6 +187,10 @@ class DiaryInfoActivity : AppCompatActivity() {
             override fun onResponse(call: Call<DiaryInfoPage>, response: Response<DiaryInfoPage>) {
                 val diaryInfo = response.body()
                 if (diaryInfo != null) {
+
+
+                    var user_profile: String = "http://3.36.52.195/profile/"
+                    var diary_painting : String = "http://3.36.52.195/diary/"
 
                     //글쓴이 소개글
                     diaryInfo_intro.text = diaryInfo.user_intro

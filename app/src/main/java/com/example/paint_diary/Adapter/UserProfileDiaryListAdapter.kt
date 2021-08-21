@@ -53,7 +53,7 @@ class UserProfileDiaryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
         val obj = diary_List?.get(position)
         when (obj?.type) {
             DiaryList.DATE_TYPE -> {
-                (holder as DateViewHolder).user_profile_date_group.text = obj.diary_date
+                (holder as DateViewHolder).user_profile_date_group.text = obj.diary_date.substring(0,7)
             }
             DiaryList.DIARY_TYPE -> {
 
