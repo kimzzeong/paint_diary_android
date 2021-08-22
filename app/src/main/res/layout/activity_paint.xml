@@ -93,7 +93,7 @@
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/optionsHolder"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/sub"
+        android:background="#E6E5E5"
         >
 
         <LinearLayout
@@ -173,7 +173,8 @@
             android:layout_height="0dp"
             android:layout_marginTop="100dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/undo"/>
+            app:layout_constraintBottom_toTopOf="@+id/undo"
+            android:layout_marginBottom="20dp"/>
 
         <ImageButton
             android:id="@+id/undo"
@@ -186,7 +187,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginLeft="160dp"
             android:padding="5dp"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="50dp"
             />
         <ImageButton
             android:id="@+id/redo"

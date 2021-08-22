@@ -5,7 +5,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import com.bumptech.glide.Glide
@@ -16,6 +18,7 @@ import com.example.paint_diary.like_data
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_diary_info.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_profile_modify.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
@@ -31,6 +34,16 @@ class DiaryInfoActivity : AppCompatActivity() {
     private var diary_like : Int? = null
     private var diary_like_count : Int? = null
     private var user_idx : Int? = null
+
+
+    var gson: Gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+    var retrofit = Retrofit.Builder()
+            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +64,11 @@ class DiaryInfoActivity : AppCompatActivity() {
 
         requestDiaryInfo() //일기 상세글 정보 불러오기
         likeProcess()
+
+        //로그인 한 유저가 글쓴이가 아닐 경우 수정/삭제 팝업 안보여주기
+        if(user_idx != diary_writer){
+            diaryInfo_more_menu.visibility = View.INVISIBLE
+        }
 
 
         //좋아요
@@ -84,11 +102,11 @@ class DiaryInfoActivity : AppCompatActivity() {
             dairyPopup.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.diary_modify -> {
-                        Toast.makeText(this,"수정",Toast.LENGTH_SHORT).show()
+                        updateDiary()
                     }
 
-                    R.id.diary_delete -> {
-                        Toast.makeText(this,"삭제",Toast.LENGTH_SHORT).show()
+                    R.id.diary_remove -> {
+                        removeDiary()
                     }
 
                 }
@@ -99,17 +117,45 @@ class DiaryInfoActivity : AppCompatActivity() {
         }
     }
 
+    private fun removeDiary() {
+        val dialog = AlertDialog.Builder(this)
+        dialog.setMessage("정말 삭제하시겠습니까?")
+        dialog.setCancelable(false);
+        dialog.setPositiveButton("네"){ dialog, id ->
+
+            requestDiaryRemove()
+        }
+        dialog.setNegativeButton("아니오"){ dialog, id ->
+
+        }
+        dialog.show()
+    }
+
+    private fun updateDiary() {
+        Toast.makeText(this,"수정",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun requestDiaryRemove() {
+        var requestDiaryRemove = retrofit.create(IRetrofit::class.java)
+        requestDiaryRemove.requestRemoveDiary(diary_idx!!).enqueue(object : Callback<DiaryInfoPage>{
+            override fun onResponse(call: Call<DiaryInfoPage>, response: Response<DiaryInfoPage>) {
+                val diary = response.body()
+                Toast.makeText(this@DiaryInfoActivity,diary?.message,Toast.LENGTH_SHORT).show()
+//                val intent = Intent(this@DiaryInfoActivity, MainActivity::class.java)
+//                startActivity(intent)
+                finish()
+
+            }
+
+            override fun onFailure(call: Call<DiaryInfoPage>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
     //좋아요 갯수 불러오기
     private fun likeProcess() {
-
-        var gson: Gson = GsonBuilder()
-            .setLenient()
-            .create()
-
-        var retrofit = Retrofit.Builder()
-            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
 
         var request_like = retrofit.create(IRetrofit::class.java)
 
@@ -137,15 +183,6 @@ class DiaryInfoActivity : AppCompatActivity() {
     //좋아요 클릭 시
     private fun requestDiaryLike() {
 
-        var gson: Gson = GsonBuilder()
-            .setLenient()
-            .create()
-
-        var retrofit = Retrofit.Builder()
-            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-
         var request_like = retrofit.create(IRetrofit::class.java)
         request_like.requestContentLike(user_idx!!,diary_idx!!,diary_like!!).enqueue(object : Callback<like_data>{
             override fun onResponse(call: Call<like_data>, response: Response<like_data>) {
@@ -172,14 +209,6 @@ class DiaryInfoActivity : AppCompatActivity() {
     }
 
     private fun requestDiaryInfo() {
-        var gson: Gson = GsonBuilder()
-            .setLenient()
-            .create()
-
-        var retrofit = Retrofit.Builder()
-            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
 
         var requestDiaryInfo = retrofit.create(IRetrofit::class.java)
 

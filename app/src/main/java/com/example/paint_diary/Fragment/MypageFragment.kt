@@ -50,7 +50,7 @@ class MypageFragment : Fragment() {
 
 
         val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
-        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
+        var user_idx : Int? =  Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
         mypage_introduction.setVisibility(View.GONE)
         //if( user_idx != "" ){ //shared에 user_idx가 존재하면=>"로그인 상태라면"
         //retrofit으로 프로필 불러오기
@@ -72,7 +72,7 @@ class MypageFragment : Fragment() {
                     user_nickname = profile?.user_nickname
                     if(profile?.user_profile == null){
                         mypage_profile_photo.setImageResource(R.drawable.basic_profile)
-                        profile_photo = null;
+                        profile_photo = null
                     }else{
                         var uriToString : String = profile?.user_profile
                         var uri : Uri = Uri.parse(uriToString)

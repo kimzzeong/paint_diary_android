@@ -27,25 +27,40 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/user_profile_nickname"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="300dip"
+            android:id="@+id/sss"
+            android:layout_marginTop="200dip"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="ㅡ"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_profile_nickname"
+            app:layout_constraintTop_toBottomOf="@+id/sss"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:text="닉네임"
             android:textSize="20dp"
             android:textStyle="bold"
+            android:textColor="@color/white"
             />
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:id="@+id/user_profile_intro"
             app:layout_constraintTop_toBottomOf="@+id/user_profile_nickname"
             android:layout_marginTop="15dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:text="닉네임"
+            android:gravity="center"
+            android:text="소개글"
             android:textSize="15dp"
+            android:textColor="@color/white"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.recyclerview.widget.RecyclerView

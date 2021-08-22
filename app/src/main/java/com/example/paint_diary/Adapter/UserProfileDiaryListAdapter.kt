@@ -20,6 +20,17 @@ import kotlin.collections.ArrayList
 class UserProfileDiaryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var diary_List: ArrayList<DiaryList>? = null
     lateinit var context : Context
+
+    interface ItemClickListener {
+        fun onClick(view: View, position: Int, diary_idx :Int, diary_wirter : Int)
+    }
+
+
+    private lateinit var itemClickListner: ItemClickListener
+
+    fun setItemClickListener(itemClickListener: ItemClickListener) {
+        this.itemClickListner = itemClickListener
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view: View?
         return when(viewType){
@@ -67,6 +78,9 @@ class UserProfileDiaryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
                // (holder as DiaryViewHolder).profile_diary_date_day.text = obj.diary_date
                     //getDateDay(obj.diary_date,"Y-m-d H:i:s")
                // holder.profile_diary_date_day_num
+                holder.itemView.setOnClickListener {
+                    itemClickListner.onClick(it, position,diary_List!!.get(position).diary_idx,diary_List!!.get(position).diary_writer)
+                }
             }
         }
 

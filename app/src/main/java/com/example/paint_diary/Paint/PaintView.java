@@ -15,6 +15,10 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class PaintView extends View {
@@ -30,7 +34,7 @@ public class PaintView extends View {
     private Paint mPaint;
     public int currentColor;
     private ArrayList<FingerPath> paths = new ArrayList<>();
-    private   ArrayList<FingerPath> undoList=new ArrayList<>();
+    private ArrayList<FingerPath> undoList=new ArrayList<>();
 
     public Bitmap mBitmap;
     private Canvas mCanvas;
@@ -88,10 +92,8 @@ public class PaintView extends View {
             mPaint.setMaskFilter(fp.getFilter());
 
             mCanvas.drawPath(fp.getPath(), mPaint);
-
-
         }
-
+        listToJson();
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
         canvas.restore();
     }
@@ -186,6 +188,27 @@ public class PaintView extends View {
             default:
                 return Brush.setSolidBrush(radius);
 
+        }
+    }
+
+    private void listToJson(){
+        //filter에는 숫자로 넣어서 브러쉬 타입 넣으면 될 것 같음
+        //path는 어떻게 저장하지
+        try {
+            JSONArray jArray = new JSONArray();//배열
+            for (int i = 0; i < paths.size(); i++) {
+                JSONObject sObject = new JSONObject();//배열 내에 들어갈 json
+                sObject.put("color", paths.get(i).getColor());
+                sObject.put("filter", paths.get(i).getFilter());
+                sObject.put("width", paths.get(i).getStrokeWidth());
+                sObject.put("path", paths.get(i).getPath());
+                jArray.put(sObject);
+            }
+
+            Log.d("JSON Test", jArray.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        requestDiary()
+
         return view
     }
 
@@ -137,6 +137,7 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.invalidateOptionsMenu()
+        requestDiary()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

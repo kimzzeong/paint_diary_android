@@ -30,7 +30,7 @@ interface IRetrofit {
     @FormUrlEncoded
     @POST("callProfile.php")
     fun requestProfile(
-        @Field("user_idx") user_idx: String
+        @Field("user_idx") user_idx: Int
     ) : Call<Profile> //output 정의
 
     //회원탈퇴
@@ -130,11 +130,10 @@ interface IRetrofit {
             @Field("diary_wirter") diary_wirter: Int
     ): Call<ArrayList<DiaryList>>
 
-    //프로필 페이지 불러오기
-//    @FormUrlEncoded
-//    @POST("test.php")
-//    fun requestUserProfile(
-//            @Field("diary_wirter") diary_wirter: Int
-//    ): Call<>
+    //다이어리 삭제
+    @GET("removeDiary.php")
+    fun requestRemoveDiary(
+            @Query("diary_idx") diary_idx: Int
+    ):Call<DiaryInfoPage>
 }
 
