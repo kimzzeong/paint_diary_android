@@ -67,7 +67,6 @@ class UserProfileDiaryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
                 (holder as DateViewHolder).user_profile_date_group.text = obj.diary_date.substring(0,7)
             }
             DiaryList.DIARY_TYPE -> {
-
                 (holder as DiaryViewHolder).bind(diary_List!!.get(position))
 //                Glide.with(holder.itemView.context)
 //                    .load("http://3.36.52.195/diary/"+obj.diary_painting)
@@ -100,6 +99,9 @@ class UserProfileDiaryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
             val profile_diary_date_day_num: TextView = itemView.findViewById(R.id.profile_diary_date_day_num)
             val profile_diary_date_day: TextView = itemView.findViewById(R.id.profile_diary_date_day)
 
+            //나중에 마이페이지에서 비밀글까지 보여줄 때 그대로 복붙하면 된다악!!!!!
+           // val profile_diary_secret : ImageView = itemView.findViewById(R.id.profile_diary_secret)
+
             fun bind(item: DiaryList) {
                 profile_diary_title.text = item.diary_title
                 profile_diary_date_day.text = getDateDay(item.diary_date,"yyyy-MM-dd HH:mm:ss")
@@ -110,6 +112,11 @@ class UserProfileDiaryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
                 var uri_diary = "http://3.36.52.195/diary/"+uri
                  Glide.with(itemView).load(uri_diary).into(profile_diary_painting)
 
+//                if(item.diary_secret == 1){
+//                    profile_diary_secret.visibility = View.VISIBLE
+//                }else{
+//                    profile_diary_secret.visibility = View.INVISIBLE
+//                }
             }
 
         }

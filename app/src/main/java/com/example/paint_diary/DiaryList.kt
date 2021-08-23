@@ -3,6 +3,7 @@ package com.example.paint_diary
 data class DiaryList(
     val diary_writer : Int,
     val diary_idx : Int,
+    val diary_secret : Int,
     val diary_title:String,
     val user_nickname:String,
     val diary_painting:String,
