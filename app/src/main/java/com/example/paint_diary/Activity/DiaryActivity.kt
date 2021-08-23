@@ -55,8 +55,10 @@ class DiaryActivity : AppCompatActivity() {
     var diary_idx : Int ? = null
     var diary_writer : Int ? = null
     var update : String  = ""
+    var retrofit_date = ""
     private val userArrayList = ArrayList<User>()
     var formatDate = SimpleDateFormat("yyyy년 MM월 dd일",Locale.KOREA)
+    var formatDateSave = SimpleDateFormat("yyyy-MM-dd",Locale.KOREA)
 
     var gson: Gson = GsonBuilder()
             .setLenient()
@@ -92,6 +94,7 @@ class DiaryActivity : AppCompatActivity() {
                 selectDate.set(Calendar.MONTH,month)
                 selectDate.set(Calendar.DAY_OF_MONTH,dayOfMonth)
                 val date = formatDate.format(selectDate.time)
+                retrofit_date = formatDateSave.format(selectDate.time)
                 Toast.makeText(this,"Date:"+date,Toast.LENGTH_SHORT).show()
                 diary_date.text = date
 
@@ -230,10 +233,10 @@ class DiaryActivity : AppCompatActivity() {
                     updateDiary()
                 }else{
                     if (bitmap != null) {
-                        galleryAddPic()
-                        savePhoto(bitmap!!)
-
-                        uploadDiary()
+                       // galleryAddPic()
+                        //savePhoto(bitmap!!)
+                        Log.e("date : ",retrofit_date) // ->ok
+                       // uploadDiary()
                     }
                 }
                 return super.onOptionsItemSelected(item)
@@ -255,7 +258,7 @@ class DiaryActivity : AppCompatActivity() {
 //            }
 //
 //        })
-        //Log.e("align",align.toString())
+
     }
 
     //다이어리 업로드
