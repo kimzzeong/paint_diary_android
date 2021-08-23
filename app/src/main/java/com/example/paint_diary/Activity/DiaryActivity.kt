@@ -76,15 +76,19 @@ class DiaryActivity : AppCompatActivity() {
         setSupportActionBar(binding.diaryToolbar)
         supportActionBar?.title = "일기 쓰기"
 
-//        update = intent.getStringExtra("update")!!
-//        if(update!!.equals("update")){
-//            diary_idx = intent.getIntExtra("diary_idx",0)
-//            diary_writer = intent.getIntExtra("diary_writer",0)
-//
-//            requestDiaryinfo()
-//        }else{
+        val intent = intent
+        update = intent.getStringExtra("update")!!
+        Log.e("update",update)
+        if(update.equals("update")){
+            diary_idx = intent.getIntExtra("diary_idx",0)
+            diary_writer = intent.getIntExtra("diary_writer",0)
+
+            requestDiaryinfo()
+        }else{
+            Log.e("equals","1")
             setting()
-       // }
+            Log.e("equals","2")
+        }
 
         diary_date.setOnClickListener ( View.OnClickListener {
             val getDate = Calendar.getInstance()
@@ -188,7 +192,6 @@ class DiaryActivity : AppCompatActivity() {
     }
 
     private fun setting() {
-        val intent = intent
         val arr = intent.getByteArrayExtra("image")
         bitmap = BitmapFactory.decodeByteArray(arr, 0, arr!!.size)
         binding.paintImage.setImageBitmap(bitmap)

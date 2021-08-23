@@ -178,6 +178,7 @@ class PaintActivity : AppCompatActivity(){
                 paintView!!.mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 val byteArray = stream.toByteArray()
                 val in1 = Intent(applicationContext, DiaryActivity::class.java)
+                in1.putExtra("update","")
                 in1.putExtra("image", byteArray)
                 startActivity(in1)
                 return true
