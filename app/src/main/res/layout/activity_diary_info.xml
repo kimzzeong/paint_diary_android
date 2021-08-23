@@ -79,7 +79,7 @@
                 app:layout_constraintTop_toTopOf="@+id/diaryInfo_profile"
                 app:layout_constraintBottom_toBottomOf="@+id/diaryInfo_profile"
                 app:layout_constraintRight_toRightOf="parent"
-                android:tint="@color/main"
+                android:tint="@color/gray"
                 tools:ignore="UseAppTint" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>

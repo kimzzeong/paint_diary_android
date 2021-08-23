@@ -35,6 +35,7 @@ public class PaintView extends View {
     public int currentColor;
     private ArrayList<FingerPath> paths = new ArrayList<>();
     private ArrayList<FingerPath> undoList=new ArrayList<>();
+    private ArrayList<PathXY> pathXYList=new ArrayList<>();
 
     public Bitmap mBitmap;
     private Canvas mCanvas;
@@ -108,6 +109,8 @@ public class PaintView extends View {
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
+        Log.e("moveTo:x", String.valueOf(x));
+        Log.e("moveTo:y", String.valueOf(y));
     }
 
     private void touchMove(float x, float y){
@@ -118,11 +121,21 @@ public class PaintView extends View {
             mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
             mX = x;
             mY = y;
+            Log.e("quadTo:x", String.valueOf(x));
+            Log.e("quadTo:y", String.valueOf(y));
+            PathXY pathxy = new PathXY(x,y);
+            pathXYList.add(pathxy);
         }
     }
 
     private void touchUp(){
         mPath.lineTo(mX, mY);
+        Log.e("lineTo:x", String.valueOf(mX));
+        Log.e("lineTo:y", String.valueOf(mY));
+        for (int i = 0; i < pathXYList.size(); i++){
+            Log.e("pathx:", String.valueOf(pathXYList.get(i).getX()));
+            Log.e("pathy:", String.valueOf(pathXYList.get(i).getY()));
+        }
     }
 
     @Override
@@ -152,8 +165,6 @@ public class PaintView extends View {
         if (paths.size()>0) {
             undoList.add(paths.remove(paths.size()-1));
             invalidate();
-            Log.e("undoList", String.valueOf(undoList.size()));
-            Log.e("paths", String.valueOf(paths.size()));
         }else{
 
         }
@@ -163,8 +174,6 @@ public class PaintView extends View {
     public void onClickRedo (){
         if (undoList.size()>0) {
             paths.add(undoList.remove(undoList.size()-1));
-            Log.e("undoList", String.valueOf(undoList.size()));
-            Log.e("paths", String.valueOf(paths.size()));
             invalidate();
         }else{
 

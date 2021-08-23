@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,17 +27,35 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:id="@+id/image"
+            android:id="@+id/paint_image"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_gravity="center"
             />
     </LinearLayout>
+<!--    <DatePicker-->
+<!--        android:id="@+id/diary_date"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/image_background"-->
+<!--        android:datePickerMode="spinner"-->
+<!--        android:calendarViewShown="false"-->
+<!--        />-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/diary_date"
+        app:layout_constraintTop_toBottomOf="@+id/image_background"
+        style="@android:style/Widget.Holo.Spinner"
+        android:textColor="@color/gray"
+        android:textSize="20dp"
+        android:text="날짜선택"
+        />
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:id="@+id/diary_title"
-        app:layout_constraintTop_toBottomOf="@+id/image_background"
+        app:layout_constraintTop_toBottomOf="@+id/diary_date"
         android:hint="제목"
         android:maxLength="50"
         android:maxLines="3"

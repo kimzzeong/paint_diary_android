@@ -135,5 +135,17 @@ interface IRetrofit {
     fun requestRemoveDiary(
             @Query("diary_idx") diary_idx: Int
     ):Call<DiaryInfoPage>
+
+    //다이어리 수정
+    @GET("test.php")
+    fun requestUpdateDiary(
+            @Query("diary_idx") diary_idx: Int,
+            @Query("diary_title") diary_title: String,
+            @Query("diary_weather") diary_weather: Int,
+            @Query("diary_range") diary_range: Int,
+            @Query("diary_content") diary_content: String,
+            @Query("diary_secret") diary_secret: Int
+    ):Call<DiaryInfoPage>
+
 }
 

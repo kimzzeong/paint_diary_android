@@ -82,6 +82,7 @@ class DiaryInfoActivity : AppCompatActivity() {
         diary_comment.setOnClickListener {
             Toast.makeText(this,"댓글 클릭",Toast.LENGTH_SHORT).show()
         }
+
         //프로필 사진 클릭 시 유저프로필 액티비티로 이동
         diaryInfo_profile.setOnClickListener {
             val intent = Intent(this, UserProfileActivity::class.java)
@@ -89,12 +90,14 @@ class DiaryInfoActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //새로고침
         diaryInfo_refresh.setOnRefreshListener {
             requestDiaryInfo() //일기 상세글 정보 불러오기
             likeProcess()
             diaryInfo_refresh.isRefreshing = false
         }
 
+        //팝업메뉴 클릭시 수정/삭제
         diaryInfo_more_menu.setOnClickListener {
             val dairyPopup = PopupMenu(this, diaryInfo_more_menu)
             menuInflater?.inflate(R.menu.diary_modify_menu, dairyPopup.menu)
@@ -102,7 +105,12 @@ class DiaryInfoActivity : AppCompatActivity() {
             dairyPopup.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.diary_modify -> {
-                        updateDiary()
+                        //updateDiary()
+                        val intent = Intent(this, DiaryActivity::class.java)
+                        intent.putExtra("update","update") // 새글쓰는게 아니라 글 업데이트임을 보여줌
+                        intent.putExtra("diary_idx",diary_idx)
+                        intent.putExtra("diary_writer",diary_writer)
+                        startActivity(intent)
                     }
 
                     R.id.diary_remove -> {
@@ -132,7 +140,20 @@ class DiaryInfoActivity : AppCompatActivity() {
     }
 
     private fun updateDiary() {
-        Toast.makeText(this,"수정",Toast.LENGTH_SHORT).show()
+//        var requestDiaryUpdate = retrofit.create(IRetrofit::class.java)
+//        requestDiaryUpdate.requestUpdateDiary(diary_idx!!,).enqueue(object : Callback<DiaryInfoPage>{
+//            override fun onResponse(call: Call<DiaryInfoPage>, response: Response<DiaryInfoPage>) {
+//                val diary = response.body()
+//                Toast.makeText(this@DiaryInfoActivity,diary?.message,Toast.LENGTH_SHORT).show()
+//                finish()
+//
+//            }
+//
+//            override fun onFailure(call: Call<DiaryInfoPage>, t: Throwable) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
     }
 
     private fun requestDiaryRemove() {
@@ -141,8 +162,6 @@ class DiaryInfoActivity : AppCompatActivity() {
             override fun onResponse(call: Call<DiaryInfoPage>, response: Response<DiaryInfoPage>) {
                 val diary = response.body()
                 Toast.makeText(this@DiaryInfoActivity,diary?.message,Toast.LENGTH_SHORT).show()
-//                val intent = Intent(this@DiaryInfoActivity, MainActivity::class.java)
-//                startActivity(intent)
                 finish()
 
             }
