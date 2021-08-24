@@ -79,6 +79,7 @@ interface IRetrofit {
         @Part("diary_range") diary_range: RequestBody,
         @Part("diary_content") diary_content: RequestBody,
         @Part("diary_secret") diary_secret: RequestBody,
+        @Part("diary_date") diary_date: RequestBody,
         @Part imageFile: MultipartBody.Part //diary_painting
     ): Call<DiaryUpload>
 
@@ -137,14 +138,16 @@ interface IRetrofit {
     ):Call<DiaryInfoPage>
 
     //다이어리 수정
-    @GET("test.php")
+    @FormUrlEncoded
+    @POST("modifyDiary.php")
     fun requestUpdateDiary(
-            @Query("diary_idx") diary_idx: Int,
-            @Query("diary_title") diary_title: String,
-            @Query("diary_weather") diary_weather: Int,
-            @Query("diary_range") diary_range: Int,
-            @Query("diary_content") diary_content: String,
-            @Query("diary_secret") diary_secret: Int
+            @Field("diary_idx") diary_idx: Int,
+            @Field("diary_title") diary_title: String,
+            @Field("diary_weather") diary_weather: Int,
+            @Field("diary_range") diary_range: Int,
+            @Field("diary_content") diary_content: String,
+            @Field("diary_date") diary_date: String,
+            @Field("diary_secret") diary_secret: Int
     ):Call<DiaryInfoPage>
 
 }

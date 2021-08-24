@@ -2,6 +2,7 @@ package com.example.paint_diary
 
 data class DiaryInfoPage (
     val diary_title: String,
+    val diary_idx: Int,
     val message: String,
     val diary_content: String,
     val diary_nickname: String,

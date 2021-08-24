@@ -221,8 +221,10 @@ class DiaryInfoActivity : AppCompatActivity() {
     private fun diary_like_setting() {
         if(diary_like == 0){
             diary_favorite_icon.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+            diary_favorite_icon.setColorFilter(Color.rgb(116,113,111))
         }else{
             diary_favorite_icon.setImageResource(R.drawable.ic_baseline_favorite_24)
+            diary_favorite_icon.setColorFilter(Color.rgb(236,86,43))
         }
 
     }

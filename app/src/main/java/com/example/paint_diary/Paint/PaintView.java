@@ -2,12 +2,14 @@ package com.example.paint_diary.Paint;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,6 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class PaintView extends View {
@@ -38,6 +43,7 @@ public class PaintView extends View {
     private ArrayList<PathXY> pathXYList=new ArrayList<>();
 
     public Bitmap mBitmap;
+    public String stringToBitmap = "http://3.36.52.195/diary/20210813_024732.jpeg";
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
@@ -61,9 +67,7 @@ public class PaintView extends View {
         //canvas크기 1:1
         int height = metrics.widthPixels;
         int width = metrics.widthPixels;
-
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
         currentColor = COLOR_PEN;
     }
 
@@ -96,6 +100,7 @@ public class PaintView extends View {
         }
         listToJson();
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+        //canvas.drawBitmap (GetImageFromURL(stringToBitmap), 0,  0,null);
         canvas.restore();
     }
 
@@ -220,4 +225,5 @@ public class PaintView extends View {
             e.printStackTrace();
         }
     }
+
 }

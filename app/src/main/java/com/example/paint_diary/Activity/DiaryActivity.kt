@@ -1,5 +1,6 @@
 package com.example.paint_diary.Activity
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -57,8 +58,9 @@ class DiaryActivity : AppCompatActivity() {
     var update : String  = ""
     var retrofit_date = ""
     private val userArrayList = ArrayList<User>()
-    var formatDate = SimpleDateFormat("yyyy년 MM월 dd일",Locale.KOREA)
+    var formatDate = SimpleDateFormat("yyyy-MM-dd",Locale.KOREA)
     var formatDateSave = SimpleDateFormat("yyyy-MM-dd",Locale.KOREA)
+    var datePicker : DatePickerDialog? = null
 
     var gson: Gson = GsonBuilder()
             .setLenient()
@@ -92,18 +94,20 @@ class DiaryActivity : AppCompatActivity() {
 
         diary_date.setOnClickListener ( View.OnClickListener {
             val getDate = Calendar.getInstance()
-            val datePicker = DatePickerDialog(this,android.R.style.Theme_Holo_Light_Dialog_MinWidth,DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            datePicker = DatePickerDialog(this,DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                 val selectDate : Calendar = Calendar.getInstance()
                 selectDate.set(Calendar.YEAR,year)
                 selectDate.set(Calendar.MONTH,month)
                 selectDate.set(Calendar.DAY_OF_MONTH,dayOfMonth)
                 val date = formatDate.format(selectDate.time)
                 retrofit_date = formatDateSave.format(selectDate.time)
-                Toast.makeText(this,"Date:"+date,Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Date:"+retrofit_date,Toast.LENGTH_SHORT).show()
                 diary_date.text = date
 
             }, getDate.get(Calendar.YEAR), getDate.get(Calendar.MONTH),getDate.get(Calendar.DAY_OF_MONTH))
-            datePicker.show()
+                    .apply {
+                        datePicker.maxDate = System.currentTimeMillis()}
+            datePicker!!.show()
 
         })
 
@@ -136,6 +140,7 @@ class DiaryActivity : AppCompatActivity() {
 
     }
 
+    //일기 정보 불러옴
     private fun requestDiaryinfo() {
         var gson: Gson = GsonBuilder()
                 .setLenient()
@@ -152,7 +157,7 @@ class DiaryActivity : AppCompatActivity() {
             override fun onResponse(call: Call<DiaryInfoPage>, response: Response<DiaryInfoPage>) {
                 val diaryInfo = response.body()
                 if (diaryInfo != null) {
-                    var diary_painting : String = "http://3.36.52.195/diary/"
+                    var diary_painting = "http://3.36.52.195/diary/"
 
 
                     //일기 그림
@@ -162,7 +167,8 @@ class DiaryActivity : AppCompatActivity() {
                             .into(binding.paintImage)
 
                     //날짜
-                    //diaryInfo_date.text = diaryInfo.diary_date
+                    diary_date.text =  diaryInfo.diary_date
+                    retrofit_date = diaryInfo.diary_date
 
                     //제목
                     binding.diaryTitle.setText(diaryInfo.diary_title)
@@ -191,6 +197,7 @@ class DiaryActivity : AppCompatActivity() {
         })
     }
 
+    //새글 작성시 셋팅
     private fun setting() {
         val arr = intent.getByteArrayExtra("image")
         bitmap = BitmapFactory.decodeByteArray(arr, 0, arr!!.size)
@@ -199,6 +206,7 @@ class DiaryActivity : AppCompatActivity() {
         spinnerSetting()
     }
 
+    //스피너 날씨 셋팅
     private fun spinnerSetting() {
         val user1 = User("0", "해")
         userArrayList.add(user1)
@@ -236,10 +244,10 @@ class DiaryActivity : AppCompatActivity() {
                     updateDiary()
                 }else{
                     if (bitmap != null) {
-                       // galleryAddPic()
-                        //savePhoto(bitmap!!)
+                        galleryAddPic()
+                        savePhoto(bitmap!!)
                         Log.e("date : ",retrofit_date) // ->ok
-                       // uploadDiary()
+                        uploadDiary()
                     }
                 }
                 return super.onOptionsItemSelected(item)
@@ -248,19 +256,32 @@ class DiaryActivity : AppCompatActivity() {
         }
     }
 
+    //다이어리 수정
     private fun updateDiary() {
-//        var diaryUpdate = retrofit.create(IRetrofit::class.java)
-//
-//        diaryUpdate.requestUpdateDiary(diary_idx!!,binding.diaryTitle.text.toString(), id_value!!,align,binding.diaryContent.text.toString(),secret).enqueue(object :Callback<DiaryInfoPage>{
-//            override fun onResponse(call: Call<DiaryInfoPage>, response: Response<DiaryInfoPage>) {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onFailure(call: Call<DiaryInfoPage>, t: Throwable) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
+        var diaryUpdate = retrofit.create(IRetrofit::class.java)
+
+        Toast.makeText(this,retrofit_date,Toast.LENGTH_SHORT).show()
+        diaryUpdate.requestUpdateDiary(diary_idx!!,binding.diaryTitle.text.toString(), id_value!!,align,binding.diaryContent.text.toString(),retrofit_date, secret).enqueue(object :Callback<DiaryInfoPage>{
+            override fun onResponse(call: Call<DiaryInfoPage>, response: Response<DiaryInfoPage>) {
+                var diary = response.body()
+                diary_idx = diary?.diary_idx
+
+                val intent = Intent(this@DiaryActivity, MainActivity::class.java)
+                intent.putExtra("diary_idx",diary_idx)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                val paintActivity: PaintActivity? = null
+                paintActivity?.finish()
+                startActivity(intent)
+                Toast.makeText(this@DiaryActivity,"글이 정상적으로 등록되었습니다.",Toast.LENGTH_SHORT).show()
+                finish()
+            }
+
+            override fun onFailure(call: Call<DiaryInfoPage>, t: Throwable) {
+                Toast.makeText(this@DiaryActivity, "다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+                Log.e("onFailure", t.localizedMessage)
+            }
+
+        })
 
     }
 
@@ -282,10 +303,11 @@ class DiaryActivity : AppCompatActivity() {
         val diary_range_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), align.toString())
         val diary_content_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), binding.diaryContent.text.toString())
         val diary_secret_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), secret.toString())
+        val diary_date_request : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), retrofit_date)
 
         val body : MultipartBody.Part = MultipartBody.Part.createFormData("diaryBitmap",file.name,requestBody)
 
-        diaryUpload.diaryUpload(user_idx_request, diaryTitle_request, id_value_request, diary_range_request, diary_content_request, diary_secret_request, body).enqueue(object : Callback<DiaryUpload> {
+        diaryUpload.diaryUpload(user_idx_request, diaryTitle_request, id_value_request, diary_range_request, diary_content_request, diary_secret_request, diary_date_request, body).enqueue(object : Callback<DiaryUpload> {
             override fun onResponse(call: Call<DiaryUpload>, response: Response<DiaryUpload>) {
                 var diary = response.body()
                 diary_idx = diary?.diary_idx
