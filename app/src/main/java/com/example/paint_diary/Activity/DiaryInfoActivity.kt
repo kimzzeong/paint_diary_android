@@ -80,7 +80,9 @@ class DiaryInfoActivity : AppCompatActivity() {
 
         //댓글
         diary_comment.setOnClickListener {
-            Toast.makeText(this,"댓글 클릭",Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, CommentsActivity::class.java)
+            //intent.putExtra("diary_writer",diary_writer)
+            startActivity(intent)
         }
 
         //프로필 사진 클릭 시 유저프로필 액티비티로 이동
@@ -139,22 +141,6 @@ class DiaryInfoActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun updateDiary() {
-//        var requestDiaryUpdate = retrofit.create(IRetrofit::class.java)
-//        requestDiaryUpdate.requestUpdateDiary(diary_idx!!,).enqueue(object : Callback<DiaryInfoPage>{
-//            override fun onResponse(call: Call<DiaryInfoPage>, response: Response<DiaryInfoPage>) {
-//                val diary = response.body()
-//                Toast.makeText(this@DiaryInfoActivity,diary?.message,Toast.LENGTH_SHORT).show()
-//                finish()
-//
-//            }
-//
-//            override fun onFailure(call: Call<DiaryInfoPage>, t: Throwable) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
-    }
 
     private fun requestDiaryRemove() {
         var requestDiaryRemove = retrofit.create(IRetrofit::class.java)

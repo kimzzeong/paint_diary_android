@@ -104,7 +104,7 @@ class UserProfileDiaryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
 
             fun bind(item: DiaryList) {
                 profile_diary_title.text = item.diary_title
-                profile_diary_date_day.text = getDateDay(item.diary_date,"yyyy-MM-dd HH:mm:ss")
+                profile_diary_date_day.text = getDateDay(item.diary_date,"yyyy-MM-dd")
                 var date = item.diary_date.substring(8,10)
                 profile_diary_date_day_num.text =date
                 var uriToString : String = item.diary_painting
