@@ -160,9 +160,9 @@ interface IRetrofit {
             @Field("comment_secret") comment_secret: Int
     ):Call<CommentsList>
 
-    //다이어리 불러오기
+    //댓글 불러오기
     @FormUrlEncoded
-    @POST("test.php")
+    @POST("requestComments.php")
     fun requestComments(
         @Field("diary_idx") diary_idx: Int
     ): Call<ArrayList<CommentsList>>
