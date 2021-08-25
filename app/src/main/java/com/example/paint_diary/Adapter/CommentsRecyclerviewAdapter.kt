@@ -1,17 +1,23 @@
 package com.example.paint_diary.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.paint_diary.Activity.DiaryActivity
 import com.example.paint_diary.CommentsList
 import com.example.paint_diary.R
+import kotlinx.android.synthetic.main.activity_diary_info.*
 
 class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapter.ViewHolder>(){
 
@@ -50,6 +56,27 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
         }else{
             holder.itemView.setBackgroundColor(Color.WHITE)
         }
+
+        holder.setComments.setOnClickListener {
+            val commentsPopup = PopupMenu(context!!, holder.setComments)
+            commentsPopup.menuInflater?.inflate(R.menu.diary_modify_menu, commentsPopup.menu)
+
+            commentsPopup.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.diary_modify -> {
+                        Toast.makeText(context,"수정",Toast.LENGTH_SHORT).show()
+                    }
+
+                    R.id.diary_remove -> {
+                        Toast.makeText(context,"삭제",Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+                false
+            }
+
+            commentsPopup.show()
+        }
     }
 
     override fun getItemCount(): Int {
@@ -61,6 +88,7 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
         var comments_nickname : TextView = itemView.findViewById(R.id.comments_nickname)
         var comment_datetime : TextView = itemView.findViewById(R.id.comment_datetime)
         var comment_content : TextView = itemView.findViewById(R.id.comment_content)
+        var setComments : ImageButton = itemView.findViewById(R.id.setComments)
 
 
 
