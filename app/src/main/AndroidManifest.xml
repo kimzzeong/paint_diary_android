@@ -22,7 +22,7 @@
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
         <activity android:name=".Activity.UserProfileActivity"></activity>
-        <activity android:name=".Activity.CommentsActivity" />
+        <activity android:name=".Activity.CommentsActivity"/>
         <activity android:name=".Activity.ChangePWActivity" />
         <activity android:name=".Activity.DiaryInfoActivity" />
         <activity android:name=".Activity.DiaryActivity" />

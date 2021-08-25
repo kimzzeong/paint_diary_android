@@ -120,9 +120,9 @@ interface IRetrofit {
     //좋아요 불러오기
     @GET("diary_like_request.php")
     fun requestLikeInfo(
-        @Query("diary_idx") diary_idx: Int,
-        @Query("user_idx") user_idx: Int
-        ) : Call<like_data> //output 정의Diary> //output 정의
+            @Query("diary_idx") diary_idx: Int,
+            @Query("user_idx") user_idx: Int
+    ) : Call<like_data>
 
     //프로필 페이지 일기리스트 불러오기
     @FormUrlEncoded
@@ -150,5 +150,21 @@ interface IRetrofit {
             @Field("diary_secret") diary_secret: Int
     ):Call<DiaryInfoPage>
 
+    //댓글 등록
+    @FormUrlEncoded
+    @POST("commentsUpload.php")
+    fun sendComments(
+            @Field("diary_idx") diary_idx: Int,
+            @Field("comment_content") comment_content: String,
+            @Field("comment_writer") comment_writer: Int,
+            @Field("comment_secret") comment_secret: Int
+    ):Call<CommentsList>
+
+    //다이어리 불러오기
+    @FormUrlEncoded
+    @POST("test.php")
+    fun requestComments(
+        @Field("diary_idx") diary_idx: Int
+    ): Call<ArrayList<CommentsList>>
 }
 

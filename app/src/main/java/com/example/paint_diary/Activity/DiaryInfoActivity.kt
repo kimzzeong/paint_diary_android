@@ -63,7 +63,6 @@ class DiaryInfoActivity : AppCompatActivity() {
         supportActionBar?.title = "제목"
 
         requestDiaryInfo() //일기 상세글 정보 불러오기
-        likeProcess()
 
         //로그인 한 유저가 글쓴이가 아닐 경우 수정/삭제 팝업 안보여주기
         if(user_idx != diary_writer){
@@ -81,7 +80,7 @@ class DiaryInfoActivity : AppCompatActivity() {
         //댓글
         diary_comment.setOnClickListener {
             val intent = Intent(this, CommentsActivity::class.java)
-            //intent.putExtra("diary_writer",diary_writer)
+            intent.putExtra("diary_idx",diary_idx)
             startActivity(intent)
         }
 
@@ -171,6 +170,8 @@ class DiaryInfoActivity : AppCompatActivity() {
                     diary_like = like.like_status
                     diary_like_count = like.like_count
                     diary_favorite_text.text = diary_like_count.toString()
+                    diary_comment_text.text = like.comments_count.toString()
+
                     diary_like_setting()
 
                 }
@@ -181,8 +182,6 @@ class DiaryInfoActivity : AppCompatActivity() {
             }
 
         })
-
-
     }
 
     //좋아요 클릭 시
@@ -285,5 +284,11 @@ class DiaryInfoActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        likeProcess()
     }
 }
