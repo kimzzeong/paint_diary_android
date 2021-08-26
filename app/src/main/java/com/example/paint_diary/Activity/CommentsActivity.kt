@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,7 +54,6 @@ class CommentsActivity : AppCompatActivity() {
 
        commentsRecyclerview = CommentsRecyclerviewAdapter()
        requestCommentList()
-       requestCommentCount()
        val layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
        comments_list.layoutManager = layoutManager
 
@@ -68,9 +68,16 @@ class CommentsActivity : AppCompatActivity() {
             }
         }
 
+       //댓글 등록
         comments_send.setOnClickListener {
             CommentSend()
         }
+
+       //댓글 목록 새로고침
+       comments_refresh.setOnRefreshListener{
+           requestCommentList()
+           comments_refresh.isRefreshing = false
+       }
 
     }
 
@@ -90,7 +97,7 @@ class CommentsActivity : AppCompatActivity() {
         })
     }
 
-    private fun requestCommentList() {
+    fun requestCommentList() {
         var comment = retrofit.create(IRetrofit::class.java)
         comment.requestComments(diary_idx).enqueue(object : Callback<ArrayList<CommentsList>> {
             override fun onResponse(call: Call<ArrayList<CommentsList>>, response: Response<ArrayList<CommentsList>>) {
@@ -98,7 +105,7 @@ class CommentsActivity : AppCompatActivity() {
                 comments_list.adapter = commentsRecyclerview
                 commentsRecyclerview.commentsList = commentsList
                 commentsRecyclerview.notifyDataSetChanged()
-
+                requestCommentCount()
             }
 
             override fun onFailure(call: Call<ArrayList<CommentsList>>, t: Throwable) {
@@ -131,11 +138,5 @@ class CommentsActivity : AppCompatActivity() {
 
         })
     }
-
-    override fun onStart() {
-        super.onStart()
-
-    }
-
 
 }

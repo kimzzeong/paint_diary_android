@@ -9,5 +9,6 @@ data class CommentsList (
     val comment_writer: Int,
     val comment_status: Int,
     val comment_count : Int,
+    val comment_idx : Int,
     val comment_datetime: String
 )

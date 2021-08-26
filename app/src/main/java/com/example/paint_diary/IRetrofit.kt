@@ -173,5 +173,11 @@ interface IRetrofit {
     fun requestCommentsCount(
             @Field("diary_idx") diary_idx: Int
     ): Call<CommentsList>
+
+    //댓글 삭제
+    @GET("removeComments.php")
+    fun requestRemoveComments(
+            @Query("comment_idx") comment_idx: Int
+    ):Call<CommentsList>
 }
 
