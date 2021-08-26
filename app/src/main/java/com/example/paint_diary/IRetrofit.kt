@@ -164,7 +164,14 @@ interface IRetrofit {
     @FormUrlEncoded
     @POST("requestComments.php")
     fun requestComments(
-        @Field("diary_idx") diary_idx: Int
+            @Field("diary_idx") diary_idx: Int
     ): Call<ArrayList<CommentsList>>
+
+    //댓글 불러오기
+    @FormUrlEncoded
+    @POST("requestCommentsCount.php")
+    fun requestCommentsCount(
+            @Field("diary_idx") diary_idx: Int
+    ): Call<CommentsList>
 }
 

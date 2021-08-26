@@ -53,6 +53,7 @@ class CommentsActivity : AppCompatActivity() {
 
        commentsRecyclerview = CommentsRecyclerviewAdapter()
        requestCommentList()
+       requestCommentCount()
        val layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
        comments_list.layoutManager = layoutManager
 
@@ -71,6 +72,22 @@ class CommentsActivity : AppCompatActivity() {
             CommentSend()
         }
 
+    }
+
+    private fun requestCommentCount() {
+        var comment = retrofit.create(IRetrofit::class.java)
+        comment.requestCommentsCount(diary_idx).enqueue(object : Callback<CommentsList> {
+            override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
+                var count = response.body()
+                comments_count.text = count?.comment_count.toString()
+
+            }
+
+            override fun onFailure(call: Call<CommentsList>, t: Throwable) {
+                Log.e("error",t.localizedMessage)
+            }
+
+        })
     }
 
     private fun requestCommentList() {

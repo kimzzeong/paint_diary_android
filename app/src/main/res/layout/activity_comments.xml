@@ -16,8 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/comments_title"
-            android:text="0"
+            android:id="@+id/comments_count"
             android:textSize="20dp"
             android:textColor="@color/black"
             app:layout_constraintLeft_toLeftOf="parent"
