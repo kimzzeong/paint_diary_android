@@ -34,7 +34,7 @@ class PaintActivity : AppCompatActivity(){
     var switch_brush_option : Boolean = false
 
     companion object {
-        var activity: Activity? = null
+        var paintactivity: Activity? = null
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class PaintActivity : AppCompatActivity(){
         setContentView(R.layout.activity_paint)
         setSupportActionBar(paint_toolbar)
         supportActionBar?.title = "그림그리기"
-        activity = this@PaintActivity
+        paintactivity = this@PaintActivity
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics)
         paintView = findViewById(R.id.paint_view)

@@ -10,14 +10,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.paint_diary.Activity.DiaryInfoActivity
 import com.example.paint_diary.Activity.ProfileModifyActivity
 import com.example.paint_diary.Activity.SettingActivity
+import com.example.paint_diary.Adapter.UserProfileDiaryListAdapter
+import com.example.paint_diary.Data.DiaryList
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.Data.Profile
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,6 +35,17 @@ class MypageFragment : Fragment() {
     var user_nickname :String? = null
     var user_introduction :String? = null
     var profile_photo : String? = null
+    lateinit var userProfileDiaryListAdapter: UserProfileDiaryListAdapter
+
+    var gson: Gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+    var retrofit = Retrofit.Builder()
+            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
     companion object {
         const val TAG : String = "로그"
         fun newInstance() : MypageFragment {
@@ -49,23 +66,18 @@ class MypageFragment : Fragment() {
         Log.d(TAG, "MypageFragment = onStart() called")
 
 
-        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
-        var user_idx : Int? =  Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
+
         mypage_introduction.setVisibility(View.GONE)
         //if( user_idx != "" ){ //shared에 user_idx가 존재하면=>"로그인 상태라면"
         //retrofit으로 프로필 불러오기
-        var gson: Gson = GsonBuilder()
-                .setLenient()
-                .create()
 
-        var retrofit = Retrofit.Builder()
-                .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
 
         var user_profile = retrofit.create(IRetrofit::class.java)
+
+        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
+        var user_idx : Int? =  Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
         if (user_idx != null) {
-            user_profile.requestProfile(user_idx).enqueue(object: Callback<Profile> {
+            user_profile.requestProfile(user_idx!!).enqueue(object: Callback<Profile> {
                 override fun onResponse(call: Call<Profile>, response: Response<Profile>) {
                     var profile = response.body()
                     user_introduction = profile?.user_introduction
@@ -125,6 +137,23 @@ class MypageFragment : Fragment() {
         mypage_toolbar.setTitleTextColor(Color.WHITE)
         mypage_toolbar.setTitle("마이페이지")
 
+
+        userProfileDiaryListAdapter = UserProfileDiaryListAdapter()
+        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+
+        mypage_diary_list.layoutManager = layoutManager
+
+        userProfileDiaryListAdapter.setItemClickListener(object : UserProfileDiaryListAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int, diary_idx: Int, diary_wirter: Int) {
+                val intent = Intent(activity, DiaryInfoActivity::class.java)
+                intent.putExtra("diary_idx",diary_idx)
+                intent.putExtra("diary_wirter",diary_wirter)
+                Log.e("click",diary_idx.toString())
+                startActivity(intent)
+            }
+
+        })
+
         mypage_profile_modify.setOnClickListener {
 
             val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
@@ -146,6 +175,36 @@ class MypageFragment : Fragment() {
             val intent = Intent(context, SettingActivity::class.java)
             startActivity(intent)
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.invalidateOptionsMenu()
+        requestDiary()
+    }
+
+    private fun requestDiary() {
+        var diary_request = retrofit.create(IRetrofit::class.java)
+
+        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
+        var user_idx : Int? =  Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
+        diary_request.requestMypageDiary(user_idx!!).enqueue(object : Callback<ArrayList<DiaryList>> {
+            override fun onResponse(call: Call<ArrayList<DiaryList>>, response: Response<ArrayList<DiaryList>>
+            ) {
+
+                var diary = response.body()!!
+                mypage_diary_list.adapter = userProfileDiaryListAdapter
+
+                userProfileDiaryListAdapter.diary_List = diary
+                userProfileDiaryListAdapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<ArrayList<DiaryList>>, t: Throwable) {
+                Log.e("실패", t.localizedMessage)
+            }
+
+        })
 
     }
 }

@@ -98,7 +98,7 @@ class UserProfileDiaryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
             val profile_diary_date_day: TextView = itemView.findViewById(R.id.profile_diary_date_day)
 
             //나중에 마이페이지에서 비밀글까지 보여줄 때 그대로 복붙하면 된다악!!!!!
-            //val profile_diary_secret : ImageView = itemView.findViewById(R.id.profile_diary_secret)
+            val profile_diary_secret : ImageView = itemView.findViewById(R.id.profile_diary_secret)
 
             fun bind(item: DiaryList) {
                 profile_diary_title.text = item.diary_title
@@ -110,11 +110,11 @@ class UserProfileDiaryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder
                 var uri_diary = "http://3.36.52.195/diary/"+uri
                  Glide.with(itemView).load(uri_diary).into(profile_diary_painting)
 
-//                if(item.diary_secret == 1){
-//                    profile_diary_secret.visibility = View.VISIBLE
-//                }else{
-//                    profile_diary_secret.visibility = View.INVISIBLE
-//                }
+                if(item.diary_secret == 1){
+                    profile_diary_secret.visibility = View.VISIBLE
+                }else{
+                    profile_diary_secret.visibility = View.INVISIBLE
+                }
             }
 
         }

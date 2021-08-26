@@ -132,6 +132,13 @@ interface IRetrofit {
             @Field("diary_wirter") diary_wirter: Int
     ): Call<ArrayList<DiaryList>>
 
+    //마이 페이지 일기리스트 불러오기
+    @FormUrlEncoded
+    @POST("requestMypageDiary.php")
+    fun requestMypageDiary(
+            @Field("diary_wirter") diary_wirter: Int
+    ): Call<ArrayList<DiaryList>>
+
     //다이어리 삭제
     @GET("removeDiary.php")
     fun requestRemoveDiary(
@@ -186,6 +193,13 @@ interface IRetrofit {
     fun requestModifyComments(
             @Query("comment_idx") comment_idx: Int,
             @Query("comment_content") comment_content: String
+    ):Call<CommentsList>
+
+    //댓글 공개/비공개 전환
+    @GET("commentsSecret.php")
+    fun commentsSecret(
+            @Query("comment_idx") comment_idx: Int,
+            @Query("comment_secret") comment_secret: Int
     ):Call<CommentsList>
 }
 

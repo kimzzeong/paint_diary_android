@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:background="@color/sub"
@@ -30,16 +31,17 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:textSize="18dp"/>
+
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/profile_diary_secret"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/ic_baseline_lock_24"
+        android:visibility="invisible"
         app:layout_constraintLeft_toRightOf="@+id/profile_diary_title"
         app:layout_constraintTop_toTopOf="@+id/profile_diary_title"
-        android:src="@drawable/ic_baseline_lock_24"
-        android:layout_marginLeft="5dp"
-        android:visibility="invisible"
-        />
+        app:layout_constraintBottom_toBottomOf="@+id/profile_diary_title"/>
 
     <View
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    <item-->
+<!--        android:id="@+id/comments_secret"-->
+<!--        android:title="비밀댓글로 전환"-->
+<!--        />-->
+    <item
+        android:id="@+id/comments_modify"
+        android:title="수정"
+        />
+    <item
+        android:id="@+id/comments_remove"
+        android:title="삭제"
+        />
+
+</menu>

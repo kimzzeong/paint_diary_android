@@ -21,6 +21,7 @@ import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.comments_dialog.view.*
+import kotlinx.android.synthetic.main.comments_modify_dialog.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -74,14 +75,16 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
             holder.setComments.visibility = View.INVISIBLE
         }
 
+
+        val commentsPopup = PopupMenu(mContext!!, holder.setComments)
+        commentsPopup.menuInflater?.inflate(R.menu.comments_modify_menu, commentsPopup.menu)
+
         holder.setComments.setOnClickListener {
-            val commentsPopup = PopupMenu(mContext!!, holder.setComments)
-            commentsPopup.menuInflater?.inflate(R.menu.diary_modify_menu, commentsPopup.menu)
 
             commentsPopup.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    R.id.diary_modify -> {
-                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+                    R.id.comments_modify -> {
+                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_modify_dialog,null)
                         val mBuilder = AlertDialog.Builder(mContext!!)
                                 .setView(mDialog)
 
@@ -99,7 +102,7 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
                         }
                     }
 
-                    R.id.diary_remove -> {
+                    R.id.comments_remove -> {
                         val dialog = AlertDialog.Builder(mContext!!)
                         dialog.setMessage("정말 삭제하시겠습니까?")
                         dialog.setCancelable(false);
@@ -114,6 +117,24 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
                         dialog.show()
                     }
 
+//                    R.id.comments_secret -> {
+//                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+//                        val mBuilder = AlertDialog.Builder(mContext!!)
+//                                .setView(mDialog)
+//
+//                        val mAlertDialog = mBuilder.show()
+//
+//                        mDialog.comments_dialog_cancel.setOnClickListener {
+//                            mAlertDialog.dismiss()
+//                        }
+////                        var secret = commentItem.comment_secret
+////                        if(secret == 1 ){
+////                            menuItem.title = "공개로 전환"
+////                            set_comments_secret(commentItem.comment_idx,)
+////                        }
+//
+//                    }
+
                 }
                 false
             }
@@ -122,9 +143,24 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
         }
     }
 
+    private fun set_comments_secret(comment_idx: Int, comment_secret:Int) {
+        var requestDiarySecret = retrofit.create(IRetrofit::class.java)
+        requestDiarySecret.commentsSecret(comment_idx!!,comment_secret).enqueue(object : Callback<CommentsList> {
+            override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
+                val comments = response.body()
+                Toast.makeText(mContext, comments?.message, Toast.LENGTH_SHORT).show()
+                (mContext as CommentsActivity).requestCommentList()
+            }
+
+            override fun onFailure(call: Call<CommentsList>, t: Throwable) {
+            }
+
+        })
+    }
+
     private fun requestCommentsModify(comment_idx: Int, comment_content:String) {
-        var requestDiaryModify = retrofit.create(IRetrofit::class.java)
-        requestDiaryModify.requestModifyComments(comment_idx!!,comment_content).enqueue(object : Callback<CommentsList> {
+        var requestCommentsModify = retrofit.create(IRetrofit::class.java)
+        requestCommentsModify.requestModifyComments(comment_idx!!,comment_content).enqueue(object : Callback<CommentsList> {
             override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
                 val comments = response.body()
                 Toast.makeText(mContext, comments?.message, Toast.LENGTH_SHORT).show()

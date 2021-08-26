@@ -1,5 +1,6 @@
 package com.example.paint_diary.Activity
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -34,6 +35,10 @@ class DiaryInfoActivity : AppCompatActivity() {
     private var diary_like_count : Int? = null
     private var user_idx : Int? = null
 
+    companion object {
+        var diaryInfoActivity: Activity? = null
+    }
+
 
     var gson: Gson = GsonBuilder()
             .setLenient()
@@ -54,9 +59,7 @@ class DiaryInfoActivity : AppCompatActivity() {
         val sharedPreferences = this.getSharedPreferences("user",0)
         var user_idx_str : String? = sharedPreferences?.getString("user_idx", "")
         user_idx = Integer.parseInt(user_idx_str)
-
-
-
+        diaryInfoActivity = this
 
         setSupportActionBar(diaryInfo_toolbar)
         supportActionBar?.title = "제목"

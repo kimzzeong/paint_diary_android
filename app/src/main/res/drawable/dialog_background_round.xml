@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+    <!-- 각 모서리 dip 만큼 코너형식 -->
+    <corners android:radius="30dip" />
+    <!-- 배경색 -->
+    <solid android:color="#fff" />
+</shape>
