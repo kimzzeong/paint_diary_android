@@ -9,7 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialog
 import com.example.paint_diary.IRetrofit
-import com.example.paint_diary.JoinMembership
+import com.example.paint_diary.Data.JoinMembership
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

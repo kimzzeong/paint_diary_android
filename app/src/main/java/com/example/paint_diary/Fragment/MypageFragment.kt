@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.paint_diary.Activity.ProfileModifyActivity
 import com.example.paint_diary.Activity.SettingActivity
 import com.example.paint_diary.IRetrofit
-import com.example.paint_diary.Profile
+import com.example.paint_diary.Data.Profile
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

@@ -1,4 +1,4 @@
-package com.example.paint_diary
+package com.example.paint_diary.Data
 
 data class DiaryList(
     val diary_writer : Int,

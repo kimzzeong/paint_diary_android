@@ -1,4 +1,6 @@
-package com.example.paint_diary;
+package com.example.paint_diary.Data;
+
+import com.example.paint_diary.R;
 
 import java.util.ArrayList;
 

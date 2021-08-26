@@ -15,11 +15,12 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.paint_diary.Activity.CommentsActivity
-import com.example.paint_diary.CommentsList
+import com.example.paint_diary.Data.CommentsList
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.comments_dialog.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -80,7 +81,22 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
             commentsPopup.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.diary_modify -> {
-                        Toast.makeText(mContext, "수정", Toast.LENGTH_SHORT).show()
+                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+                        val mBuilder = AlertDialog.Builder(mContext!!)
+                                .setView(mDialog)
+
+                        val mAlertDialog = mBuilder.show()
+                        mDialog.comment_set_edit.setText(commentItem.comment_content)
+
+                        //댓글 수정 다이얼로그 확인버튼 클릭시
+                        mDialog.comment_set_ok.setOnClickListener {
+                            requestCommentsModify(commentItem.comment_idx,mDialog.comment_set_edit.text.toString())
+                            mAlertDialog.dismiss()
+                        }
+                        //댓글 수정 다이얼로그 취소버튼 클릭시
+                        mDialog.comment_set_cancel.setOnClickListener {
+                            mAlertDialog.dismiss()
+                        }
                     }
 
                     R.id.diary_remove -> {
@@ -90,7 +106,6 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
                         dialog.setPositiveButton("네") { dialog, id ->
 
                             requestCommentsRemove(commentItem.comment_idx)
-                            //(mContext as CommentsActivity).requestCommentList()
 
                         }
                         dialog.setNegativeButton("아니오") { dialog, id ->
@@ -105,6 +120,21 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
 
             commentsPopup.show()
         }
+    }
+
+    private fun requestCommentsModify(comment_idx: Int, comment_content:String) {
+        var requestDiaryModify = retrofit.create(IRetrofit::class.java)
+        requestDiaryModify.requestModifyComments(comment_idx!!,comment_content).enqueue(object : Callback<CommentsList> {
+            override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
+                val comments = response.body()
+                Toast.makeText(mContext, comments?.message, Toast.LENGTH_SHORT).show()
+                (mContext as CommentsActivity).requestCommentList()
+            }
+
+            override fun onFailure(call: Call<CommentsList>, t: Throwable) {
+            }
+
+        })
     }
 
     private fun requestCommentsRemove(comment_idx: Int) {

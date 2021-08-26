@@ -3,7 +3,6 @@ package com.example.paint_diary.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
@@ -11,10 +10,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import com.bumptech.glide.Glide
-import com.example.paint_diary.DiaryInfoPage
+import com.example.paint_diary.Data.DiaryInfoPage
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
-import com.example.paint_diary.like_data
+import com.example.paint_diary.Data.like_data
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_diary_info.*
@@ -152,7 +151,6 @@ class DiaryInfoActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<DiaryInfoPage>, t: Throwable) {
-                TODO("Not yet implemented")
             }
 
         })
@@ -223,57 +221,61 @@ class DiaryInfoActivity : AppCompatActivity() {
                 val diaryInfo = response.body()
                 if (diaryInfo != null) {
 
-
-                    var user_profile: String = "http://3.36.52.195/profile/"
-                    var diary_painting : String = "http://3.36.52.195/diary/"
-
-                    //글쓴이 소개글
-                    diaryInfo_intro.text = diaryInfo.user_intro
-
-                    //글쓴이 닉네임
-                    diaryInfo_nickname.text = diaryInfo.diary_nickname
-
-                    //글쓴이 프로필, 프로필이 없으면 기본 사진
-                    if(diaryInfo?.user_profile != null){
-                        user_profile += diaryInfo.user_profile
-                        Glide.with(applicationContext)
-                            .load(user_profile)
-                            .circleCrop()
-                            .into(diaryInfo_profile)
+                    if(diaryInfo.diary_status == 1){
+                        Toast.makeText(this@DiaryInfoActivity,"삭제된 게시물입니다.",Toast.LENGTH_SHORT).show()
+                        onBackPressed()
                     }else{
-                        diaryInfo_profile.setImageResource(R.drawable.basic_profile)
-                    }
+                        var user_profile: String = "http://3.36.52.195/profile/"
+                        var diary_painting : String = "http://3.36.52.195/diary/"
 
-                    //일기 그림
-                    diary_painting += diaryInfo.diary_painting
-                    Glide.with(applicationContext)
-                        .load(diary_painting)
-                        .into(diaryInfo_painting)
+                        //글쓴이 소개글
+                        diaryInfo_intro.text = diaryInfo.user_intro
 
-                    //날짜
-                    diaryInfo_date.text = diaryInfo.diary_date
+                        //글쓴이 닉네임
+                        diaryInfo_nickname.text = diaryInfo.diary_nickname
 
-                    //제목
-                    diaryInfo_title.text = diaryInfo.diary_title
+                        //글쓴이 프로필, 프로필이 없으면 기본 사진
+                        if(diaryInfo?.user_profile != null){
+                            user_profile += diaryInfo.user_profile
+                            Glide.with(applicationContext)
+                                .load(user_profile)
+                                .circleCrop()
+                                .into(diaryInfo_profile)
+                        }else{
+                            diaryInfo_profile.setImageResource(R.drawable.basic_profile)
+                        }
 
-                    //날씨
-                    when (diaryInfo.diary_weather) {
-                        0 -> diaryInfo_weather.setImageResource(R.drawable.sun)
-                        1 -> diaryInfo_weather.setImageResource(R.drawable.cloudy)
-                        2 -> diaryInfo_weather.setImageResource(R.drawable.moon)
-                        3 -> diaryInfo_weather.setImageResource(R.drawable.rainy)
-                        4 -> diaryInfo_weather.setImageResource(R.drawable.snowflake)
-                    }
-                    diaryInfo_weather.setColorFilter(Color.rgb(230,220,211))
+                        //일기 그림
+                        diary_painting += diaryInfo.diary_painting
+                        Glide.with(applicationContext)
+                            .load(diary_painting)
+                            .into(diaryInfo_painting)
 
-                    //내용
-                    diaryInfo_content.text = diaryInfo.diary_content
+                        //날짜
+                        diaryInfo_date.text = diaryInfo.diary_date
 
-                    //내용 정렬
-                    when (diaryInfo.diary_range) {
-                        0 -> diaryInfo_content.gravity = Gravity.START
-                        1 -> diaryInfo_content.gravity = Gravity.CENTER_HORIZONTAL
-                        2 -> diaryInfo_content.gravity = Gravity.END
+                        //제목
+                        diaryInfo_title.text = diaryInfo.diary_title
+
+                        //날씨
+                        when (diaryInfo.diary_weather) {
+                            0 -> diaryInfo_weather.setImageResource(R.drawable.sun)
+                            1 -> diaryInfo_weather.setImageResource(R.drawable.cloudy)
+                            2 -> diaryInfo_weather.setImageResource(R.drawable.moon)
+                            3 -> diaryInfo_weather.setImageResource(R.drawable.rainy)
+                            4 -> diaryInfo_weather.setImageResource(R.drawable.snowflake)
+                        }
+                        diaryInfo_weather.setColorFilter(Color.rgb(230,220,211))
+
+                        //내용
+                        diaryInfo_content.text = diaryInfo.diary_content
+
+                        //내용 정렬
+                        when (diaryInfo.diary_range) {
+                            0 -> diaryInfo_content.gravity = Gravity.START
+                            1 -> diaryInfo_content.gravity = Gravity.CENTER_HORIZONTAL
+                            2 -> diaryInfo_content.gravity = Gravity.END
+                        }
                     }
                 }
             }
@@ -282,7 +284,6 @@ class DiaryInfoActivity : AppCompatActivity() {
                 onBackPressed()
                 Toast.makeText(this@DiaryInfoActivity,"다시 시도해주세요.",Toast.LENGTH_SHORT).show()
             }
-
         })
     }
 

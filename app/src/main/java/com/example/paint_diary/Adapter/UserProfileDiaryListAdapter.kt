@@ -9,10 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.paint_diary.DiaryList
-import com.example.paint_diary.DiaryRequest
+import com.example.paint_diary.Data.DiaryList
 import com.example.paint_diary.R
-import kotlinx.android.synthetic.main.activity_diary_info.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList

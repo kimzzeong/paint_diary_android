@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
-import com.example.paint_diary.Withdrawal
+import com.example.paint_diary.Data.Withdrawal
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_setting.*

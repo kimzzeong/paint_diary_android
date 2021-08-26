@@ -1,4 +1,4 @@
-package com.example.paint_diary
+package com.example.paint_diary.Data
 
 data class DiaryInfoPage (
     val diary_title: String,
@@ -10,6 +10,7 @@ data class DiaryInfoPage (
     val diary_weather: Int,
     val diary_range: Int,
     val diary_secret: Int,
+    val diary_status: Int,
     val diary_date: String,
     val user_idx: String,
     val user_profile: String,

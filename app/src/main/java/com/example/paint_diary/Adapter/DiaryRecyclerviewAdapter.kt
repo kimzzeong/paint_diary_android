@@ -1,8 +1,6 @@
 package com.example.paint_diary.Adapter
 
-import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.paint_diary.DiaryRequest
+import com.example.paint_diary.Data.DiaryRequest
 import com.example.paint_diary.R
 
 class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.ViewHolder>(){

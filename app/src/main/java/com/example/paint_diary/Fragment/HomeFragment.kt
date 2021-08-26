@@ -10,10 +10,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.paint_diary.Activity.DiaryInfoActivity
-import com.example.paint_diary.Activity.LoginActivity
 import com.example.paint_diary.Activity.PaintActivity
 import com.example.paint_diary.Adapter.DiaryRecyclerviewAdapter
-import com.example.paint_diary.DiaryRequest
+import com.example.paint_diary.Data.DiaryRequest
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
 import com.google.gson.Gson

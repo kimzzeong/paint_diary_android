@@ -1,5 +1,6 @@
 package com.example.paint_diary
 
+import com.example.paint_diary.Data.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -167,7 +168,7 @@ interface IRetrofit {
             @Field("diary_idx") diary_idx: Int
     ): Call<ArrayList<CommentsList>>
 
-    //댓글 불러오기
+    //댓글 갯수 불러오기
     @FormUrlEncoded
     @POST("requestCommentsCount.php")
     fun requestCommentsCount(
@@ -178,6 +179,13 @@ interface IRetrofit {
     @GET("removeComments.php")
     fun requestRemoveComments(
             @Query("comment_idx") comment_idx: Int
+    ):Call<CommentsList>
+
+    //댓글 수정
+    @GET("modifyComments.php")
+    fun requestModifyComments(
+            @Query("comment_idx") comment_idx: Int,
+            @Query("comment_content") comment_content: String
     ):Call<CommentsList>
 }
 

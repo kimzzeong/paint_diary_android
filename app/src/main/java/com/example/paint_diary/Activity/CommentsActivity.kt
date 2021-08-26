@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.paint_diary.Adapter.CommentsRecyclerviewAdapter
-import com.example.paint_diary.CommentsList
+import com.example.paint_diary.Data.CommentsList
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
 import com.google.gson.Gson

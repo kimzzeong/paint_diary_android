@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.paint_diary.R;
-import com.example.paint_diary.User;
+import com.example.paint_diary.Data.User;
 
 import java.util.List;
 
