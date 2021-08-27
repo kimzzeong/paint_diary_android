@@ -45,7 +45,7 @@ class UserProfileActivity : AppCompatActivity() {
             override fun onClick(view: View, position: Int, diary_idx: Int, diary_wirter: Int) {
                 val intent = Intent(this@UserProfileActivity, DiaryInfoActivity::class.java)
                 intent.putExtra("diary_idx",diary_idx)
-                intent.putExtra("diary_wirter",diary_wirter)
+                intent.putExtra("diary_writer",diary_wirter)
                 Log.e("click",diary_idx.toString())
                 startActivity(intent)
             }

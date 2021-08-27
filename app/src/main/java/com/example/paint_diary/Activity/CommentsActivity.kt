@@ -1,5 +1,6 @@
 package com.example.paint_diary.Activity
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -48,7 +49,6 @@ class CommentsActivity : AppCompatActivity() {
 
         comments_toolbar.setTitleTextColor(Color.BLACK)
         comments_toolbar.setTitle("댓글")
-
        val intent = intent
        diary_idx = intent.getIntExtra("diary_idx", 0)
 
@@ -114,6 +114,12 @@ class CommentsActivity : AppCompatActivity() {
         })
     }
 
+    private fun hideKeyBoard() {
+        val manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            manager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+
+    }
+
     private fun CommentSend() {
         var commentSend = retrofit.create(IRetrofit::class.java)
         var intent = intent
@@ -127,8 +133,7 @@ class CommentsActivity : AppCompatActivity() {
                 Toast.makeText(this@CommentsActivity, comment?.message, Toast.LENGTH_SHORT).show()
                 comments_edit.setText(null)
                 requestCommentList()
-                val manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                manager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                hideKeyBoard()
             }
 
             override fun onFailure(call: Call<CommentsList>, t: Throwable) {
