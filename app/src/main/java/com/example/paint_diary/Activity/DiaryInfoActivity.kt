@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
@@ -30,7 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class DiaryInfoActivity : AppCompatActivity() {
     private var diary_idx: Int? = null
-    private var diary_writer : Int? = null //user_nickname
+    private var diary_writer : Int? = null
     private var diary_like : Int? = null
     private var diary_like_count : Int? = null
     private var user_idx : Int? = null
@@ -55,7 +56,7 @@ class DiaryInfoActivity : AppCompatActivity() {
 
         val intent = intent
         diary_idx = intent.getIntExtra("diary_idx",0)
-        diary_writer = intent.getIntExtra("diary_wirter",0)
+        diary_writer = intent.getIntExtra("diary_writer",0)
         val sharedPreferences = this.getSharedPreferences("user",0)
         var user_idx_str : String? = sharedPreferences?.getString("user_idx", "")
         user_idx = Integer.parseInt(user_idx_str)
@@ -63,13 +64,11 @@ class DiaryInfoActivity : AppCompatActivity() {
 
         setSupportActionBar(diaryInfo_toolbar)
         supportActionBar?.title = "제목"
+        Log.e("user_idx",user_idx.toString())
+        Log.e("diary_writer",diary_writer.toString())
 
         requestDiaryInfo() //일기 상세글 정보 불러오기
 
-        //로그인 한 유저가 글쓴이가 아닐 경우 수정/삭제 팝업 안보여주기
-        if(user_idx != diary_writer){
-            diaryInfo_more_menu.visibility = View.INVISIBLE
-        }
 
 
         //좋아요
@@ -279,6 +278,14 @@ class DiaryInfoActivity : AppCompatActivity() {
                             1 -> diaryInfo_content.gravity = Gravity.CENTER_HORIZONTAL
                             2 -> diaryInfo_content.gravity = Gravity.END
                         }
+
+
+                        //로그인 한 유저가 글쓴이가 아닐 경우 수정/삭제 팝업 안보여주기
+                        if(user_idx != diary_writer){
+                            diaryInfo_more_menu.visibility = View.INVISIBLE
+                        }else{
+                            diaryInfo_more_menu.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
@@ -292,7 +299,10 @@ class DiaryInfoActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
+        val intent = intent
+        diary_idx = intent.getIntExtra("diary_idx",0)
+        diary_writer = intent.getIntExtra("diary_writer",0)
+        requestDiaryInfo()
         likeProcess()
     }
 }

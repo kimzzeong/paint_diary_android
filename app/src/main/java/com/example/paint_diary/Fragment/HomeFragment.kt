@@ -83,10 +83,10 @@ class HomeFragment : Fragment() {
         diary_list.layoutManager = layoutManager
 
         diaryRecyclerview.setItemClickListener(object : DiaryRecyclerviewAdapter.ItemClickListener {
-            override fun onClick(view: View, position: Int, diary_idx :Int, diary_wirter : Int) {
+            override fun onClick(view: View, position: Int, diary_idx :Int, diary_writer : Int) {
                 val intent = Intent(context, DiaryInfoActivity::class.java)
                 intent.putExtra("diary_idx",diary_idx)
-                intent.putExtra("diary_wirter",diary_wirter)
+                intent.putExtra("diary_writer",diary_writer)
                 Log.e("click",diary_idx.toString())
                 startActivity(intent)
             }

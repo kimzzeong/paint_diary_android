@@ -176,12 +176,15 @@ class PaintActivity : AppCompatActivity(){
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
             R.id.paint_save -> {
+                val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
+                var user_idx : Int? = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
                 val stream = ByteArrayOutputStream()
                 paintView!!.mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 val byteArray = stream.toByteArray()
                 val in1 = Intent(applicationContext, DiaryActivity::class.java)
-                in1.putExtra("update", "")
                 in1.putExtra("image", byteArray)
+                in1.putExtra("update", "")
+                in1.putExtra("diary_writer", user_idx)
                 startActivity(in1)
                 return true
             }

@@ -19,7 +19,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.paint_diary.*
-import com.example.paint_diary.Activity.DiaryInfoActivity.Companion.diaryInfoActivity
 import com.example.paint_diary.Activity.PaintActivity.Companion.paintactivity
 import com.example.paint_diary.Adapter.SpinnerAdapter
 import com.example.paint_diary.Data.DiaryInfoPage
@@ -83,10 +82,10 @@ class DiaryActivity : AppCompatActivity() {
 
         val intent = intent
         update = intent.getStringExtra("update")!!
+        diary_idx = intent.getIntExtra("diary_idx", 0)
+        diary_writer = intent.getIntExtra("diary_writer", 0)
         Log.e("update", update)
         if(update.equals("update")){
-            diary_idx = intent.getIntExtra("diary_idx", 0)
-            diary_writer = intent.getIntExtra("diary_writer", 0)
 
             requestDiaryinfo()
         }else{
@@ -97,11 +96,15 @@ class DiaryActivity : AppCompatActivity() {
 
         diary_date.setOnClickListener(View.OnClickListener {
             val getDate = Calendar.getInstance()
+            var date_split = retrofit_date.split("-")
             datePicker = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+
+
                 val selectDate: Calendar = Calendar.getInstance()
                 selectDate.set(Calendar.YEAR, year)
                 selectDate.set(Calendar.MONTH, month)
                 selectDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
                 val date = formatDate.format(selectDate.time)
                 retrofit_date = formatDateSave.format(selectDate.time)
                 diary_date.text = date
@@ -110,6 +113,10 @@ class DiaryActivity : AppCompatActivity() {
                     .apply {
                         datePicker.maxDate = System.currentTimeMillis()
                     }
+
+            if(update.equals("update")){
+                datePicker?.updateDate(Integer.parseInt(date_split[0]),Integer.parseInt(date_split[1])- 1,Integer.parseInt(date_split[2]))
+            }
             datePicker!!.show()
 
         })
@@ -278,8 +285,9 @@ class DiaryActivity : AppCompatActivity() {
 
                 val intent = Intent(this@DiaryActivity, DiaryInfoActivity::class.java)
                 intent.putExtra("diary_idx", diary_idx)
+                intent.putExtra("diary_writer", diary_writer)
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-               // diaryInfoActivity?.finish()
+                // diaryInfoActivity?.finish()
                 startActivity(intent)
                 Toast.makeText(this@DiaryActivity, "글이 정상적으로 등록되었습니다.", Toast.LENGTH_SHORT).show()
                 finish()
@@ -323,7 +331,8 @@ class DiaryActivity : AppCompatActivity() {
 
                 val intent = Intent(this@DiaryActivity, DiaryInfoActivity::class.java)
                 intent.putExtra("diary_idx", diary_idx)
-                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.putExtra("diary_writer", diary_writer)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
                 paintactivity?.finish()
                 startActivity(intent)
