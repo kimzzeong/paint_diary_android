@@ -47,11 +47,15 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
         var diaryImage : ImageView = itemView.findViewById(R.id.diary_image)
         var diaryWriter : TextView = itemView.findViewById(R.id.diary_writer)
         var diaryTitle : TextView = itemView.findViewById(R.id.diary_title)
+        var favorite_text : TextView = itemView.findViewById(R.id.favorite_text)
+        var comments_text : TextView = itemView.findViewById(R.id.comments_text)
 
 
         fun bind(item: DiaryRequest) {
             diaryTitle.text = item.diary_title
             diaryWriter.text = item.user_nickname
+            favorite_text.text = item.diary_like_count.toString()
+            comments_text.text= item.diary_comment_count.toString()
             var uriToString : String = item.diary_painting
             var uri : Uri = Uri.parse(uriToString)
             var uri_diary = "http://3.36.52.195/diary/"+uri

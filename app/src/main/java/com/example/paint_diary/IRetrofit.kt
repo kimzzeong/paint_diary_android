@@ -85,10 +85,10 @@ interface IRetrofit {
     ): Call<DiaryUpload>
 
     //다이어리 불러오기
-   // @FormUrlEncoded
+    //@FormUrlEncoded
     @POST("diary_request.php")
     fun requestDiary(
-//        @Field("user_idx") user_idx: String
+     //   @Field("listing_num") listing_num: Int
     ): Call<ArrayList<DiaryRequest>>
 
     //비밀번호 변경

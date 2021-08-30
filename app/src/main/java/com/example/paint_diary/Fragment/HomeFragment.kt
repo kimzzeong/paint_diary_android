@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -13,20 +15,34 @@ import com.example.paint_diary.Activity.DiaryInfoActivity
 import com.example.paint_diary.Activity.PaintActivity
 import com.example.paint_diary.Adapter.DiaryRecyclerviewAdapter
 import com.example.paint_diary.Data.DiaryRequest
+import com.example.paint_diary.Data.like_data
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_diary_info.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment() {
     lateinit var diaryRecyclerview: DiaryRecyclerviewAdapter
+    var listing_num : Int = 0
+
+    var gson: Gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+    var retrofit = Retrofit.Builder()
+            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
 
     companion object {
         const val TAG : String = "로그"
@@ -67,6 +83,28 @@ class HomeFragment : Fragment() {
         home_toolbar.setTitleTextColor(Color.WHITE)
         home_toolbar.setTitle("홈")
 
+        listing_spinner.adapter = activity?.let {
+            ArrayAdapter.createFromResource(
+                    it,
+                R.array.listSpinner,
+                android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            listing_spinner.adapter = adapter
+        }
+        }
+
+        listing_spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                listing_num = position
+                requestDiary()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {} // 스피너 쓰기위한 어뎁터 메소드 선언부
+        })
+
 
 
         write_btn.setOnClickListener{
@@ -104,14 +142,6 @@ class HomeFragment : Fragment() {
 //        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
 //        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
 
-        var gson: Gson = GsonBuilder()
-            .setLenient()
-            .create()
-
-        var retrofit = Retrofit.Builder()
-            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
 
         var diary_request = retrofit.create(IRetrofit::class.java)
 
@@ -120,8 +150,15 @@ class HomeFragment : Fragment() {
             ) {
 
                 var diary = response.body()!!
-                diary_list.adapter = diaryRecyclerview
 
+                diary_list.adapter = diaryRecyclerview
+                if(listing_num == 1){
+                    diary.sortByDescending { it.diary_date }
+                }else if(listing_num == 2){
+                    diary.sortByDescending { it.diary_like_count }
+                }else if(listing_num == 3){
+                    diary.sortByDescending { it.diary_comment_count }
+                }
                 diaryRecyclerview.diaryList = diary
                 diaryRecyclerview.notifyDataSetChanged()
             }
@@ -157,6 +194,31 @@ class HomeFragment : Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+//    private fun likeProcess() {
+//
+//        var request_like = retrofit.create(IRetrofit::class.java)
+//
+//        request_like.requestLikeInfo(diary_idx!!,user_idx!!).enqueue(object : Callback<like_data>{
+//            override fun onResponse(call: Call<like_data>, response: Response<like_data>) {
+//                val like = response.body()
+//                if(like != null){
+//                    diary_like = like.like_status
+//                    diary_like_count = like.like_count
+//                    diary_favorite_text.text = diary_like_count.toString()
+//                    diary_comment_text.text = like.comments_count.toString()
+//
+//                    diary_like_setting()
+//
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<like_data>, t: Throwable) {
+//                Toast.makeText(activity,"좋아요 불러오기 실패",Toast.LENGTH_SHORT).show()
+//            }
+//
+//        })
+//    }
 
 
 }
