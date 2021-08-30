@@ -32,6 +32,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
+                android:id="@+id/content_layout"
                 >
                 <ImageView
                     android:layout_width="17dp"
@@ -93,6 +94,16 @@
                 app:layout_constraintTop_toBottomOf="@id/diary_title"
                 android:textSize="15dp"
                 android:text="글쓴이"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/diary_date"
+                card_view:layout_constraintRight_toRightOf="@+id/content_layout"
+                card_view:layout_constraintBottom_toBottomOf="@+id/diary_writer"
+                android:textSize="10dp"
+                android:text="1시간전"
+                android:layout_marginLeft="20dp"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

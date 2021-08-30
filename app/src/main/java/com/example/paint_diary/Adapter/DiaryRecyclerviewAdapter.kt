@@ -1,5 +1,6 @@
 package com.example.paint_diary.Adapter
 
+import android.R.string
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +11,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.paint_diary.Data.DiaryRequest
 import com.example.paint_diary.R
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+
 
 class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.ViewHolder>(){
 
     var diaryList: ArrayList<DiaryRequest>? = null
 
     interface ItemClickListener {
-        fun onClick(view: View, position: Int, diary_idx :Int, diary_wirter : Int)
+        fun onClick(view: View, position: Int, diary_idx: Int, diary_wirter: Int)
     }
 
 
@@ -35,7 +41,7 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(diaryList!!.get(position))
         holder.itemView.setOnClickListener {
-            itemClickListner.onClick(it, position,diaryList!!.get(position).diary_idx,diaryList!!.get(position).diary_writer)
+            itemClickListner.onClick(it, position, diaryList!!.get(position).diary_idx, diaryList!!.get(position).diary_writer)
         }
     }
 
@@ -49,6 +55,7 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
         var diaryTitle : TextView = itemView.findViewById(R.id.diary_title)
         var favorite_text : TextView = itemView.findViewById(R.id.favorite_text)
         var comments_text : TextView = itemView.findViewById(R.id.comments_text)
+        var diary_date : TextView = itemView.findViewById(R.id.diary_date)
 
 
         fun bind(item: DiaryRequest) {
@@ -56,6 +63,8 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
             diaryWriter.text = item.user_nickname
             favorite_text.text = item.diary_like_count.toString()
             comments_text.text= item.diary_comment_count.toString()
+            diary_date.text = item.diary_date
+
             var uriToString : String = item.diary_painting
             var uri : Uri = Uri.parse(uriToString)
             var uri_diary = "http://3.36.52.195/diary/"+uri
