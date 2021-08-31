@@ -1,6 +1,5 @@
 package com.example.paint_diary.Activity
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -52,7 +51,7 @@ class CommentsActivity : AppCompatActivity() {
        val intent = intent
        diary_idx = intent.getIntExtra("diary_idx", 0)
 
-       commentsRecyclerview = CommentsRecyclerviewAdapter()
+       commentsRecyclerview = CommentsRecyclerviewAdapter(this)
        requestCommentList()
        val layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
        comments_list.layoutManager = layoutManager

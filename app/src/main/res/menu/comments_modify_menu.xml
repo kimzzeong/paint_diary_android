@@ -12,5 +12,9 @@
         android:id="@+id/comments_remove"
         android:title="삭제"
         />
+    <item
+        android:id="@+id/comments_recomment"
+        android:title="대댓글"
+        />
 
 </menu>

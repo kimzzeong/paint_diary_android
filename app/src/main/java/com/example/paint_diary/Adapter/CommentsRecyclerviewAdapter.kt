@@ -1,20 +1,18 @@
 package com.example.paint_diary.Adapter
 
 import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.paint_diary.Activity.CommentsActivity
@@ -23,6 +21,7 @@ import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.comments_modify_dialog.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,10 +30,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapter.ViewHolder>(){
+class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerView.Adapter<CommentsRecyclerviewAdapter.ViewHolder>(){
 
     var commentsList: ArrayList<CommentsList>? = null
+    var commentsActivity = commentsActivity
+
+    lateinit var recommentsRecyclerview: ReCommentsRecyclerviewAdapter
     var mContext : Context? = null
+    var activity : CommentsActivity? = null
     var gson: Gson = GsonBuilder()
             .setLenient()
             .create()
@@ -44,15 +47,6 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-//    interface ItemClickListener {
-//        fun onClick(view: View, position: Int)
-//    }
-
-
-//    private lateinit var itemClickListner: ItemClickListener
-//    fun setItemClickListener(itemClickListener: ItemClickListener) {
-//        this.itemClickListner = itemClickListener
-//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         mContext = parent.context
@@ -63,10 +57,6 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val commentItem: CommentsList = commentsList!!.get(position)
         holder.bind(commentsList!!.get(position))
-//        holder.itemView.setOnClickListener {
-//            itemClickListner.onClick(it, position)
-//        }
-
         val sharedPreferences = mContext?.getSharedPreferences("user", Context.MODE_PRIVATE)
         var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
         if(commentItem.comment_writer == user_idx){
@@ -119,6 +109,12 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
 
                         }
                         dialog.show()
+                    }
+
+                    R.id.comments_recomment -> {
+
+                        commentsActivity.comments_edit.hint = "@"+commentItem.comment_nickname+"님에게 답장..."
+
                     }
 
 //                    R.id.comments_secret -> {
@@ -202,10 +198,16 @@ class CommentsRecyclerviewAdapter:RecyclerView.Adapter<CommentsRecyclerviewAdapt
         var comment_datetime : TextView = itemView.findViewById(R.id.comment_datetime)
         var comment_content : TextView = itemView.findViewById(R.id.comment_content)
         var setComments : ImageButton = itemView.findViewById(R.id.setComments)
-
+        var recomments_item : RecyclerView = itemView.findViewById(R.id.recomments_item)
 
 
         fun bind(item: CommentsList) {
+            recommentsRecyclerview = ReCommentsRecyclerviewAdapter()
+            recomments_item.adapter = recommentsRecyclerview
+            recommentsRecyclerview.reCommentsList = commentsList
+            recommentsRecyclerview.notifyDataSetChanged()
+            val layoutManager = LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
+            recomments_item.layoutManager = layoutManager
 
             comments_nickname.text = item.comment_nickname
             comment_datetime.text = item.comment_datetime

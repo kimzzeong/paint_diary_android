@@ -1,6 +1,5 @@
 package com.example.paint_diary.Adapter
 
-import android.R.string
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.paint_diary.Data.DiaryRequest
 import com.example.paint_diary.R
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -64,6 +60,7 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
             favorite_text.text = item.diary_like_count.toString()
             comments_text.text= item.diary_comment_count.toString()
             diary_date.text = item.diary_date
+
 
             var uriToString : String = item.diary_painting
             var uri : Uri = Uri.parse(uriToString)
