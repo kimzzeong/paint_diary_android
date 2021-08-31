@@ -86,8 +86,7 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    //picasso
-    implementation 'com.squareup.picasso:picasso:2.71828'
-
+    //passcodeView
+    implementation 'com.hanks:passcodeview:0.1.2'
 
 }
