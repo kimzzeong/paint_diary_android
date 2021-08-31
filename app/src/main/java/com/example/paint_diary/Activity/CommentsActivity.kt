@@ -87,7 +87,7 @@ class CommentsActivity : AppCompatActivity() {
             if(commentsSendStatus == 0){
                 CommentSend()
             }else{
-               // ReCommentSend()
+                ReCommentSend()
             }
         }
 
@@ -101,17 +101,17 @@ class CommentsActivity : AppCompatActivity() {
 
     private fun ReCommentSend() {
         var recommentSend = retrofit.create(IRetrofit::class.java)
-        var intent = intent
         val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
         var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
 
-        recommentSend.sendComments(comment_idx, comments_edit.text.toString(), user_idx, reCommentsecret).enqueue(object : Callback<CommentsList> {
+        recommentSend.sendReComments(comment_idx, comments_edit.text.toString(), user_idx, reCommentsecret).enqueue(object : Callback<CommentsList> {
             override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
                 val comment = response.body()
                 Toast.makeText(this@CommentsActivity, comment?.message, Toast.LENGTH_SHORT).show()
                 comments_edit.setText(null)
-                requestCommentList()
-                hideKeyBoard()
+                comments_edit.hint = "댓글을 입력해주세요"
+               // requestCommentList()
+                //hideKeyBoard()
             }
 
             override fun onFailure(call: Call<CommentsList>, t: Throwable) {

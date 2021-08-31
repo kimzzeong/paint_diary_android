@@ -173,9 +173,9 @@ interface IRetrofit {
     @POST("test.php")
     fun sendReComments(
             @Field("comment_idx") comment_idx: Int,
-            @Field("comment_content") comment_content: String,
-            @Field("comment_writer") comment_writer: Int,
-            @Field("comment_secret") comment_secret: Int
+            @Field("recomment_content") recomment_content: String,
+            @Field("recomment_writer") recomment_writer: Int,
+            @Field("recomment_secret") recomment_secret: Int
     ):Call<CommentsList>
 
     //댓글 불러오기
