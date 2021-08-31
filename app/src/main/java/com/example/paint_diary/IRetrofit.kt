@@ -170,7 +170,7 @@ interface IRetrofit {
 
     //대댓글 등록
     @FormUrlEncoded
-    @POST("test.php")
+    @POST("recommentsUpload.php")
     fun sendReComments(
             @Field("comment_idx") comment_idx: Int,
             @Field("recomment_content") recomment_content: String,
@@ -183,6 +183,13 @@ interface IRetrofit {
     @POST("requestComments.php")
     fun requestComments(
             @Field("diary_idx") diary_idx: Int
+    ): Call<ArrayList<CommentsList>>
+
+    //대댓글 불러오기
+    @FormUrlEncoded
+    @POST("requestReComments.php")
+    fun requestReComments(
+            @Field("comment_idx") comment_idx: Int
     ): Call<ArrayList<CommentsList>>
 
     //댓글 갯수 불러오기

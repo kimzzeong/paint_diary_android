@@ -70,7 +70,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recomments_item"
+        android:id="@+id/recomments_list"
         app:layout_constraintTop_toBottomOf="@+id/comment_content"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

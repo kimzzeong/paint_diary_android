@@ -3,6 +3,7 @@ package com.example.paint_diary.Adapter
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.paint_diary.Activity.CommentsActivity
@@ -201,16 +203,21 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         var comment_datetime : TextView = itemView.findViewById(R.id.comment_datetime)
         var comment_content : TextView = itemView.findViewById(R.id.comment_content)
         var setComments : ImageButton = itemView.findViewById(R.id.setComments)
-        //var recomments_item : RecyclerView = itemView.findViewById(R.id.recomments_item)
+        var recomments_list : RecyclerView = itemView.findViewById(R.id.recomments_list)
 
 
         fun bind(item: CommentsList) {
-            //recommentsRecyclerview = ReCommentsRecyclerviewAdapter()
-            //recomments_item.adapter = recommentsRecyclerview
-            //recommentsRecyclerview.reCommentsList = commentsList
-            //recommentsRecyclerview.notifyDataSetChanged()
-            //val layoutManager = LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
-            //recomments_item.layoutManager = layoutManager
+
+//            recommentsRecyclerview = ReCommentsRecyclerviewAdapter()
+//            Log.e("1","1")
+//            recomments_list.adapter = recommentsRecyclerview
+//            Log.e("2","2")
+//            requestCommentList(item.comment_idx)
+//            Log.e("3","3")
+//            val layoutManager = LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
+//            Log.e("4","4")
+//            recomments_list.layoutManager = layoutManager
+//            Log.e("5","5")
 
             comments_nickname.text = item.comment_nickname
             comment_datetime.text = item.comment_datetime
@@ -228,4 +235,22 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         }
     }
 
+//    fun requestCommentList(comment_idx: Int) {
+//        //Toast.makeText(mContext,""+comment_idx,Toast.LENGTH_SHORT).show()
+//        Log.e("comment_idx",comment_idx.toString())
+//        var comment = retrofit.create(IRetrofit::class.java)
+//        comment.requestReComments(comment_idx).enqueue(object : Callback<ArrayList<CommentsList>> {
+//            override fun onResponse(call: Call<ArrayList<CommentsList>>, response: Response<ArrayList<CommentsList>>) {
+//                var recomments = response.body()!!
+//                Log.e("onResponse",""+recomments!!.size)
+//                recommentsRecyclerview.reCommentsList = recomments
+//                recommentsRecyclerview.notifyDataSetChanged()
+//            }
+//
+//            override fun onFailure(call: Call<ArrayList<CommentsList>>, t: Throwable) {
+//                Log.e("onFailure",""+t.localizedMessage)
+//            }
+//
+//        })
+//    }
 }
