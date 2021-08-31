@@ -168,6 +168,16 @@ interface IRetrofit {
             @Field("comment_secret") comment_secret: Int
     ):Call<CommentsList>
 
+    //대댓글 등록
+    @FormUrlEncoded
+    @POST("test.php")
+    fun sendReComments(
+            @Field("comment_idx") comment_idx: Int,
+            @Field("comment_content") comment_content: String,
+            @Field("comment_writer") comment_writer: Int,
+            @Field("comment_secret") comment_secret: Int
+    ):Call<CommentsList>
+
     //댓글 불러오기
     @FormUrlEncoded
     @POST("requestComments.php")

@@ -114,6 +114,8 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
                     R.id.comments_recomment -> {
 
                         commentsActivity.comments_edit.hint = "@"+commentItem.comment_nickname+"님에게 답장..."
+                        commentsActivity.commentsSendStatus = 1
+                        commentsActivity.comment_idx = commentItem.comment_idx
 
                     }
 

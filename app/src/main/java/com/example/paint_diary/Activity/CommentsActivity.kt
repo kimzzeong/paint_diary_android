@@ -37,10 +37,13 @@ class CommentsActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-    var secret : Int = 0 //댓글 공개 여부
+    var commentSecret : Int = 0 //댓글 공개 여부
+    var reCommentsecret : Int = 0 //대댓글 공개 여부
     var diary_idx : Int = 0
     lateinit var commentsRecyclerview: CommentsRecyclerviewAdapter
     var commentsList : ArrayList<CommentsList>? = null
+    var commentsSendStatus = 0
+    var comment_idx = 0
 
    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,20 +59,36 @@ class CommentsActivity : AppCompatActivity() {
        val layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
        comments_list.layoutManager = layoutManager
 
-        //댓글 비밀글
+        //댓글,대댓글 비밀글
         comments_secret.setOnClickListener {
-            if(secret == 0){
-                comments_secret.setImageResource(R.drawable.ic_baseline_lock_24)
-                secret = 1
+            if(commentsSendStatus == 0){
+                if(commentSecret == 0){
+                    comments_secret.setImageResource(R.drawable.ic_baseline_lock_24)
+                    commentSecret = 1
+                }else{
+                    comments_secret.setImageResource(R.drawable.ic_baseline_lock_open_24)
+                    commentSecret = 0
+                }
             }else{
-                comments_secret.setImageResource(R.drawable.ic_baseline_lock_open_24)
-                secret = 0
+                if(reCommentsecret == 0){
+                    comments_secret.setImageResource(R.drawable.ic_baseline_lock_24)
+                    reCommentsecret = 1
+                }else{
+                    comments_secret.setImageResource(R.drawable.ic_baseline_lock_open_24)
+                    reCommentsecret = 0
+                }
             }
+
+           // Toast.makeText(this,"댓글"+commentsSendStatus,Toast.LENGTH_SHORT).show()
         }
 
        //댓글 등록
         comments_send.setOnClickListener {
-            CommentSend()
+            if(commentsSendStatus == 0){
+                CommentSend()
+            }else{
+               // ReCommentSend()
+            }
         }
 
        //댓글 목록 새로고침
@@ -78,6 +97,29 @@ class CommentsActivity : AppCompatActivity() {
            comments_refresh.isRefreshing = false
        }
 
+    }
+
+    private fun ReCommentSend() {
+        var recommentSend = retrofit.create(IRetrofit::class.java)
+        var intent = intent
+        val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
+        var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
+
+        recommentSend.sendComments(comment_idx, comments_edit.text.toString(), user_idx, reCommentsecret).enqueue(object : Callback<CommentsList> {
+            override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
+                val comment = response.body()
+                Toast.makeText(this@CommentsActivity, comment?.message, Toast.LENGTH_SHORT).show()
+                comments_edit.setText(null)
+                requestCommentList()
+                hideKeyBoard()
+            }
+
+            override fun onFailure(call: Call<CommentsList>, t: Throwable) {
+                Toast.makeText(this@CommentsActivity, "다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                Log.e("error", t.localizedMessage)
+            }
+
+        })
     }
 
     private fun requestCommentCount() {
@@ -126,7 +168,7 @@ class CommentsActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
         var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
 
-        commentSend.sendComments(diary_idx, comments_edit.text.toString(), user_idx, secret).enqueue(object : Callback<CommentsList> {
+        commentSend.sendComments(diary_idx, comments_edit.text.toString(), user_idx, commentSecret).enqueue(object : Callback<CommentsList> {
             override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
                 val comment = response.body()
                 Toast.makeText(this@CommentsActivity, comment?.message, Toast.LENGTH_SHORT).show()
