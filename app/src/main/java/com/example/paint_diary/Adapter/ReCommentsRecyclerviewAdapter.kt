@@ -9,13 +9,19 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.paint_diary.Activity.CommentsActivity
 import com.example.paint_diary.Data.CommentsList
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_comments.*
+import kotlinx.android.synthetic.main.comments_modify_dialog.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -74,6 +80,107 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
         val commentItem: CommentsList = reCommentsList!!.get(position)
         holder.bind(reCommentsList!!.get(position))
 
+        //more 이미지 클릭 시 팝업메뉴
+        val commentsPopup = PopupMenu(mContext!!, holder.setComments)
+        commentsPopup.menuInflater?.inflate(R.menu.recomments_modify_menu, commentsPopup.menu)
+
+        holder.setComments.setOnClickListener {
+
+            commentsPopup.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.comments_modify -> {
+                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_modify_dialog, null)
+                        val mBuilder = AlertDialog.Builder(mContext!!)
+                            .setView(mDialog)
+
+                        val mAlertDialog = mBuilder.show()
+                        mDialog.comment_set_edit.setText(commentItem.comment_content)
+
+                        //댓글 수정 다이얼로그 확인버튼 클릭시
+                        mDialog.comment_set_ok.setOnClickListener {
+                            requestReCommentsModify(commentItem.recomment_idx, mDialog.comment_set_edit.text.toString())
+                            mAlertDialog.dismiss()
+                        }
+                        //댓글 수정 다이얼로그 취소버튼 클릭시
+                        mDialog.comment_set_cancel.setOnClickListener {
+                            mAlertDialog.dismiss()
+                        }
+
+                        mDialog.comment_set_edit.clearFocus(); //hidden keyboard
+                    }
+
+                    R.id.comments_remove -> {
+                        val dialog = AlertDialog.Builder(mContext!!)
+                        dialog.setMessage("정말 삭제하시겠습니까?")
+                        dialog.setCancelable(false);
+                        dialog.setPositiveButton("네") { dialog, id ->
+
+                            RerequestCommentsRemove(commentItem.recomment_idx)
+
+                        }
+                        dialog.setNegativeButton("아니오") { dialog, id ->
+
+                        }
+                        dialog.show()
+                    }
+
+
+//                    R.id.comments_secret -> {
+//                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+//                        val mBuilder = AlertDialog.Builder(mContext!!)
+//                                .setView(mDialog)
+//
+//                        val mAlertDialog = mBuilder.show()
+//
+//                        mDialog.comments_dialog_cancel.setOnClickListener {
+//                            mAlertDialog.dismiss()
+//                        }
+////                        var secret = commentItem.comment_secret
+////                        if(secret == 1 ){
+////                            menuItem.title = "공개로 전환"
+////                            set_comments_secret(commentItem.comment_idx,)
+////                        }
+//
+//                    }
+
+                }
+                false
+            }
+
+            commentsPopup.show()
+        }
+
+    }
+
+    private fun requestReCommentsModify(recommentIdx: Int, comment_content: String) {
+        var requestCommentsModify = retrofit.create(IRetrofit::class.java)
+        requestCommentsModify.requestModifyReComments(recommentIdx!!, comment_content).enqueue(object : Callback<CommentsList> {
+            override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
+                val comments = response.body()
+                Toast.makeText(mContext, comments?.message, Toast.LENGTH_SHORT).show()
+                (mContext as CommentsActivity).requestCommentList()
+            }
+
+            override fun onFailure(call: Call<CommentsList>, t: Throwable) {
+            }
+
+        })
+    }
+
+    private fun RerequestCommentsRemove(recommentIdx: Int) {
+        var requestDiaryRemove = retrofit.create(IRetrofit::class.java)
+        //대댓글 삭제로 가야함 지금 댓글 삭제임
+        requestDiaryRemove.requestRemoveReComments(recommentIdx!!).enqueue(object : Callback<CommentsList> {
+            override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
+                val comments = response.body()
+                Toast.makeText(mContext, comments?.message, Toast.LENGTH_SHORT).show()
+                (mContext as CommentsActivity).requestCommentList()
+            }
+
+            override fun onFailure(call: Call<CommentsList>, t: Throwable) {
+            }
+
+        })
     }
 
     override fun getItemCount(): Int {

@@ -1,9 +1,11 @@
 package com.example.paint_diary.Activity
 
+import LoadingDialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +20,7 @@ import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.dialog_loading.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -153,6 +156,7 @@ class CommentsActivity : AppCompatActivity() {
             }
 
         })
+        loaderLayout.visibility = View.INVISIBLE
     }
 
     private fun hideKeyBoard() {

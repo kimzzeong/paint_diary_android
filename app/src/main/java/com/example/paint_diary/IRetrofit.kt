@@ -202,14 +202,27 @@ interface IRetrofit {
     //댓글 삭제
     @GET("removeComments.php")
     fun requestRemoveComments(
-            @Query("comment_idx") comment_idx: Int
+        @Query("comment_idx") comment_idx: Int
+    ):Call<CommentsList>
+
+    //대댓글 삭제
+    @GET("removeReComments.php")
+    fun requestRemoveReComments(
+        @Query("recomment_idx") recomment_idx: Int
     ):Call<CommentsList>
 
     //댓글 수정
     @GET("modifyComments.php")
     fun requestModifyComments(
-            @Query("comment_idx") comment_idx: Int,
-            @Query("comment_content") comment_content: String
+        @Query("comment_idx") comment_idx: Int,
+        @Query("comment_content") comment_content: String
+    ):Call<CommentsList>
+
+    //대댓글 수정
+    @GET("modifyReComments.php")
+    fun requestModifyReComments(
+        @Query("recomment_idx") recomment_idx: Int,
+        @Query("recomment_content") recomment_content: String
     ):Call<CommentsList>
 
     //댓글 공개/비공개 전환

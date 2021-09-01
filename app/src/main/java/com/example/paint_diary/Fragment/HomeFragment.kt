@@ -1,5 +1,6 @@
 package com.example.paint_diary.Fragment
 
+import LoadingDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -15,19 +16,17 @@ import com.example.paint_diary.Activity.DiaryInfoActivity
 import com.example.paint_diary.Activity.PaintActivity
 import com.example.paint_diary.Adapter.DiaryRecyclerviewAdapter
 import com.example.paint_diary.Data.DiaryRequest
-import com.example.paint_diary.Data.like_data
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.activity_diary_info.*
+import kotlinx.android.synthetic.main.dialog_loading.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -142,7 +141,7 @@ class HomeFragment : Fragment() {
 //        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
 //        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
 
-
+        loaderLayout.visibility = View.VISIBLE
         var diary_request = retrofit.create(IRetrofit::class.java)
 
         diary_request.requestDiary().enqueue(object : Callback<ArrayList<DiaryRequest>> {
@@ -161,6 +160,7 @@ class HomeFragment : Fragment() {
                 }
                 diaryRecyclerview.diaryList = diary
                 diaryRecyclerview.notifyDataSetChanged()
+
             }
 
             override fun onFailure(call: Call<ArrayList<DiaryRequest>>, t: Throwable) {
@@ -168,6 +168,7 @@ class HomeFragment : Fragment() {
             }
 
         })
+        loaderLayout.visibility = View.INVISIBLE
     }
 
     override fun onResume() {

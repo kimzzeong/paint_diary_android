@@ -11,5 +11,6 @@ data class CommentsList (
     val comment_secret: Int,
     val comment_count : Int,
     val comment_idx : Int,
+    val recomment_idx : Int,
     val comment_datetime: String
 )
