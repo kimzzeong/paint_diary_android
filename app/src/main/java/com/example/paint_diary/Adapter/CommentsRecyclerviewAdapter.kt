@@ -71,6 +71,28 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         }
 
 
+        //대댓글 불러와 리사이클러뷰에 넣기
+        //requestCommentList(commentItem.comment_idx)
+        var comment = retrofit.create(IRetrofit::class.java)
+        comment.requestReComments(commentItem.comment_idx).enqueue(object : Callback<ArrayList<CommentsList>> {
+            override fun onResponse(call: Call<ArrayList<CommentsList>>, response: Response<ArrayList<CommentsList>>) {
+                var recomments = response.body()!!
+                Log.e("onResponse",""+recomments!!.size)
+                recommentsRecyclerview = ReCommentsRecyclerviewAdapter()
+                holder.recomments_list.adapter = recommentsRecyclerview
+                recommentsRecyclerview.reCommentsList = recomments
+                recommentsRecyclerview.notifyDataSetChanged()
+                val layoutManager = LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
+                holder.recomments_list.layoutManager = layoutManager
+            }
+
+            override fun onFailure(call: Call<ArrayList<CommentsList>>, t: Throwable) {
+                Log.e("onFailure",""+t.localizedMessage)
+            }
+
+        })
+
+        //more 이미지 클릭 시 팝업메뉴
         val commentsPopup = PopupMenu(mContext!!, holder.setComments)
         commentsPopup.menuInflater?.inflate(R.menu.comments_modify_menu, commentsPopup.menu)
 
@@ -163,6 +185,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         })
     }
 
+    //댓글 수정
     private fun requestCommentsModify(comment_idx: Int, comment_content: String) {
         var requestCommentsModify = retrofit.create(IRetrofit::class.java)
         requestCommentsModify.requestModifyComments(comment_idx!!, comment_content).enqueue(object : Callback<CommentsList> {
@@ -178,6 +201,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         })
     }
 
+    //댓글 삭제
     private fun requestCommentsRemove(comment_idx: Int) {
         var requestDiaryRemove = retrofit.create(IRetrofit::class.java)
         requestDiaryRemove.requestRemoveComments(comment_idx!!).enqueue(object : Callback<CommentsList> {
@@ -208,21 +232,13 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
 
         fun bind(item: CommentsList) {
 
-//            recommentsRecyclerview = ReCommentsRecyclerviewAdapter()
-//            Log.e("1","1")
-//            recomments_list.adapter = recommentsRecyclerview
-//            Log.e("2","2")
-//            requestCommentList(item.comment_idx)
-//            Log.e("3","3")
-//            val layoutManager = LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
-//            Log.e("4","4")
-//            recomments_list.layoutManager = layoutManager
-//            Log.e("5","5")
-
             comments_nickname.text = item.comment_nickname
             comment_datetime.text = item.comment_datetime
             comment_content.text = item.comment_content
             var uriToString : String = item.comment_profile
+
+
+
             if(uriToString != null){
 
                 var uri : Uri = Uri.parse(uriToString)
@@ -235,22 +251,9 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         }
     }
 
-//    fun requestCommentList(comment_idx: Int) {
-//        //Toast.makeText(mContext,""+comment_idx,Toast.LENGTH_SHORT).show()
-//        Log.e("comment_idx",comment_idx.toString())
-//        var comment = retrofit.create(IRetrofit::class.java)
-//        comment.requestReComments(comment_idx).enqueue(object : Callback<ArrayList<CommentsList>> {
-//            override fun onResponse(call: Call<ArrayList<CommentsList>>, response: Response<ArrayList<CommentsList>>) {
-//                var recomments = response.body()!!
-//                Log.e("onResponse",""+recomments!!.size)
-//                recommentsRecyclerview.reCommentsList = recomments
-//                recommentsRecyclerview.notifyDataSetChanged()
-//            }
-//
-//            override fun onFailure(call: Call<ArrayList<CommentsList>>, t: Throwable) {
-//                Log.e("onFailure",""+t.localizedMessage)
-//            }
-//
-//        })
-//    }
+    fun requestCommentList(comment_idx: Int) {
+        //Toast.makeText(mContext,""+comment_idx,Toast.LENGTH_SHORT).show()
+        Log.e("comment_idx",comment_idx.toString())
+
+    }
 }

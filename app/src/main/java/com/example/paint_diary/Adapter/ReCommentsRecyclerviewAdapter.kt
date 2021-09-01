@@ -73,6 +73,7 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val commentItem: CommentsList = reCommentsList!!.get(position)
         holder.bind(reCommentsList!!.get(position))
+
     }
 
     override fun getItemCount(): Int {
