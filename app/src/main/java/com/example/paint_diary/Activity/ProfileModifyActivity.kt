@@ -72,9 +72,10 @@ class ProfileModifyActivity : AppCompatActivity() {
     var user_profile : String? = null
     var uriPath : String? = null
     private lateinit var getResultImage : ActivityResultLauncher<Intent>
-//    val folderPath = Environment.getExternalStorageDirectory().absolutePath + "/Pictures/Drawing/" //사진저장 경로
-//    val timestamp : String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date()) //사진파일이름에 들어감
-//    val fileName = "${timestamp}.jpeg"
+    val folderPath = Environment.getExternalStorageDirectory().absolutePath + "/Pictures/Drawing/" //사진저장 경로
+    val timestamp : String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date()) //사진파일이름에 들어감
+    val fileName = "${timestamp}.jpeg"
+    var paint_flag : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -105,26 +106,30 @@ class ProfileModifyActivity : AppCompatActivity() {
             }else{
                 binding.profilePhoto.setImageResource(R.drawable.basic_profile)
             }
-        getResultImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-            if(result.resultCode == RESULT_OK){
-                val arr = result.data?.getByteArrayExtra("image")
-                var bitmap = BitmapFactory.decodeByteArray(arr, 0, arr!!.size)
-                profile_photo.setImageBitmap(bitmap)
-                uriPath = result.data.toString()
-//                    val folder = File(folderPath)
-//                    if(!folder.isDirectory){ //현재 해당 경로의 폴더가 존재하는지 확인
-//                        folder.mkdirs() // make Directory 줄임말로 해당 경로에 자동으로 디렉토리 생성
-//                    }
-//                    //실제적인 저장 처리
-//                    val out = FileOutputStream(folderPath + fileName)
-//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-//                    uriPath = folderPath+fileName
-//                    //Toast.makeText(this,"사진이 저장되었습니다.",Toast.LENGTH_SHORT).show()
 
+        //프로필 그림그리기로 가져옴
+            getResultImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
+                if(result.resultCode == RESULT_OK){
+                    val arr = result.data?.getByteArrayExtra("image")
+                    var bitmap = BitmapFactory.decodeByteArray(arr, 0, arr!!.size)
+                    profile_photo.setImageBitmap(bitmap)
+                    uriPath = result.data.toString()
+                        val folder = File(folderPath)
+                        if(!folder.isDirectory){ //현재 해당 경로의 폴더가 존재하는지 확인
+                            folder.mkdirs() // make Directory 줄임말로 해당 경로에 자동으로 디렉토리 생성
+                        }
+                        //실제적인 저장 처리
+                        val out = FileOutputStream(folderPath + fileName)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+                        uriPath = folderPath+fileName
+                    paint_flag = true
+                    //Log.e("uriPath",uriPath.toString())
+                        //Toast.makeText(this,"사진이 저장되었습니다.",Toast.LENGTH_SHORT).show()
+
+
+                }
 
             }
-
-        }
 
             setSupportActionBar(binding.profileToolbar)
 
@@ -314,6 +319,7 @@ class ProfileModifyActivity : AppCompatActivity() {
 //                        crossfade(1000)
 //                        transformations()
 //                    }
+                        paint_flag = false
                     }
 
                     GALLERY_REQUEST_CODE -> {
@@ -328,6 +334,7 @@ class ProfileModifyActivity : AppCompatActivity() {
 //                        transformations()
 //                    }
 
+                        paint_flag = false
                     }
                     CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
                         Log.e("CropImage", "CROP_IMAGE_ACTIVITY_REQUEST_CODE")
@@ -339,6 +346,8 @@ class ProfileModifyActivity : AppCompatActivity() {
                         }
 
                         uriPath = result.uri.toString()
+
+                        paint_flag = false
                     }
                 }
 
@@ -473,13 +482,20 @@ class ProfileModifyActivity : AppCompatActivity() {
                 })
 
             }
-            //프로필 사진이 변경
+            //프로필 사진 변경
             else{
+                var profileImage : String? = null
                 //creating a file
-                val split_uriPath = uriPath!!.split("file://")
-                Log.e("uriPath", split_uriPath[1])
+                    if(paint_flag == false){
+
+                        val split_uriPath = uriPath!!.split("file://")
+                        profileImage = split_uriPath[1]
+
+                    }else {
+                        profileImage = uriPath
+                    }
                 // Log.e("curPhotoPath",curPhotoPath)
-                val file = File(split_uriPath[1])	// 경로 예시 : /storage/emulated/0/Download/filename.pdf
+                val file = File(profileImage)	// 경로 예시 : /storage/emulated/0/Download/filename.pdf
                 Log.e("uploadProfile", "2")
                 var requestBody : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file)
                 var user_idx_request : RequestBody = RequestBody.create(
