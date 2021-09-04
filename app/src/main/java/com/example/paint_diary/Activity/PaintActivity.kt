@@ -176,17 +176,30 @@ class PaintActivity : AppCompatActivity(){
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
             R.id.paint_save -> {
-                val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
-                var user_idx : Int? = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
-                val stream = ByteArrayOutputStream()
-                paintView!!.mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                val byteArray = stream.toByteArray()
-                val in1 = Intent(applicationContext, DiaryActivity::class.java)
-                in1.putExtra("image", byteArray)
-                in1.putExtra("update", "")
-                in1.putExtra("diary_writer", user_idx)
-                startActivity(in1)
-                return true
+                var profile = intent.getStringExtra("paint")
+                if(profile.equals("paint")){
+                    val stream = ByteArrayOutputStream()
+                    paintView!!.mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    val byteArray = stream.toByteArray()
+                    val in1 = Intent(applicationContext, ProfileModifyActivity::class.java)
+                    in1.putExtra("image", byteArray)
+                    setResult(RESULT_OK,in1)
+                    finish()
+                    return true
+                }else {
+                    val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
+                    var user_idx: Int? =
+                        Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
+                    val stream = ByteArrayOutputStream()
+                    paintView!!.mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    val byteArray = stream.toByteArray()
+                    val in1 = Intent(applicationContext, DiaryActivity::class.java)
+                    in1.putExtra("image", byteArray)
+                    in1.putExtra("update", "")
+                    in1.putExtra("diary_writer", user_idx)
+                    startActivity(in1)
+                    return true
+                }
             }
             else -> {
                 return super.onOptionsItemSelected(item)
@@ -198,16 +211,5 @@ class PaintActivity : AppCompatActivity(){
         val menuInflater = menuInflater
         menuInflater.inflate(R.menu.paint_save_menu, menu)
         return true
-    }
-
-
-    fun StringToBitMap(encodedString: String?): Bitmap? {
-        return try {
-            val encodeByte: ByteArray = Base64.decode(encodedString, Base64.DEFAULT)
-            BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
-        } catch (e: Exception) {
-            e.message
-            null
-        }
     }
 }
