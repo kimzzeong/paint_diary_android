@@ -10,5 +10,7 @@
     <color name="main">#E6DCD3</color>
     <color name="sub">#24EFCAA6</color>
     <color name="gray">#FF9E9E9E</color>
+    <color name="green">#87A700</color>
+    <color name="red">#DA4838</color>
 
 </resources>

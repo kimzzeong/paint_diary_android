@@ -21,8 +21,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.UserProfileActivity"></activity>
-        <activity android:name=".Activity.CommentsActivity"/>
+        <activity android:name=".Activity.PasscodeActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activity.UserProfileActivity" />
+        <activity android:name=".Activity.CommentsActivity" />
         <activity android:name=".Activity.ChangePWActivity" />
         <activity android:name=".Activity.DiaryInfoActivity" />
         <activity android:name=".Activity.DiaryActivity" />
@@ -39,11 +47,6 @@
             android:name=".Activity.PaintActivity"
             android:hardwareAccelerated="false" />
         <activity android:name=".Activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <provider
