@@ -57,15 +57,10 @@ class DiaryInfoActivity : AppCompatActivity() {
         val intent = intent
         diary_idx = intent.getIntExtra("diary_idx",0)
         diary_writer = intent.getIntExtra("diary_writer",0)
-        val sharedPreferences = this.getSharedPreferences("user",0)
-        var user_idx_str : String? = sharedPreferences?.getString("user_idx", "")
-        user_idx = Integer.parseInt(user_idx_str)
         diaryInfoActivity = this
 
         setSupportActionBar(diaryInfo_toolbar)
         supportActionBar?.title = "제목"
-        Log.e("user_idx",user_idx.toString())
-        Log.e("diary_writer",diary_writer.toString())
 
         requestDiaryInfo() //일기 상세글 정보 불러오기
 
@@ -186,21 +181,34 @@ class DiaryInfoActivity : AppCompatActivity() {
 
     //좋아요 클릭 시
     private fun requestDiaryLike() {
-
-        var request_like = retrofit.create(IRetrofit::class.java)
-        request_like.requestContentLike(user_idx!!,diary_idx!!,diary_like!!).enqueue(object : Callback<like_data>{
-            override fun onResponse(call: Call<like_data>, response: Response<like_data>) {
-                val like = response.body()
-                if (like != null) {
-                    likeProcess()
+        if(user_idx != 0){
+            var request_like = retrofit.create(IRetrofit::class.java)
+            request_like.requestContentLike(user_idx!!,diary_idx!!,diary_like!!).enqueue(object : Callback<like_data>{
+                override fun onResponse(call: Call<like_data>, response: Response<like_data>) {
+                    val like = response.body()
+                    if (like != null) {
+                        likeProcess()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<like_data>, t: Throwable) {
-                Toast.makeText(this@DiaryInfoActivity,"좋아요 실패.",Toast.LENGTH_SHORT).show()
-            }
+                override fun onFailure(call: Call<like_data>, t: Throwable) {
+                    Toast.makeText(this@DiaryInfoActivity,"좋아요 실패.",Toast.LENGTH_SHORT).show()
+                }
 
-        })
+            })
+        }else{
+            val dialog = AlertDialog.Builder(this)
+            dialog.setMessage("로그인을 하셔야 이용 가능한 서비스입니다.\n지금 바로 로그인하시겠습니까?")
+            dialog.setCancelable(false);
+            dialog.setPositiveButton("네"){ dialog, id ->
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
+            dialog.setNegativeButton("아니오"){ dialog, id ->
+
+            }
+            dialog.show()
+        }
     }
 
     private fun diary_like_setting() {
@@ -302,6 +310,10 @@ class DiaryInfoActivity : AppCompatActivity() {
         val intent = intent
         diary_idx = intent.getIntExtra("diary_idx",0)
         diary_writer = intent.getIntExtra("diary_writer",0)
+
+        val sharedPreferences = this.getSharedPreferences("user",0)
+        var user_idx_str : String? = sharedPreferences?.getString("user_idx", "0")
+            user_idx = Integer.parseInt(user_idx_str)
         requestDiaryInfo()
         likeProcess()
     }

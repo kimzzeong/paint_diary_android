@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.Data.Login
+import com.example.paint_diary.FindPWActivity
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -89,7 +90,8 @@ class LoginActivity : AppCompatActivity() {
 
         }
         login_find_password.setOnClickListener{
-            Toast.makeText(this@LoginActivity,"비번찾기",Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, FindPWActivity::class.java) // 인텐트를 생성
+            startActivity(intent)
         }
         login_to_join.setOnClickListener{
             //Toast.makeText(this@LoginActivity,"회원가입",Toast.LENGTH_SHORT).show()

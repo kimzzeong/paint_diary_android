@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.hanks.passcodeview.PasscodeView
 import com.example.paint_diary.R
 import kotlinx.android.synthetic.main.activity_passcode.*
 
