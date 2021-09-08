@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
-        <activity android:name=".FindPWActivity"></activity>
+        <activity android:name=".Activity.FindPWActivity"></activity>
         <activity android:name=".Activity.PasscodeActivity">
         </activity>
         <activity android:name=".Activity.UserProfileActivity" />

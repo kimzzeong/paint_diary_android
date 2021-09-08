@@ -11,7 +11,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.Data.Login
-import com.example.paint_diary.FindPWActivity
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

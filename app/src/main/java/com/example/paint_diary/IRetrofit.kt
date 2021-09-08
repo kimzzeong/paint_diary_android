@@ -196,7 +196,7 @@ interface IRetrofit {
     @FormUrlEncoded
     @POST("requestCommentsCount.php")
     fun requestCommentsCount(
-            @Field("diary_idx") diary_idx: Int
+        @Field("diary_idx") diary_idx: Int
     ): Call<CommentsList>
 
     //댓글 삭제
@@ -231,5 +231,12 @@ interface IRetrofit {
             @Query("comment_idx") comment_idx: Int,
             @Query("comment_secret") comment_secret: Int
     ):Call<CommentsList>
+
+    //비밀번호 찾기
+    @FormUrlEncoded
+    @POST("sendPWforemail.php")
+    fun requestFindPW(
+        @Field("email") email: String
+    ): Call<String>
 }
 
