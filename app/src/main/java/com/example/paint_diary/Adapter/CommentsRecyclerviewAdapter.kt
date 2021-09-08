@@ -61,13 +61,128 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         val commentItem: CommentsList = commentsList!!.get(position)
         holder.bind(commentsList!!.get(position))
         val sharedPreferences = mContext?.getSharedPreferences("user", Context.MODE_PRIVATE)
-        var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
+        var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
         if(commentItem.comment_writer == user_idx){
             holder.itemView.setBackgroundColor(Color.parseColor("#24EFCAA6"))
-            holder.setComments.visibility = View.VISIBLE
+
+            //more 이미지 클릭 시 팝업메뉴
+            val commentsPopup = PopupMenu(mContext!!, holder.setComments)
+            commentsPopup.menuInflater?.inflate(R.menu.comments_modify_menu, commentsPopup.menu)
+
+            holder.setComments.setOnClickListener {
+
+                commentsPopup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.comments_modify -> {
+                            val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_modify_dialog, null)
+                            val mBuilder = AlertDialog.Builder(mContext!!)
+                                .setView(mDialog)
+
+                            val mAlertDialog = mBuilder.show()
+                            mDialog.comment_set_edit.setText(commentItem.comment_content)
+
+                            //댓글 수정 다이얼로그 확인버튼 클릭시
+                            mDialog.comment_set_ok.setOnClickListener {
+                                requestCommentsModify(commentItem.comment_idx, mDialog.comment_set_edit.text.toString())
+                                mAlertDialog.dismiss()
+                            }
+                            //댓글 수정 다이얼로그 취소버튼 클릭시
+                            mDialog.comment_set_cancel.setOnClickListener {
+                                mAlertDialog.dismiss()
+                            }
+
+                            mDialog.comment_set_edit.clearFocus(); //hidden keyboard
+                        }
+
+                        R.id.comments_remove -> {
+                            val dialog = AlertDialog.Builder(mContext!!)
+                            dialog.setMessage("정말 삭제하시겠습니까?")
+                            dialog.setCancelable(false);
+                            dialog.setPositiveButton("네") { dialog, id ->
+
+                                requestCommentsRemove(commentItem.comment_idx)
+
+                            }
+                            dialog.setNegativeButton("아니오") { dialog, id ->
+
+                            }
+                            dialog.show()
+                        }
+
+                        R.id.comments_recomment -> {
+
+                            commentsActivity.comments_edit.hint = "@" + commentItem.comment_nickname + "님에게 답장..."
+                            commentsActivity.commentsSendStatus = 1
+                            commentsActivity.comment_idx = commentItem.comment_idx
+
+                        }
+
+//                    R.id.comments_secret -> {
+//                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+//                        val mBuilder = AlertDialog.Builder(mContext!!)
+//                                .setView(mDialog)
+//
+//                        val mAlertDialog = mBuilder.show()
+//
+//                        mDialog.comments_dialog_cancel.setOnClickListener {
+//                            mAlertDialog.dismiss()
+//                        }
+////                        var secret = commentItem.comment_secret
+////                        if(secret == 1 ){
+////                            menuItem.title = "공개로 전환"
+////                            set_comments_secret(commentItem.comment_idx,)
+////                        }
+//
+//                    }
+
+                    }
+                    false
+                }
+
+                commentsPopup.show()
+            }
         }else{
             holder.itemView.setBackgroundColor(Color.WHITE)
-            holder.setComments.visibility = View.INVISIBLE
+
+            //more 이미지 클릭 시 팝업메뉴
+            val commentsPopup = PopupMenu(mContext!!, holder.setComments)
+            commentsPopup.menuInflater?.inflate(R.menu.recomments_menu, commentsPopup.menu)
+
+            holder.setComments.setOnClickListener {
+
+                commentsPopup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.comments_recomment -> {
+                            commentsActivity.comments_edit.hint = "@" + commentItem.comment_nickname + "님에게 답장..."
+                            commentsActivity.commentsSendStatus = 1
+                            commentsActivity.comment_idx = commentItem.comment_idx
+
+                        }
+
+//                    R.id.comments_secret -> {
+//                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+//                        val mBuilder = AlertDialog.Builder(mContext!!)
+//                                .setView(mDialog)
+//
+//                        val mAlertDialog = mBuilder.show()
+//
+//                        mDialog.comments_dialog_cancel.setOnClickListener {
+//                            mAlertDialog.dismiss()
+//                        }
+////                        var secret = commentItem.comment_secret
+////                        if(secret == 1 ){
+////                            menuItem.title = "공개로 전환"
+////                            set_comments_secret(commentItem.comment_idx,)
+////                        }
+//
+//                    }
+
+                    }
+                    false
+                }
+
+                commentsPopup.show()
+            }
         }
 
 
@@ -92,82 +207,6 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
 
         })
 
-        //more 이미지 클릭 시 팝업메뉴
-        val commentsPopup = PopupMenu(mContext!!, holder.setComments)
-        commentsPopup.menuInflater?.inflate(R.menu.comments_modify_menu, commentsPopup.menu)
-
-        holder.setComments.setOnClickListener {
-
-            commentsPopup.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.comments_modify -> {
-                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_modify_dialog, null)
-                        val mBuilder = AlertDialog.Builder(mContext!!)
-                                .setView(mDialog)
-
-                        val mAlertDialog = mBuilder.show()
-                        mDialog.comment_set_edit.setText(commentItem.comment_content)
-
-                        //댓글 수정 다이얼로그 확인버튼 클릭시
-                        mDialog.comment_set_ok.setOnClickListener {
-                            requestCommentsModify(commentItem.comment_idx, mDialog.comment_set_edit.text.toString())
-                            mAlertDialog.dismiss()
-                        }
-                        //댓글 수정 다이얼로그 취소버튼 클릭시
-                        mDialog.comment_set_cancel.setOnClickListener {
-                            mAlertDialog.dismiss()
-                        }
-
-                        mDialog.comment_set_edit.clearFocus(); //hidden keyboard
-                    }
-
-                    R.id.comments_remove -> {
-                        val dialog = AlertDialog.Builder(mContext!!)
-                        dialog.setMessage("정말 삭제하시겠습니까?")
-                        dialog.setCancelable(false);
-                        dialog.setPositiveButton("네") { dialog, id ->
-
-                            requestCommentsRemove(commentItem.comment_idx)
-
-                        }
-                        dialog.setNegativeButton("아니오") { dialog, id ->
-
-                        }
-                        dialog.show()
-                    }
-
-                    R.id.comments_recomment -> {
-
-                        commentsActivity.comments_edit.hint = "@" + commentItem.comment_nickname + "님에게 답장..."
-                        commentsActivity.commentsSendStatus = 1
-                        commentsActivity.comment_idx = commentItem.comment_idx
-
-                    }
-
-//                    R.id.comments_secret -> {
-//                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
-//                        val mBuilder = AlertDialog.Builder(mContext!!)
-//                                .setView(mDialog)
-//
-//                        val mAlertDialog = mBuilder.show()
-//
-//                        mDialog.comments_dialog_cancel.setOnClickListener {
-//                            mAlertDialog.dismiss()
-//                        }
-////                        var secret = commentItem.comment_secret
-////                        if(secret == 1 ){
-////                            menuItem.title = "공개로 전환"
-////                            set_comments_secret(commentItem.comment_idx,)
-////                        }
-//
-//                    }
-
-                }
-                false
-            }
-
-            commentsPopup.show()
-        }
     }
 
     private fun set_comments_secret(comment_idx: Int, comment_secret: Int) {

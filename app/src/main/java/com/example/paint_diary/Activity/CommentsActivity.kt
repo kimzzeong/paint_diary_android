@@ -2,12 +2,14 @@ package com.example.paint_diary.Activity
 
 import LoadingDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -85,12 +87,29 @@ class CommentsActivity : AppCompatActivity() {
            // Toast.makeText(this,"댓글"+commentsSendStatus,Toast.LENGTH_SHORT).show()
         }
 
+       val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
+       var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
+
        //댓글 등록
         comments_send.setOnClickListener {
-            if(commentsSendStatus == 0){
-                CommentSend()
+            if(user_idx == 0){
+                val dialog = AlertDialog.Builder(this)
+                dialog.setMessage("로그인을 하셔야 이용 가능한 서비스입니다.\n지금 바로 로그인하시겠습니까?")
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("네"){ dialog, id ->
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                }
+                dialog.setNegativeButton("아니오"){ dialog, id ->
+
+                }
+                dialog.show()
             }else{
-                ReCommentSend()
+                if(commentsSendStatus == 0){
+                    CommentSend()
+                }else{
+                    ReCommentSend()
+                }
             }
         }
 
