@@ -86,6 +86,16 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/diary_lock"
+                android:visibility="invisible"
+                card_view:layout_constraintTop_toTopOf="@+id/diary_title"
+                card_view:layout_constraintLeft_toRightOf="@+id/diary_title"
+                card_view:layout_constraintBottom_toBottomOf="@+id/diary_title"
+                android:src="@drawable/ic_baseline_lock_24"
+                />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

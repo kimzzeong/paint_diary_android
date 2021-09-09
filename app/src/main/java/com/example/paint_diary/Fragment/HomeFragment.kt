@@ -137,6 +137,7 @@ class HomeFragment : Fragment() {
     }
 
 
+    //다이어리 전체 리스트 불러오기
     private fun requestDiary() {
 //        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
 //        var user_idx : String? = sharedPreferences?.getString("user_idx", "")

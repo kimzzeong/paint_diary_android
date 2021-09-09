@@ -1,6 +1,7 @@
 package com.example.paint_diary.Adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.paint_diary.Activity.CommentsActivity
@@ -49,6 +51,7 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
         var comment_datetime : TextView = itemView.findViewById(R.id.comment_datetime)
         var comment_content : TextView = itemView.findViewById(R.id.comment_content)
         var setComments : ImageButton = itemView.findViewById(R.id.setComments)
+        var comments_layout : ConstraintLayout = itemView.findViewById(R.id.comments_layout)
 
 
 
@@ -83,6 +86,16 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
         //more 이미지 클릭 시 팝업메뉴
         val commentsPopup = PopupMenu(mContext!!, holder.setComments)
         commentsPopup.menuInflater?.inflate(R.menu.recomments_modify_menu, commentsPopup.menu)
+
+        val sharedPreferences = mContext?.getSharedPreferences("user", Context.MODE_PRIVATE)
+        var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
+        if(commentItem.comment_writer != user_idx){
+            holder.setComments.visibility = View.INVISIBLE
+            holder.comments_layout.setBackgroundColor(Color.WHITE)
+        }else{
+            holder.setComments.visibility = View.VISIBLE
+            holder.comments_layout.setBackgroundColor(Color.parseColor("#24EFCAA6"))
+        }
 
         holder.setComments.setOnClickListener {
 

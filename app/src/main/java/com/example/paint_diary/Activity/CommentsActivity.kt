@@ -34,13 +34,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 class CommentsActivity : AppCompatActivity() {
 
     var gson: Gson = GsonBuilder()
-            .setLenient()
-            .create()
+        .setLenient()
+        .create()
 
     var retrofit = Retrofit.Builder()
-            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+        .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
 
     var commentSecret : Int = 0 //댓글 공개 여부
     var reCommentsecret : Int = 0 //대댓글 공개 여부
@@ -50,19 +50,19 @@ class CommentsActivity : AppCompatActivity() {
     var commentsSendStatus = 0
     var comment_idx = 0
 
-   override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comments)
 
         comments_toolbar.setTitleTextColor(Color.BLACK)
         comments_toolbar.setTitle("댓글")
-       val intent = intent
-       diary_idx = intent.getIntExtra("diary_idx", 0)
+        val intent = intent
+        diary_idx = intent.getIntExtra("diary_idx", 0)
 
-       commentsRecyclerview = CommentsRecyclerviewAdapter(this)
-       requestCommentList()
-       val layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-       comments_list.layoutManager = layoutManager
+        commentsRecyclerview = CommentsRecyclerviewAdapter(this)
+        requestCommentList()
+        val layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        comments_list.layoutManager = layoutManager
 
         //댓글,대댓글 비밀글
         comments_secret.setOnClickListener {
@@ -84,13 +84,13 @@ class CommentsActivity : AppCompatActivity() {
                 }
             }
 
-           // Toast.makeText(this,"댓글"+commentsSendStatus,Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this,"댓글"+commentsSendStatus,Toast.LENGTH_SHORT).show()
         }
 
-       val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
-       var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
+        val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
+        var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
 
-       //댓글 등록
+        //댓글 등록
         comments_send.setOnClickListener {
             if(user_idx == 0){
                 val dialog = AlertDialog.Builder(this)
@@ -113,11 +113,11 @@ class CommentsActivity : AppCompatActivity() {
             }
         }
 
-       //댓글 목록 새로고침
-       comments_refresh.setOnRefreshListener{
-           requestCommentList()
-           comments_refresh.isRefreshing = false
-       }
+        //댓글 목록 새로고침
+        comments_refresh.setOnRefreshListener{
+            requestCommentList()
+            comments_refresh.isRefreshing = false
+        }
 
     }
 
@@ -126,14 +126,14 @@ class CommentsActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
         var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
 
-        recommentSend.sendReComments(comment_idx, comments_edit.text.toString(), user_idx, reCommentsecret).enqueue(object : Callback<CommentsList> {
+        recommentSend.sendReComments(comment_idx, comments_edit.text.toString(), user_idx,diary_idx, reCommentsecret).enqueue(object : Callback<CommentsList> {
             override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
                 val comment = response.body()
                 Toast.makeText(this@CommentsActivity, comment?.message, Toast.LENGTH_SHORT).show()
                 comments_edit.setText(null)
                 comments_edit.hint = "댓글을 입력해주세요"
-               // requestCommentList()
-                //hideKeyBoard()
+                requestCommentList()
+                hideKeyBoard()
             }
 
             override fun onFailure(call: Call<CommentsList>, t: Throwable) {
@@ -175,12 +175,12 @@ class CommentsActivity : AppCompatActivity() {
             }
 
         })
-        loaderLayout.visibility = View.INVISIBLE
+        dialog_layout.visibility = View.INVISIBLE
     }
 
     private fun hideKeyBoard() {
         val manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            manager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        manager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
     }
 

@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,7 +64,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         val sharedPreferences = mContext?.getSharedPreferences("user", Context.MODE_PRIVATE)
         var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
         if(commentItem.comment_writer == user_idx){
-            holder.itemView.setBackgroundColor(Color.parseColor("#24EFCAA6"))
+            holder.comments_layout.setBackgroundColor(Color.parseColor("#24EFCAA6"))
 
             //more 이미지 클릭 시 팝업메뉴
             val commentsPopup = PopupMenu(mContext!!, holder.setComments)
@@ -142,7 +143,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
                 commentsPopup.show()
             }
         }else{
-            holder.itemView.setBackgroundColor(Color.WHITE)
+            holder.comments_layout.setBackgroundColor(Color.WHITE)
 
             //more 이미지 클릭 시 팝업메뉴
             val commentsPopup = PopupMenu(mContext!!, holder.setComments)
@@ -267,6 +268,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         var comment_content : TextView = itemView.findViewById(R.id.comment_content)
         var setComments : ImageButton = itemView.findViewById(R.id.setComments)
         var recomments_list : RecyclerView = itemView.findViewById(R.id.recomments_list)
+        var comments_layout : ConstraintLayout = itemView.findViewById(R.id.comments_layout)
 
 
         fun bind(item: CommentsList) {

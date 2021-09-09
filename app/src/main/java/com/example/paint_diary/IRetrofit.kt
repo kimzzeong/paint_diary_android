@@ -175,6 +175,7 @@ interface IRetrofit {
             @Field("comment_idx") comment_idx: Int,
             @Field("recomment_content") recomment_content: String,
             @Field("recomment_writer") recomment_writer: Int,
+            @Field("diary_idx") diary_idx: Int,
             @Field("recomment_secret") recomment_secret: Int
     ):Call<CommentsList>
 
