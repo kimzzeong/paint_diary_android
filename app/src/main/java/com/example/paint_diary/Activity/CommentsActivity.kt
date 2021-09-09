@@ -161,6 +161,7 @@ class CommentsActivity : AppCompatActivity() {
     }
 
     fun requestCommentList() {
+        dialog_layout.visibility = View.VISIBLE
         var comment = retrofit.create(IRetrofit::class.java)
         comment.requestComments(diary_idx).enqueue(object : Callback<ArrayList<CommentsList>> {
             override fun onResponse(call: Call<ArrayList<CommentsList>>, response: Response<ArrayList<CommentsList>>) {
@@ -169,13 +170,13 @@ class CommentsActivity : AppCompatActivity() {
                 commentsRecyclerview.commentsList = commentsList
                 commentsRecyclerview.notifyDataSetChanged()
                 requestCommentCount()
+                dialog_layout.visibility = View.INVISIBLE
             }
 
             override fun onFailure(call: Call<ArrayList<CommentsList>>, t: Throwable) {
             }
 
         })
-        dialog_layout.visibility = View.INVISIBLE
     }
 
     private fun hideKeyBoard() {
