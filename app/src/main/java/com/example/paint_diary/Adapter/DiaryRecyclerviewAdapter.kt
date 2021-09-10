@@ -75,6 +75,8 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
                 diaryTitle.text = "비밀글입니다."
                 diaryWriter.text = ""
                 diary_date.text = ""
+                favorite_text.text = item.diary_like_count.toString()
+                comments_text.text= item.diary_comment_count.toString()
                 Glide.with(itemView).load(R.drawable.secret).into(diaryImage)
                 diary_lock.visibility = View.INVISIBLE
             }else if(item.diary_secret == 1 && item.diary_writer == user_idx){

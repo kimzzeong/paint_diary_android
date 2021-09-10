@@ -72,6 +72,7 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                         Toast.makeText(this@LoginActivity,login?.user_nickname+"님 반갑습니다.",Toast.LENGTH_SHORT).show()
                     }else if(login?.status.equals("fail")){ //로그인 실패
+                      //  Log.e("fail",login!!.user_nickname)
                         Toast.makeText(this@LoginActivity,"이메일이나 비밀번호를 확인해 주세요.",Toast.LENGTH_SHORT).show()
                     }else{
                         Toast.makeText(this@LoginActivity,"존재하지 않는 회원입니다.",Toast.LENGTH_SHORT).show()

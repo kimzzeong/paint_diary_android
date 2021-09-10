@@ -41,6 +41,7 @@ class SettingActivity : AppCompatActivity() {
                 finish()
                 editor.remove("user_idx")
                 editor.commit()
+                Toast.makeText(this,"로그아웃 되었습니다.",Toast.LENGTH_SHORT).show()
             }
             dialog.setNegativeButton("아니오"){ dialog, id ->
             }

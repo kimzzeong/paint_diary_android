@@ -12,6 +12,7 @@
         android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/comments_toolbar"
+        android:stateListAnimator="@null"
         android:elevation="2dp">
         <TextView
             android:layout_width="wrap_content"
