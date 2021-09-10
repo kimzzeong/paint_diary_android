@@ -171,7 +171,6 @@ class CommentsActivity : AppCompatActivity() {
                 commentsRecyclerview.notifyDataSetChanged()
                 requestCommentCount()
                 dialog_layout.visibility = View.INVISIBLE
-                
             }
 
             override fun onFailure(call: Call<ArrayList<CommentsList>>, t: Throwable) {
