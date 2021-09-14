@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">paint_diary</string>
     <string name="i">ㅡ</string>
+    <string name="pre"><![CDATA[<]]></string>
+    <string name="next"><![CDATA[>]]></string>
 </resources>

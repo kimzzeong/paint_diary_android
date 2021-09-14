@@ -71,6 +71,7 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
         var diary_lock : ImageView = itemView.findViewById(R.id.diary_lock)
 
         fun bind(item: DiaryRequest) {
+            //비밀글이고 비밀글 글쓴이와 현재 로그인 중인 유저가 다를 때
             if(item.diary_secret == 1 && item.diary_writer != user_idx){
                 diaryTitle.text = "비밀글입니다."
                 diaryWriter.text = ""
@@ -79,6 +80,7 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
                 comments_text.text= item.diary_comment_count.toString()
                 Glide.with(itemView).load(R.drawable.secret).into(diaryImage)
                 diary_lock.visibility = View.INVISIBLE
+                //비밀글이고 비밀글 글쓴이와 현재 로그인 중인 유저가 같을 때
             }else if(item.diary_secret == 1 && item.diary_writer == user_idx){
                 diaryTitle.text = item.diary_title
                 diaryWriter.text = item.user_nickname
@@ -92,6 +94,7 @@ class DiaryRecyclerviewAdapter:RecyclerView.Adapter<DiaryRecyclerviewAdapter.Vie
                 var uri_diary = "http://3.36.52.195/diary/"+uri
                 Glide.with(itemView).load(uri_diary).into(diaryImage)
 
+                //그 외
             }else{
                 diaryTitle.text = item.diary_title
                 diaryWriter.text = item.user_nickname

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.paint_diary.Activity.AttendanceActivity
 import com.example.paint_diary.Activity.DiaryInfoActivity
 import com.example.paint_diary.Activity.ProfileModifyActivity
 import com.example.paint_diary.Activity.SettingActivity
@@ -96,6 +97,7 @@ class MypageFragment : Fragment() {
                        // mypage_profile_photo.setImageResource(R.drawable.ic_baseline_add_24)
                     }
                     mypage_nickname.setText(profile?.user_nickname)
+                    mypage_count.text = "일기 수 : "+profile?.user_diary_count+"개 | 출석 수 : 0일"
                     if(profile?.user_introduction != null){
                         mypage_introduction.setVisibility(View.VISIBLE)
                         mypage_introduction.setText(profile?.user_introduction)
@@ -153,6 +155,11 @@ class MypageFragment : Fragment() {
             }
 
         })
+
+        mypage_attendance_btn.setOnClickListener {
+            val intent = Intent(activity, AttendanceActivity::class.java)
+            startActivity(intent)
+        }
 
         mypage_profile_modify.setOnClickListener {
 

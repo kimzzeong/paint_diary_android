@@ -50,6 +50,7 @@ class SettingActivity : AppCompatActivity() {
                     val sharedPreferences = this.getSharedPreferences("user", 0)
                     val editor = sharedPreferences.edit()
                     editor.remove("passMode")
+                 //   editor.remove("passcode")
                     editor.commit()
                     setting_lock.text = "앱 잠금 설정"
                 Toast.makeText(this,"앱 잠금이 해제되었습니다.",Toast.LENGTH_SHORT).show()

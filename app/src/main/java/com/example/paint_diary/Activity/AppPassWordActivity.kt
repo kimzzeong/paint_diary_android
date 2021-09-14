@@ -2,10 +2,8 @@ package com.example.paint_diary.Activity
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -190,19 +188,19 @@ class AppPassWordActivity : AppCompatActivity(), View.OnClickListener {
             when(password.size){
                 1 -> {
                     pass01 = password.get(0)
-                    view_01.setBackgroundResource(R.drawable.bg_view_blue_oval)
+                    view_01.setBackgroundResource(R.drawable.bg_view_green_oval)
                 }
                 2 -> {
                     pass02 = password.get(1)
-                    view_02.setBackgroundResource(R.drawable.bg_view_blue_oval)
+                    view_02.setBackgroundResource(R.drawable.bg_view_green_oval)
                 }
                 3 -> {
                     pass03 = password.get(2)
-                    view_03.setBackgroundResource(R.drawable.bg_view_blue_oval)
+                    view_03.setBackgroundResource(R.drawable.bg_view_green_oval)
                 }
                 4 -> {
                     pass04 = password.get(3)
-                    view_04.setBackgroundResource(R.drawable.bg_view_blue_oval)
+                    view_04.setBackgroundResource(R.drawable.bg_view_green_oval)
                     if(passwordMode == "0"){
                         passcode = pass01 + pass02 + pass03 + pass04
                         passwordMode = "1"
@@ -242,6 +240,7 @@ class AppPassWordActivity : AppCompatActivity(), View.OnClickListener {
         if(getPassMode().equals(null) || getPassMode() == "0"){
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
         //잠금설정이 되어 있을 때
         else{
