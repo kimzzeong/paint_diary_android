@@ -1,6 +1,7 @@
 package com.example.paint_diary.Activity
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,6 +29,32 @@ class SettingActivity : AppCompatActivity() {
         val sharedPreferences = this.getSharedPreferences("user",0)
         val editor = sharedPreferences.edit()
         var user_idx : String? = sharedPreferences?.getString("user_idx", "")
+
+
+        var passMode = sharedPreferences?.getString("passMode","")
+        if(passMode.equals(null) || passMode.equals("")){
+            setting_lock.text = "앱 잠금 설정"
+        }else{
+
+            setting_lock.text = "앱 잠금 설정 해제"
+        }
+
+        //앱 잠금 설정
+        setting_lock.setOnClickListener {
+            if(passMode.equals(null) || passMode.equals("")){
+                val intent = Intent(this, AppPassWordActivity::class.java)
+                intent.putExtra("settingActivity","setting")
+                startActivity(intent)
+            }else{
+                    //쉐어드에 비밀번호와 앱 잠금 상태인지 아닌지 체크
+                    val sharedPreferences = this.getSharedPreferences("user", 0)
+                    val editor = sharedPreferences.edit()
+                    editor.remove("passMode")
+                    editor.commit()
+                    setting_lock.text = "앱 잠금 설정"
+                Toast.makeText(this,"앱 잠금이 해제되었습니다.",Toast.LENGTH_SHORT).show()
+            }
+        }
 
         //로그아웃 클릭
         setting_logout.setOnClickListener {
@@ -96,6 +123,19 @@ class SettingActivity : AppCompatActivity() {
             dialog.setNegativeButton("아니오"){ dialog, id ->
             }
             dialog.show()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val sharedPreferences = this.getSharedPreferences("user",0)
+        var passMode = sharedPreferences?.getString("passMode","")
+        if(passMode.equals(null) || passMode.equals("")){
+            setting_lock.text = "앱 잠금 설정"
+        }else{
+
+            setting_lock.text = "앱 잠금 설정 해제"
         }
     }
 }

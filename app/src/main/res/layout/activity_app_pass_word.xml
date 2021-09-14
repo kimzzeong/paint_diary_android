@@ -23,7 +23,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:text="안내문"
+                android:text="비밀번호를 입력해주세요."
                 android:textSize="25dp"
                 android:gravity="center"
                 android:layout_marginTop="150dp"

@@ -3,6 +3,7 @@ package com.example.paint_diary;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
@@ -14,6 +15,7 @@ import java.io.OutputStream;
 import retrofit2.http.GET;
 
 public class dd {
+
 
 
 }
