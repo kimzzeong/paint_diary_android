@@ -79,7 +79,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         home_toolbar.inflateMenu(R.menu.home_menu)
-        home_toolbar.setTitleTextColor(Color.WHITE)
+        home_toolbar.setTitleTextColor(Color.GRAY)
         home_toolbar.setTitle("홈")
 
         listing_spinner.adapter = activity?.let {

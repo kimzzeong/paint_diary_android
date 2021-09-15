@@ -45,6 +45,7 @@ class CommentsActivity : AppCompatActivity() {
     var commentSecret : Int = 0 //댓글 공개 여부
     var reCommentsecret : Int = 0 //대댓글 공개 여부
     var diary_idx : Int = 0
+    var diary_writer : Int = 0
     lateinit var commentsRecyclerview: CommentsRecyclerviewAdapter
     var commentsList : ArrayList<CommentsList>? = null
     var commentsSendStatus = 0
@@ -58,6 +59,7 @@ class CommentsActivity : AppCompatActivity() {
         comments_toolbar.setTitle("댓글")
         val intent = intent
         diary_idx = intent.getIntExtra("diary_idx", 0)
+        diary_writer = intent.getIntExtra("diary_writer", 0)
 
         commentsRecyclerview = CommentsRecyclerviewAdapter(this)
         requestCommentList()
@@ -182,6 +184,9 @@ class CommentsActivity : AppCompatActivity() {
     private fun hideKeyBoard() {
         val manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         manager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        comments_secret.setImageResource(R.drawable.ic_baseline_lock_open_24)
+        commentSecret = 0
+
 
     }
 

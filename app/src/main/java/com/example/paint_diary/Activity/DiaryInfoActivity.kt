@@ -77,6 +77,7 @@ class DiaryInfoActivity : AppCompatActivity() {
         diary_comment.setOnClickListener {
             val intent = Intent(this, CommentsActivity::class.java)
             intent.putExtra("diary_idx",diary_idx)
+            intent.putExtra("diary_writer",diary_writer)
             startActivity(intent)
         }
 
