@@ -212,6 +212,13 @@ interface IRetrofit {
         @Query("recomment_idx") recomment_idx: Int
     ):Call<CommentsList>
 
+    //비밀댓글 설정
+    @GET("commentsSecret.php")
+    fun requestCommentsSecret(
+        @Query("comment_idx") comment_idx: Int,
+        @Query("comment_secret") comment_secret: Int
+    ):Call<CommentsList>
+
     //댓글 수정
     @GET("modifyComments.php")
     fun requestModifyComments(
@@ -224,13 +231,6 @@ interface IRetrofit {
     fun requestModifyReComments(
         @Query("recomment_idx") recomment_idx: Int,
         @Query("recomment_content") recomment_content: String
-    ):Call<CommentsList>
-
-    //댓글 공개/비공개 전환
-    @GET("commentsSecret.php")
-    fun commentsSecret(
-            @Query("comment_idx") comment_idx: Int,
-            @Query("comment_secret") comment_secret: Int
     ):Call<CommentsList>
 
     //비밀번호 찾기

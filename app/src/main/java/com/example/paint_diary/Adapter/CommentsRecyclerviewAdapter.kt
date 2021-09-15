@@ -77,11 +77,22 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
                     .setView(comments_dialog)
 
                 val mComments_dialog_AlertDialog = mBuilder.show()
-
+                var secret = commentItem.comment_secret
+                if(secret == 0){
+                    comments_dialog.comments_dialog_secret.text = "비밀댓글로 전환"
+                }else{
+                    comments_dialog.comments_dialog_secret.text = "공개댓글로 전환"
+                }
 
                 //다이얼로그 댓글 공개 전환 클릭
                 comments_dialog.comments_dialog_secret.setOnClickListener {
-                    //여기서 플래그 값으로 재전송
+                    if(secret == 0){
+                        secret = 1
+                    }else{
+                        secret = 0
+                    }
+                    requestCommentSecret(commentItem.comment_idx,secret)
+                    mComments_dialog_AlertDialog.dismiss()
                 }
 
                 //다이얼로그 댓글 수정 클릭
@@ -122,6 +133,8 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
 
                             }
                             dialog.show()
+
+                    mComments_dialog_AlertDialog.dismiss()
                 }
 
                 //다이얼로그 취소 클릭
@@ -274,20 +287,6 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
 
     }
 
-    private fun set_comments_secret(comment_idx: Int, comment_secret: Int) {
-        var requestDiarySecret = retrofit.create(IRetrofit::class.java)
-        requestDiarySecret.commentsSecret(comment_idx!!, comment_secret).enqueue(object : Callback<CommentsList> {
-            override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
-                val comments = response.body()
-                Toast.makeText(mContext, comments?.message, Toast.LENGTH_SHORT).show()
-                (mContext as CommentsActivity).requestCommentList()
-            }
-
-            override fun onFailure(call: Call<CommentsList>, t: Throwable) {
-            }
-
-        })
-    }
 
     //댓글 수정
     private fun requestCommentsModify(comment_idx: Int, comment_content: String) {
@@ -309,6 +308,22 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
     private fun requestCommentsRemove(comment_idx: Int) {
         var requestDiaryRemove = retrofit.create(IRetrofit::class.java)
         requestDiaryRemove.requestRemoveComments(comment_idx!!).enqueue(object : Callback<CommentsList> {
+            override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
+                val comments = response.body()
+                Toast.makeText(mContext, comments?.message, Toast.LENGTH_SHORT).show()
+                (mContext as CommentsActivity).requestCommentList()
+            }
+
+            override fun onFailure(call: Call<CommentsList>, t: Throwable) {
+            }
+
+        })
+    }
+
+    //비밀댓글 설정
+    private fun requestCommentSecret(comment_idx: Int,comment_secret: Int) {
+        var requestSecret = retrofit.create(IRetrofit::class.java)
+        requestSecret.requestCommentsSecret(comment_idx!!,comment_secret).enqueue(object : Callback<CommentsList> {
             override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
                 val comments = response.body()
                 Toast.makeText(mContext, comments?.message, Toast.LENGTH_SHORT).show()
