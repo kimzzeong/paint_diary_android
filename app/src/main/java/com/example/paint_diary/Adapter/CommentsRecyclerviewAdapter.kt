@@ -119,6 +119,13 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
                     mComments_dialog_AlertDialog.dismiss()
                 }
 
+                //대댓글
+                comments_dialog.comments_dialog_recomments.setOnClickListener {
+                    commentsActivity.comments_edit.hint = "@" + holder.comments_nickname.text.toString() + "님에게 답장..."
+                            commentsActivity.commentsSendStatus = 1
+                            commentsActivity.comment_idx = commentItem.comment_idx
+                }
+
                 //다이얼로그 삭제 클릭
                 comments_dialog.comments_dialog_remove.setOnClickListener {
                     val dialog = AlertDialog.Builder(mContext!!)
@@ -220,47 +227,69 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
 //                commentsPopup.show()
 //            }
         }else{
-            holder.comments_layout.setBackgroundColor(Color.WHITE)
-
-            //more 이미지 클릭 시 팝업메뉴
-            val commentsPopup = PopupMenu(mContext!!, holder.setComments)
-
-            commentsPopup.menuInflater?.inflate(R.menu.recomments_menu, commentsPopup.menu)
 
             holder.setComments.setOnClickListener {
-                commentsPopup.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.comments_recomment -> {
-                            commentsActivity.comments_edit.hint = "@" + holder.comments_nickname.text.toString() + "님에게 답장..."
-                            commentsActivity.commentsSendStatus = 1
-                            commentsActivity.comment_idx = commentItem.comment_idx
+                holder.comments_layout.setBackgroundColor(Color.WHITE)
 
-                        }
+                val comments_dialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+                val mBuilder = AlertDialog.Builder(mContext!!)
+                    .setView(comments_dialog)
+                val mComments_dialog_AlertDialog = mBuilder.show()
 
-//                    R.id.comments_secret -> {
-//                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
-//                        val mBuilder = AlertDialog.Builder(mContext!!)
-//                                .setView(mDialog)
-//
-//                        val mAlertDialog = mBuilder.show()
-//
-//                        mDialog.comments_dialog_cancel.setOnClickListener {
-//                            mAlertDialog.dismiss()
-//                        }
-////                        var secret = commentItem.comment_secret
-////                        if(secret == 1 ){
-////                            menuItem.title = "공개로 전환"
-////                            set_comments_secret(commentItem.comment_idx,)
-////                        }
-//
-//                    }
-
-                    }
-                    false
+                comments_dialog.comments_dialog_secret.visibility = View.GONE
+                comments_dialog.comments_dialog_modify.visibility = View.GONE
+                comments_dialog.comments_dialog_remove.visibility = View.GONE
+                comments_dialog.comments_dialog_recomments.setOnClickListener {
+                    commentsActivity.comments_edit.hint = "@" + holder.comments_nickname.text.toString() + "님에게 답장..."
+                    commentsActivity.commentsSendStatus = 1
+                    commentsActivity.comment_idx = commentItem.comment_idx
+                    mComments_dialog_AlertDialog.dismiss()
                 }
 
-                commentsPopup.show()
+                comments_dialog.comments_dialog_cancel.setOnClickListener {
+                    mComments_dialog_AlertDialog.dismiss()
+                }
             }
+
+            //more 이미지 클릭 시 팝업메뉴
+//            val commentsPopup = PopupMenu(mContext!!, holder.setComments)
+//
+//            commentsPopup.menuInflater?.inflate(R.menu.recomments_menu, commentsPopup.menu)
+
+//            holder.setComments.setOnClickListener {
+//                commentsPopup.setOnMenuItemClickListener { menuItem ->
+//                    when (menuItem.itemId) {
+//                        R.id.comments_recomment -> {
+//                            commentsActivity.comments_edit.hint = "@" + holder.comments_nickname.text.toString() + "님에게 답장..."
+//                            commentsActivity.commentsSendStatus = 1
+//                            commentsActivity.comment_idx = commentItem.comment_idx
+//
+//                        }
+//
+////                    R.id.comments_secret -> {
+////                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+////                        val mBuilder = AlertDialog.Builder(mContext!!)
+////                                .setView(mDialog)
+////
+////                        val mAlertDialog = mBuilder.show()
+////
+////                        mDialog.comments_dialog_cancel.setOnClickListener {
+////                            mAlertDialog.dismiss()
+////                        }
+//////                        var secret = commentItem.comment_secret
+//////                        if(secret == 1 ){
+//////                            menuItem.title = "공개로 전환"
+//////                            set_comments_secret(commentItem.comment_idx,)
+//////                        }
+////
+////                    }
+//
+//                    }
+//                    false
+//                }
+//
+//                commentsPopup.show()
+//            }
         }
 
 
@@ -271,7 +300,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
             override fun onResponse(call: Call<ArrayList<CommentsList>>, response: Response<ArrayList<CommentsList>>) {
                 var recomments = response.body()!!
                 Log.e("onResponse",""+recomments!!.size)
-                recommentsRecyclerview = ReCommentsRecyclerviewAdapter()
+                recommentsRecyclerview = ReCommentsRecyclerviewAdapter(commentsActivity.diary_writer)
                 holder.recomments_list.adapter = recommentsRecyclerview
                 recommentsRecyclerview.reCommentsList = recomments
                 recommentsRecyclerview.notifyDataSetChanged()
@@ -371,6 +400,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
             //비밀댓글일 경우
             else{
                 comments_lock.visibility = View.VISIBLE
+                setComments.visibility = View.INVISIBLE
                 if(item.comment_writer == user_idx || commentsActivity.diary_writer == user_idx){
                     comments_nickname.text = item.comment_nickname
                     comment_datetime.text = item.comment_datetime
@@ -390,7 +420,6 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
                     comments_nickname.text = "비밀댓글"
                     comment_datetime.text = item.comment_datetime
                     comment_content.text = "비밀댓글 입니다."
-                    comments_profile
 
 
                 }

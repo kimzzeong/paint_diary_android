@@ -23,6 +23,7 @@ import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_comments.*
+import kotlinx.android.synthetic.main.comments_dialog.view.*
 import kotlinx.android.synthetic.main.comments_modify_dialog.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,7 +32,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.ArrayList
 
-class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerviewAdapter.ViewHolder>() {
+class ReCommentsRecyclerviewAdapter(diary_writer : Int): RecyclerView.Adapter<ReCommentsRecyclerviewAdapter.ViewHolder>() {
 
     var reCommentsList: ArrayList<CommentsList>? = null
     var mContext : Context? = null
@@ -45,6 +46,11 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
             .build()
 
 
+    var user_idx : Int = 0
+    var diary_writer = diary_writer
+
+
+
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         var comments_profile : ImageView = itemView.findViewById(R.id.comments_profile)
         var comments_nickname : TextView = itemView.findViewById(R.id.comments_nickname)
@@ -52,22 +58,52 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
         var comment_content : TextView = itemView.findViewById(R.id.comment_content)
         var setComments : ImageButton = itemView.findViewById(R.id.setComments)
         var comments_layout : ConstraintLayout = itemView.findViewById(R.id.comments_layout)
+        var comments_lock : ImageView = itemView.findViewById(R.id.comments_lock)
 
 
 
         fun bind(item: CommentsList) {
-            //requestCommentList()
-            comments_nickname.text = item.comment_nickname
-            comment_datetime.text = item.comment_datetime
-            comment_content.text = item.comment_content
-            var uriToString : String = item.comment_profile
-            if(uriToString != null){
+            //비밀댓글이 아닐 경우
+            if(item.comment_secret == 0){
+                comments_nickname.text = item.comment_nickname
+                comment_datetime.text = item.comment_datetime
+                comment_content.text = item.comment_content
+                var uriToString : String = item.comment_profile
+                if(uriToString != null){
 
-                var uri : Uri = Uri.parse(uriToString)
-                var uri_diary = "http://3.36.52.195/profile/"+uri
-                Glide.with(itemView).load(uri_diary).into(comments_profile)
-            }else{
-                comments_profile.setImageResource(R.drawable.basic_profile)
+                    var uri : Uri = Uri.parse(uriToString)
+                    var uri_diary = "http://3.36.52.195/profile/"+uri
+                    Glide.with(itemView).load(uri_diary).into(comments_profile)
+                }else{
+                    comments_profile.setImageResource(R.drawable.basic_profile)
+                }
+            }
+            //비밀댓글일 경우
+            else{
+                comments_lock.visibility = View.VISIBLE
+                setComments.visibility = View.INVISIBLE
+                if(item.comment_writer == user_idx || diary_writer == user_idx ){
+                    comments_nickname.text = item.comment_nickname
+                    comment_datetime.text = item.comment_datetime
+                    comment_content.text = item.comment_content
+                    var uriToString : String = item.comment_profile
+                    if(uriToString != null){
+
+                        var uri : Uri = Uri.parse(uriToString)
+                        var uri_diary = "http://3.36.52.195/profile/"+uri
+                        Glide.with(itemView).load(uri_diary).into(comments_profile)
+                    }else{
+                        comments_profile.setImageResource(R.drawable.basic_profile)
+                    }
+
+                }else{
+
+                    comments_nickname.text = "비밀댓글"
+                    comment_datetime.text = item.comment_datetime
+                    comment_content.text = "비밀댓글 입니다."
+
+
+                }
             }
 
         }
@@ -75,6 +111,8 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         mContext = parent.context
+        val sharedPreferences = mContext?.getSharedPreferences("user", Context.MODE_PRIVATE)
+        user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
         val v = LayoutInflater.from(parent.context).inflate(R.layout.reomments_item, parent, false)
         return ViewHolder(v)
     }
@@ -84,8 +122,8 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
         holder.bind(reCommentsList!!.get(position))
 
         //more 이미지 클릭 시 팝업메뉴
-        val commentsPopup = PopupMenu(mContext!!, holder.setComments)
-        commentsPopup.menuInflater?.inflate(R.menu.recomments_modify_menu, commentsPopup.menu)
+//        val commentsPopup = PopupMenu(mContext!!, holder.setComments)
+//        commentsPopup.menuInflater?.inflate(R.menu.recomments_modify_menu, commentsPopup.menu)
 
         val sharedPreferences = mContext?.getSharedPreferences("user", Context.MODE_PRIVATE)
         var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
@@ -99,10 +137,37 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
 
         holder.setComments.setOnClickListener {
 
-            commentsPopup.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.comments_modify -> {
-                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_modify_dialog, null)
+            val comments_dialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+            val mBuilder = AlertDialog.Builder(mContext!!)
+                .setView(comments_dialog)
+
+            val mComments_dialog_AlertDialog = mBuilder.show()
+
+            comments_dialog.comments_dialog_recomments.visibility = View.GONE
+
+            var secret = commentItem.comment_secret
+            Log.e("secret",secret.toString())
+            if(secret == 0){
+                comments_dialog.comments_dialog_secret.text = "비밀댓글로 전환"
+            }else{
+                comments_dialog.comments_dialog_secret.text = "공개댓글로 전환"
+            }
+
+            //대댓글 비밀 전환
+            comments_dialog.comments_dialog_secret.setOnClickListener {
+                if(secret == 0){
+                    secret = 1
+                }else{
+                    secret = 0
+                }
+                requestCommentSecret(commentItem.recomment_idx,secret)
+
+                mComments_dialog_AlertDialog.dismiss()
+            }
+
+            //대댓글 수정
+            comments_dialog.comments_dialog_modify.setOnClickListener {
+                val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_modify_dialog, null)
                         val mBuilder = AlertDialog.Builder(mContext!!)
                             .setView(mDialog)
 
@@ -120,10 +185,12 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
                         }
 
                         mDialog.comment_set_edit.clearFocus(); //hidden keyboard
-                    }
+                mComments_dialog_AlertDialog.dismiss()
+            }
 
-                    R.id.comments_remove -> {
-                        val dialog = AlertDialog.Builder(mContext!!)
+            //대댓글 삭제
+            comments_dialog.comments_dialog_remove.setOnClickListener {
+                val dialog = AlertDialog.Builder(mContext!!)
                         dialog.setMessage("정말 삭제하시겠습니까?")
                         dialog.setCancelable(false);
                         dialog.setPositiveButton("네") { dialog, id ->
@@ -135,32 +202,76 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
 
                         }
                         dialog.show()
-                    }
-
-
-//                    R.id.comments_secret -> {
-//                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
-//                        val mBuilder = AlertDialog.Builder(mContext!!)
-//                                .setView(mDialog)
-//
-//                        val mAlertDialog = mBuilder.show()
-//
-//                        mDialog.comments_dialog_cancel.setOnClickListener {
-//                            mAlertDialog.dismiss()
-//                        }
-////                        var secret = commentItem.comment_secret
-////                        if(secret == 1 ){
-////                            menuItem.title = "공개로 전환"
-////                            set_comments_secret(commentItem.comment_idx,)
-////                        }
-//
-//                    }
-
-                }
-                false
+                mComments_dialog_AlertDialog.dismiss()
             }
 
-            commentsPopup.show()
+            //다이얼로그 취소
+            comments_dialog.comments_dialog_cancel.setOnClickListener {
+                mComments_dialog_AlertDialog.dismiss()
+            }
+
+//            commentsPopup.setOnMenuItemClickListener { menuItem ->
+//                when (menuItem.itemId) {
+//                    R.id.comments_modify -> {
+//                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_modify_dialog, null)
+//                        val mBuilder = AlertDialog.Builder(mContext!!)
+//                            .setView(mDialog)
+//
+//                        val mAlertDialog = mBuilder.show()
+//                        mDialog.comment_set_edit.setText(commentItem.comment_content)
+//
+//                        //댓글 수정 다이얼로그 확인버튼 클릭시
+//                        mDialog.comment_set_ok.setOnClickListener {
+//                            requestReCommentsModify(commentItem.recomment_idx, mDialog.comment_set_edit.text.toString())
+//                            mAlertDialog.dismiss()
+//                        }
+//                        //댓글 수정 다이얼로그 취소버튼 클릭시
+//                        mDialog.comment_set_cancel.setOnClickListener {
+//                            mAlertDialog.dismiss()
+//                        }
+//
+//                        mDialog.comment_set_edit.clearFocus(); //hidden keyboard
+//                    }
+//
+//                    R.id.comments_remove -> {
+//                        val dialog = AlertDialog.Builder(mContext!!)
+//                        dialog.setMessage("정말 삭제하시겠습니까?")
+//                        dialog.setCancelable(false);
+//                        dialog.setPositiveButton("네") { dialog, id ->
+//
+//                            RerequestCommentsRemove(commentItem.recomment_idx)
+//
+//                        }
+//                        dialog.setNegativeButton("아니오") { dialog, id ->
+//
+//                        }
+//                        dialog.show()
+//                    }
+//
+//
+////                    R.id.comments_secret -> {
+////                        val mDialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
+////                        val mBuilder = AlertDialog.Builder(mContext!!)
+////                                .setView(mDialog)
+////
+////                        val mAlertDialog = mBuilder.show()
+////
+////                        mDialog.comments_dialog_cancel.setOnClickListener {
+////                            mAlertDialog.dismiss()
+////                        }
+//////                        var secret = commentItem.comment_secret
+//////                        if(secret == 1 ){
+//////                            menuItem.title = "공개로 전환"
+//////                            set_comments_secret(commentItem.comment_idx,)
+//////                        }
+////
+////                    }
+//
+//                }
+//                false
+//            }
+//
+//            commentsPopup.show()
         }
 
     }
@@ -200,22 +311,21 @@ class ReCommentsRecyclerviewAdapter: RecyclerView.Adapter<ReCommentsRecyclerview
        return reCommentsList!!.size
     }
 
-//    fun requestCommentList(comment_idx: Int) {
-//        var comment = retrofit.create(IRetrofit::class.java)
-//        comment.requestReComments(comment_idx).enqueue(object : Callback<ArrayList<CommentsList>> {
-//            override fun onResponse(call: Call<ArrayList<CommentsList>>, response: Response<ArrayList<CommentsList>>) {
-//                var recomments = response.body()!!
-//                Log.e("size",""+recomments.size)
-//                reCommentsList = recomments
-//
-//                notifyDataSetChanged()
-//            }
-//
-//            override fun onFailure(call: Call<ArrayList<CommentsList>>, t: Throwable) {
-//            }
-//
-//        })
-//    }
+    //비밀댓글 설정
+    private fun requestCommentSecret(comment_idx: Int,comment_secret: Int) {
+        var requestSecret = retrofit.create(IRetrofit::class.java)
+        requestSecret.requestReCommentsSecret(comment_idx!!,comment_secret).enqueue(object : Callback<CommentsList> {
+            override fun onResponse(call: Call<CommentsList>, response: Response<CommentsList>) {
+                val comments = response.body()
+                Toast.makeText(mContext, comments?.message, Toast.LENGTH_SHORT).show()
+                (mContext as CommentsActivity).requestCommentList()
+            }
+
+            override fun onFailure(call: Call<CommentsList>, t: Throwable) {
+            }
+
+        })
+    }
 
 
 }
