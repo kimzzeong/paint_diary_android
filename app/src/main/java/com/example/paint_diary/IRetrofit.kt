@@ -88,7 +88,14 @@ interface IRetrofit {
     //@FormUrlEncoded
     @POST("diary_request.php")
     fun requestDiary(
-     //   @Field("listing_num") listing_num: Int
+        //   @Field("listing_num") listing_num: Int
+    ): Call<ArrayList<DiaryRequest>>
+
+    //다이어리 날짜로 불러오기
+    @FormUrlEncoded
+    @POST("diary_request_date.php")
+    fun requestDiaryDate(
+           @Field("date") date: String
     ): Call<ArrayList<DiaryRequest>>
 
     //비밀번호 변경

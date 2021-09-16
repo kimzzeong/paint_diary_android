@@ -1,15 +1,15 @@
 package com.example.paint_diary.Fragment
 
-import LoadingDialog
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.paint_diary.Activity.DiaryInfoActivity
@@ -20,6 +20,7 @@ import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_diary.*
 import kotlinx.android.synthetic.main.dialog_loading.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
@@ -27,12 +28,17 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment() {
     lateinit var diaryRecyclerview: DiaryRecyclerviewAdapter
     var listing_num : Int = 0
+
+    var datePicker : DatePickerDialog? = null
+    var formatDate = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
 
     var gson: Gson = GsonBuilder()
             .setLenient()
@@ -78,27 +84,73 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        home_toolbar.inflateMenu(R.menu.home_menu)
-        home_toolbar.setTitleTextColor(Color.GRAY)
-        home_toolbar.setTitle("홈")
+        val activity = activity as AppCompatActivity?
+
+        activity?.setSupportActionBar(home_toolbar)
+        activity?.supportActionBar?.title = "홈"
 
         listing_spinner.adapter = activity?.let {
             ArrayAdapter.createFromResource(
-                    it,
+                it,
                 R.array.listSpinner,
                 android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner
-            listing_spinner.adapter = adapter
+            ).also { adapter ->
+                // Specify the layout to use when the list of choices appears
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Apply the adapter to the spinner
+                listing_spinner.adapter = adapter
+            }
         }
+
+        home_calendar.setOnClickListener {
+            Log.e("datePicker","1")
+            val getDate = Calendar.getInstance()
+            Log.e("datePicker","2")
+          //  var date_split = retrofit_date.split("-")
+            datePicker = DatePickerDialog(activity!!, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+
+
+                Log.e("datePicker","3")
+                val selectDate: Calendar = Calendar.getInstance()
+                selectDate.set(Calendar.YEAR, year)
+                selectDate.set(Calendar.MONTH, month)
+                selectDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                val date = formatDate.format(selectDate.time)
+               // retrofit_date = formatDateSave.format(selectDate.time)
+                Toast.makeText(activity,date,Toast.LENGTH_SHORT).show()
+                requestDiaryDate(date)
+                home_listing(listing_num)
+
+                Log.e("datePicker","4")
+
+            }, getDate.get(Calendar.YEAR), getDate.get(Calendar.MONTH), getDate.get(Calendar.DAY_OF_MONTH))
+                .apply {
+
+                    Log.e("datePicker","5")
+                    datePicker.maxDate = System.currentTimeMillis()
+                }
+
+            Log.e("datePicker","6")
+//
+//            if(update.equals("update")){
+//                datePicker?.updateDate(Integer.parseInt(date_split[0]),Integer.parseInt(date_split[1])- 1,Integer.parseInt(date_split[2]))
+//            }
+            datePicker!!.show()
+
+            Log.e("datePicker","7")
         }
 
         listing_spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 listing_num = position
-                requestDiary()
+                home_listing(listing_num)
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {} // 스피너 쓰기위한 어뎁터 메소드 선언부
@@ -120,20 +172,65 @@ class HomeFragment : Fragment() {
         diary_list.layoutManager = layoutManager
 
         diaryRecyclerview.setItemClickListener(object : DiaryRecyclerviewAdapter.ItemClickListener {
-            override fun onClick(view: View, position: Int, diary_idx :Int, diary_writer : Int) {
+            override fun onClick(view: View, position: Int, diary_idx: Int, diary_writer: Int) {
                 val intent = Intent(context, DiaryInfoActivity::class.java)
-                intent.putExtra("diary_idx",diary_idx)
-                intent.putExtra("diary_writer",diary_writer)
-                Log.e("click",diary_idx.toString())
+                intent.putExtra("diary_idx", diary_idx)
+                intent.putExtra("diary_writer", diary_writer)
+                Log.e("click", diary_idx.toString())
                 startActivity(intent)
             }
         })
 
         diary_refresh.setOnRefreshListener {
             requestDiary()
+            listing_spinner.adapter = activity?.let {
+                ArrayAdapter.createFromResource(
+                    it,
+                    R.array.listSpinner,
+                    android.R.layout.simple_spinner_item
+                ).also { adapter ->
+                    // Specify the layout to use when the list of choices appears
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    // Apply the adapter to the spinner
+                    listing_spinner.adapter = adapter
+                }
+            }
             diary_refresh.isRefreshing = false
+
         }
 
+    }
+
+    private fun requestDiaryDate(date : String) {
+        loaderLayout.visibility = View.VISIBLE
+        var diary_request = retrofit.create(IRetrofit::class.java)
+
+        diary_request.requestDiaryDate(date).enqueue(object : Callback<ArrayList<DiaryRequest>> {
+            override fun onResponse(
+                call: Call<ArrayList<DiaryRequest>>, response: Response<ArrayList<DiaryRequest>>
+            ) {
+
+                var diary = response.body()!!
+
+                diary_list.adapter = diaryRecyclerview
+                diaryRecyclerview.diaryList = diary
+                diaryRecyclerview.notifyDataSetChanged()
+                if(diaryRecyclerview.diaryList?.size == 0){
+                    home_info_text.visibility = View.VISIBLE
+                    diary_list.visibility = View.INVISIBLE
+                }else{
+                    home_info_text.visibility = View.INVISIBLE
+                    diary_list.visibility = View.VISIBLE
+                }
+
+            }
+
+            override fun onFailure(call: Call<ArrayList<DiaryRequest>>, t: Throwable) {
+                Log.e("실패", t.localizedMessage)
+            }
+
+        })
+        loaderLayout.visibility = View.INVISIBLE
     }
 
 
@@ -146,21 +243,16 @@ class HomeFragment : Fragment() {
         var diary_request = retrofit.create(IRetrofit::class.java)
 
         diary_request.requestDiary().enqueue(object : Callback<ArrayList<DiaryRequest>> {
-            override fun onResponse(call: Call<ArrayList<DiaryRequest>>, response: Response<ArrayList<DiaryRequest>>
+            override fun onResponse(
+                call: Call<ArrayList<DiaryRequest>>, response: Response<ArrayList<DiaryRequest>>
             ) {
 
                 var diary = response.body()!!
 
                 diary_list.adapter = diaryRecyclerview
-                if(listing_num == 1){
-                    diary.sortByDescending { it.diary_date }
-                }else if(listing_num == 2){
-                    diary.sortByDescending { it.diary_like_count }
-                }else if(listing_num == 3){
-                    diary.sortByDescending { it.diary_comment_count }
-                }
                 diaryRecyclerview.diaryList = diary
                 diaryRecyclerview.notifyDataSetChanged()
+                home_listing(listing_num)
 
             }
 
@@ -197,31 +289,22 @@ class HomeFragment : Fragment() {
         }
     }
 
-//    private fun likeProcess() {
-//
-//        var request_like = retrofit.create(IRetrofit::class.java)
-//
-//        request_like.requestLikeInfo(diary_idx!!,user_idx!!).enqueue(object : Callback<like_data>{
-//            override fun onResponse(call: Call<like_data>, response: Response<like_data>) {
-//                val like = response.body()
-//                if(like != null){
-//                    diary_like = like.like_status
-//                    diary_like_count = like.like_count
-//                    diary_favorite_text.text = diary_like_count.toString()
-//                    diary_comment_text.text = like.comments_count.toString()
-//
-//                    diary_like_setting()
-//
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<like_data>, t: Throwable) {
-//                Toast.makeText(activity,"좋아요 불러오기 실패",Toast.LENGTH_SHORT).show()
-//            }
-//
-//        })
-//    }
 
+    fun home_listing(listing_num : Int){
+        if (listing_num == 0) {
+            diaryRecyclerview.diaryList?.sortByDescending { it.diary_date }
+           // diaryRecyclerview.diaryList?.sortByDescending { it.diary_idx }
+        } else if (listing_num == 1) {
+            diaryRecyclerview.diaryList?.sortBy { it.diary_date  }
+           // diaryRecyclerview.diaryList?.sortBy { it.diary_idx  }
+        } else if (listing_num == 2) {
+            diaryRecyclerview.diaryList?.sortByDescending { it.diary_like_count }
+        } else if (listing_num == 3){
+            diaryRecyclerview.diaryList?.sortByDescending { it.diary_comment_count }
+        }
+
+        diaryRecyclerview.notifyDataSetChanged()
+    }
 
 }
 
