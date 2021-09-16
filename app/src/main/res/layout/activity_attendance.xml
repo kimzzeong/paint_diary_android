@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="parent"
 
@@ -26,14 +25,17 @@
             android:text="@string/pre"
             android:textColor="@color/black"
             android:background="@null"
+            android:backgroundTint="@color/white"
             android:textStyle="bold"
             android:textSize="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
             />
 
         <TextView
             android:id="@+id/monthYear"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="4"
             android:layout_height="wrap_content"
             android:text="hello"
             android:textAlignment="center"
@@ -48,8 +50,11 @@
             android:text="@string/next"
             android:textColor="@color/black"
             android:background="@null"
+            android:backgroundTint="@color/white"
             android:textStyle="bold"
             android:textSize="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
             />
     </LinearLayout>
     <LinearLayout
@@ -57,6 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@+id/monthYear_layout">
         <TextView
             android:layout_width="0dp"
@@ -134,7 +140,7 @@
     <Button
         android:id="@+id/btn_attendance"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_weight="1"
         android:text="출석체크"
         android:layout_marginBottom="80dp"
