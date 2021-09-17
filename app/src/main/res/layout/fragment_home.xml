@@ -25,6 +25,19 @@
                 android:textSize="20dp"
                 android:textColor="@color/white"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/home_calendar"
+                android:text="전체글"
+                android:textSize="20dp"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/white"
+                android:id="@+id/content_view"
+                android:visibility="invisible"
+                />
 
             <ImageView
                 android:id="@+id/home_calendar"

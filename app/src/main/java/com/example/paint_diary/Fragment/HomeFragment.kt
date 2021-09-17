@@ -127,6 +127,7 @@ class HomeFragment : Fragment() {
                 requestDiaryDate(date!!)
                 home_listing(listing_num)
                 Log.e("datePicker","4")
+                content_view.visibility = View.VISIBLE
               //  if(!date.equals("")){
               //  }
 
@@ -141,6 +142,22 @@ class HomeFragment : Fragment() {
                     datePicker.maxDate = System.currentTimeMillis()
                 }
 
+            content_view.setOnClickListener {
+                content_view.visibility = View.INVISIBLE
+                requestDiary()
+                listing_spinner.adapter = activity?.let {
+                    ArrayAdapter.createFromResource(
+                        it,
+                        R.array.listSpinner,
+                        android.R.layout.simple_spinner_item
+                    ).also { adapter ->
+                        // Specify the layout to use when the list of choices appears
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        // Apply the adapter to the spinner
+                        listing_spinner.adapter = adapter
+                    }
+                }
+            }
 
 
             datePicker!!.show()
@@ -156,6 +173,18 @@ class HomeFragment : Fragment() {
                 datePicker?.updateDate(Integer.parseInt(date_split!![0]),Integer.parseInt(date_split!![1])- 1,Integer.parseInt(date_split!![2]))
             }else{
 
+            }
+            listing_spinner.adapter = activity?.let {
+                ArrayAdapter.createFromResource(
+                    it,
+                    R.array.listSpinner,
+                    android.R.layout.simple_spinner_item
+                ).also { adapter ->
+                    // Specify the layout to use when the list of choices appears
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    // Apply the adapter to the spinner
+                    listing_spinner.adapter = adapter
+                }
             }
         }
 
@@ -309,16 +338,30 @@ class HomeFragment : Fragment() {
 
 
     fun home_listing(listing_num : Int){
-        if (listing_num == 0) {
-            diaryRecyclerview.diaryList?.sortByDescending { it.diary_date }
-           // diaryRecyclerview.diaryList?.sortByDescending { it.diary_idx }
-        } else if (listing_num == 1) {
-            diaryRecyclerview.diaryList?.sortBy { it.diary_date  }
-           // diaryRecyclerview.diaryList?.sortBy { it.diary_idx  }
-        } else if (listing_num == 2) {
-            diaryRecyclerview.diaryList?.sortByDescending { it.diary_like_count }
-        } else if (listing_num == 3){
-            diaryRecyclerview.diaryList?.sortByDescending { it.diary_comment_count }
+        if(date != null){
+            if (listing_num == 0) {
+                diaryRecyclerview.diaryList?.sortByDescending { it.diary_idx }
+                // diaryRecyclerview.diaryList?.sortByDescending { it.diary_idx }
+            } else if (listing_num == 1) {
+                diaryRecyclerview.diaryList?.sortBy { it.diary_idx  }
+                // diaryRecyclerview.diaryList?.sortBy { it.diary_idx  }
+            } else if (listing_num == 2) {
+                diaryRecyclerview.diaryList?.sortByDescending { it.diary_like_count }
+            } else if (listing_num == 3){
+                diaryRecyclerview.diaryList?.sortByDescending { it.diary_comment_count }
+            }
+        }else{
+            if (listing_num == 0) {
+                diaryRecyclerview.diaryList?.sortByDescending { it.diary_date }
+                // diaryRecyclerview.diaryList?.sortByDescending { it.diary_idx }
+            } else if (listing_num == 1) {
+                diaryRecyclerview.diaryList?.sortBy { it.diary_date  }
+                // diaryRecyclerview.diaryList?.sortBy { it.diary_idx  }
+            } else if (listing_num == 2) {
+                diaryRecyclerview.diaryList?.sortByDescending { it.diary_like_count }
+            } else if (listing_num == 3){
+                diaryRecyclerview.diaryList?.sortByDescending { it.diary_comment_count }
+            }
         }
 
         diaryRecyclerview.notifyDataSetChanged()
