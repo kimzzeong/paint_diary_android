@@ -49,6 +49,7 @@ class HomeFragment : Fragment() {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
+    var date : String? = null
     companion object {
         const val TAG : String = "로그"
         fun newInstance() : HomeFragment {
@@ -102,11 +103,13 @@ class HomeFragment : Fragment() {
             }
         }
 
+        //캘린더 아이콘 클릭 시 날짜별로 일기 보기 가능
         home_calendar.setOnClickListener {
             Log.e("datePicker","1")
             val getDate = Calendar.getInstance()
             Log.e("datePicker","2")
-          //  var date_split = retrofit_date.split("-")
+
+            var date_split : Array<String>? = null
             datePicker = DatePickerDialog(activity!!, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
 
 
@@ -116,13 +119,20 @@ class HomeFragment : Fragment() {
                 selectDate.set(Calendar.MONTH, month)
                 selectDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                val date = formatDate.format(selectDate.time)
+                date = formatDate.format(selectDate.time)
+                Log.e("date",date!!)
                // retrofit_date = formatDateSave.format(selectDate.time)
-                Toast.makeText(activity,date,Toast.LENGTH_SHORT).show()
-                requestDiaryDate(date)
-                home_listing(listing_num)
 
+                //Toast.makeText(activity,date,Toast.LENGTH_SHORT).show()
+                requestDiaryDate(date!!)
+                home_listing(listing_num)
                 Log.e("datePicker","4")
+              //  if(!date.equals("")){
+              //  }
+
+
+//                Log.e("size",date_split.size.toString())
+//                Log.e("date_split",date_split[0])
 
             }, getDate.get(Calendar.YEAR), getDate.get(Calendar.MONTH), getDate.get(Calendar.DAY_OF_MONTH))
                 .apply {
@@ -131,14 +141,22 @@ class HomeFragment : Fragment() {
                     datePicker.maxDate = System.currentTimeMillis()
                 }
 
-            Log.e("datePicker","6")
-//
-//            if(update.equals("update")){
-//                datePicker?.updateDate(Integer.parseInt(date_split[0]),Integer.parseInt(date_split[1])- 1,Integer.parseInt(date_split[2]))
-//            }
+
+
             datePicker!!.show()
 
-            Log.e("datePicker","7")
+            Log.e("datePicker","6")
+            if(date != null){
+
+                date_split = date?.split("-")?.toTypedArray()
+                Log.e("datePicker","7")
+                Log.e("date_split",date_split!![0])
+                Log.e("date_split",date_split!![1])
+                Log.e("date_split",date_split!![2])
+                datePicker?.updateDate(Integer.parseInt(date_split!![0]),Integer.parseInt(date_split!![1])- 1,Integer.parseInt(date_split!![2]))
+            }else{
+
+            }
         }
 
         listing_spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
