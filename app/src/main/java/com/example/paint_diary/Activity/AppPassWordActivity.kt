@@ -37,6 +37,7 @@ class AppPassWordActivity : AppCompatActivity(), View.OnClickListener {
         }else{
             setting()
         }
+        //버튼 클릭 리스너
         btn_00.setOnClickListener(this)
         btn_01.setOnClickListener(this)
         btn_02.setOnClickListener(this)

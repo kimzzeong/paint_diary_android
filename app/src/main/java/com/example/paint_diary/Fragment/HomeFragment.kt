@@ -157,6 +157,7 @@ class HomeFragment : Fragment() {
                         listing_spinner.adapter = adapter
                     }
                 }
+                date = null
             }
 
 

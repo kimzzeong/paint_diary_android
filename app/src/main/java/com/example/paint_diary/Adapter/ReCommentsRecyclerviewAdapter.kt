@@ -81,7 +81,6 @@ class ReCommentsRecyclerviewAdapter(diary_writer : Int): RecyclerView.Adapter<Re
             //비밀댓글일 경우
             else{
                 comments_lock.visibility = View.VISIBLE
-                setComments.visibility = View.INVISIBLE
                 if(item.comment_writer == user_idx || diary_writer == user_idx ){
                     comments_nickname.text = item.comment_nickname
                     comment_datetime.text = item.comment_datetime
@@ -98,6 +97,7 @@ class ReCommentsRecyclerviewAdapter(diary_writer : Int): RecyclerView.Adapter<Re
 
                 }else{
 
+                    setComments.visibility = View.INVISIBLE
                     comments_nickname.text = "비밀댓글"
                     comment_datetime.text = item.comment_datetime
                     comment_content.text = "비밀댓글 입니다."
@@ -112,7 +112,7 @@ class ReCommentsRecyclerviewAdapter(diary_writer : Int): RecyclerView.Adapter<Re
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         mContext = parent.context
         val sharedPreferences = mContext?.getSharedPreferences("user", Context.MODE_PRIVATE)
-        user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
+        user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
         val v = LayoutInflater.from(parent.context).inflate(R.layout.reomments_item, parent, false)
         return ViewHolder(v)
     }
@@ -132,7 +132,7 @@ class ReCommentsRecyclerviewAdapter(diary_writer : Int): RecyclerView.Adapter<Re
             holder.comments_layout.setBackgroundColor(Color.WHITE)
         }else{
             holder.setComments.visibility = View.VISIBLE
-            holder.comments_layout.setBackgroundColor(Color.parseColor("#24EFCAA6"))
+            holder.comments_layout.setBackgroundColor(Color.parseColor("#D4E5ED")) //#24EFCAA6
         }
 
         holder.setComments.setOnClickListener {

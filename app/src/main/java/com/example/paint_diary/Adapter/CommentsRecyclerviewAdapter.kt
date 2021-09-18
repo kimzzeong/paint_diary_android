@@ -57,7 +57,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         mContext = parent.context
 
         val sharedPreferences = mContext?.getSharedPreferences("user", Context.MODE_PRIVATE)
-        user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
+        user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
         val v = LayoutInflater.from(parent.context).inflate(R.layout.comments_item, parent, false)
         return ViewHolder(v)
     }
@@ -66,10 +66,10 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
         val commentItem: CommentsList = commentsList!!.get(position)
         holder.bind(commentsList!!.get(position))
         val sharedPreferences = mContext?.getSharedPreferences("user", Context.MODE_PRIVATE)
-        var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
+       // var user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
         Log.e("commentsAdapter",user_idx.toString())
         if(commentItem.comment_writer == user_idx){
-            holder.comments_layout.setBackgroundColor(Color.parseColor("#24EFCAA6"))
+            holder.comments_layout.setBackgroundColor(Color.parseColor("#D4E5ED")) //#24EFCAA6
             holder.setComments.setOnClickListener{
 
                 val comments_dialog = LayoutInflater.from(mContext).inflate(R.layout.comments_dialog,null)
@@ -400,7 +400,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
             //비밀댓글일 경우
             else{
                 comments_lock.visibility = View.VISIBLE
-                setComments.visibility = View.INVISIBLE
+                //현재 로그인 중인 유저가 글쓴이거나 댓글쓴이일 경우
                 if(item.comment_writer == user_idx || commentsActivity.diary_writer == user_idx){
                     comments_nickname.text = item.comment_nickname
                     comment_datetime.text = item.comment_datetime
@@ -417,6 +417,7 @@ class CommentsRecyclerviewAdapter(commentsActivity: CommentsActivity) :RecyclerV
 
                 }else{
 
+                    setComments.visibility = View.INVISIBLE
                     comments_nickname.text = "비밀댓글"
                     comment_datetime.text = item.comment_datetime
                     comment_content.text = "비밀댓글 입니다."
