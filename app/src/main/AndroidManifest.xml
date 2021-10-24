@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.AttendanceActivity"></activity>
+        <activity android:name=".Activity.ChatActivity"></activity>
+        <activity android:name=".Activity.AttendanceActivity" />
         <activity android:name=".Activity.AppPassWordActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,7 +48,7 @@
         <activity
             android:name=".Activity.PaintActivity"
             android:hardwareAccelerated="false" />
-        <activity android:name=".Activity.MainActivity"></activity>
+        <activity android:name=".Activity.MainActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

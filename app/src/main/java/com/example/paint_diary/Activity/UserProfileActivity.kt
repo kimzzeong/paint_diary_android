@@ -52,6 +52,11 @@ class UserProfileActivity : AppCompatActivity() {
 
         })
 
+        user_profile_chat_btn.setOnClickListener {
+            val intent = Intent(this@UserProfileActivity, ChatActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun requestProfile() {

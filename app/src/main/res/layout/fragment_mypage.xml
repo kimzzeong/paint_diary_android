@@ -54,7 +54,7 @@
             android:id="@+id/mypage_setting"
             android:background="@drawable/button_custom"
             android:src="@drawable/ic_baseline_settings_24"
-            app:layout_constraintRight_toRightOf="@id/mypage_attendance_btn"
+            app:layout_constraintRight_toRightOf="@id/mypage_friend_btn"
             app:layout_constraintTop_toTopOf="@id/mypage_nickname"
             />
 
@@ -76,8 +76,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/mypage_introduction"
-            app:layout_constraintRight_toRightOf="parent"
-            android:text="일기 수 : 0개 | 출석 수 : 0일"
+            app:layout_constraintRight_toRightOf="@id/mypage_friend_btn"
+            android:text="일기 수 : 0개"
             android:textStyle="bold"
             android:id="@+id/mypage_count"
             android:ellipsize="end"
@@ -88,20 +88,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/mypage_friend_btn"
-            app:layout_constraintRight_toLeftOf="@+id/mypage_attendance_btn"
-            app:layout_constraintTop_toTopOf="@id/mypage_attendance_btn"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mypage_count"
             android:layout_marginRight="10dp"
             android:text="친구목록"
             />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/mypage_attendance_btn"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mypage_count"
-            android:layout_marginTop="10dp"
-            android:text="출석체크"
-            />
+<!--        <Button-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/mypage_attendance_btn"-->
+<!--            app:layout_constraintRight_toRightOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/mypage_count"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:text="출석체크"-->
+<!--            />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
