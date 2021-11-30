@@ -251,7 +251,14 @@ interface IRetrofit {
     @FormUrlEncoded
     @POST("sendPWforemail.php")
     fun requestFindPW(
-        @Field("email") email: String
+            @Field("email") email: String
     ): Call<String>
+
+    //채팅방 불러오기
+    @FormUrlEncoded
+    @POST("chatRoomList.php")
+    fun requestChatRoom(
+            @Field("user_idx") user_idx: String
+    ): Call<ArrayList<ChatRoom>>
 }
 

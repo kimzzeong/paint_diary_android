@@ -1,7 +1,6 @@
 package com.example.paint_diary.Adapter
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.paint_diary.Data.Room
+import com.example.paint_diary.Data.ChatRoom
 import com.example.paint_diary.R
-import java.util.ArrayList
 
 class RoomAdapter : RecyclerView.Adapter<RoomAdapter.ViewHolder>() {
-    var roomList = mutableListOf<Room>()
+    var roomList = mutableListOf<ChatRoom>()
     var context : Context? = null
     var user_idx : Int = 0 //유저 고유 번호
 
@@ -50,10 +47,10 @@ class RoomAdapter : RecyclerView.Adapter<RoomAdapter.ViewHolder>() {
         var chat_datetime : TextView = itemView.findViewById(R.id.chat_datetime)
         var chat_content : TextView = itemView.findViewById(R.id.chat_content)
 
-        fun bind(item: Room){
+        fun bind(item: ChatRoom){
             chat_nickname.text = item.room_name
             chat_datetime.text = item.room_datetime
-            chat_content.text = item.message
+            chat_content.text = "일단 비워져있으요"
 //            var uriToString : String = item.room_profilePhoto
 //            if(uriToString != null){
 //
