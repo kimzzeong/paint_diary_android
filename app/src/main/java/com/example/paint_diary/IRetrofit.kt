@@ -267,6 +267,6 @@ interface IRetrofit {
     fun requestChatRoomCreate(
         @Field("user_idx") user_idx: String,
         @Field("room_name") room_name: String
-    ): Call<ArrayList<ChatRoom>>
+    ): Call<ChatRoom>
 }
 

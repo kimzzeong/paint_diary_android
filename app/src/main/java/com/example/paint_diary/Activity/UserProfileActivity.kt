@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -73,9 +74,19 @@ class UserProfileActivity : AppCompatActivity() {
 
         })
 
+        //현재 로그인 중인 유저와 사용자 프로필의 유저가 같을 경우 채팅하기 버튼 안보이게 함
+        if(user_idx.equals(""+diary_writer)){
+            user_profile_chat_btn.visibility = View.GONE
+            user_profile_follow.visibility = View.GONE
+        }else{
+            user_profile_chat_btn.visibility = View.VISIBLE
+            user_profile_follow.visibility = View.VISIBLE
+        }
+
         user_profile_chat_btn.setOnClickListener {
             //여기서 채팅방 추가시키기
             //현재 로그인 중인 유저 아이디와 내가 채팅 할 유저 아이디를 묶어서 사용자로 보내기
+
 
             requesstCreateChatRoom(user_idx+","+diary_writer)
             val intent = Intent(this@UserProfileActivity, ChatActivity::class.java)
@@ -86,15 +97,17 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun requesstCreateChatRoom(users_idx : String){
         var create_room = retrofit.create(IRetrofit::class.java)
-        create_room.requestChatRoomCreate(users_idx,diary_writer_nickname!!).enqueue(object : Callback<ArrayList<ChatRoom>>{
+        create_room.requestChatRoomCreate(users_idx,diary_writer_nickname!!).enqueue(object : Callback<ChatRoom>{
             override fun onResponse(
-                call: Call<ArrayList<ChatRoom>>,
-                response: Response<ArrayList<ChatRoom>>
+                call: Call<ChatRoom>,
+                response: Response<ChatRoom>
             ) {
+                var room = response.body()
+                //Toast.makeText(this@UserProfileActivity,room?.message,Toast.LENGTH_SHORT).show()
 
             }
 
-            override fun onFailure(call: Call<ArrayList<ChatRoom>>, t: Throwable) {
+            override fun onFailure(call: Call<ChatRoom>, t: Throwable) {
 
             }
 
