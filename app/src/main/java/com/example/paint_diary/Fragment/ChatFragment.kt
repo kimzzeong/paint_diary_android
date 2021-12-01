@@ -91,11 +91,7 @@ class ChatFragment : Fragment() {
         chatroom_recyclerview.layoutManager = layoutManager
 
 
-        //var room = Room("테스트 날짜","테스트 메세지","테스트 방 이름","https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/201909/10/97737cb1-a4b9-4ee2-a5b7-f784540cfd30.jpg")
-        //roomList!!.add(room)
         chatroom_recyclerview.adapter = roomAdapter
-        //roomAdapter.roomList = roomList!!
-        //Log.e("roomlist",""+roomList?.size)
 
         //채팅방 목록 불러옴
         requestChatRoom()
@@ -128,8 +124,8 @@ class ChatFragment : Fragment() {
                 roomAdapter.roomList = room
                 roomAdapter.notifyDataSetChanged()
 
-                Log.e("roomsize",""+room.size)
 
+                //채팅방이 없으면 진행중인 채팅방이 없다고 텍스트뷰로 알려줌
                 if(room.size <= 0){
                     chatroom_textview.visibility = View.VISIBLE
                     chatroom_recyclerview.visibility = View.INVISIBLE
@@ -146,6 +142,10 @@ class ChatFragment : Fragment() {
         })
 
         //loaderLayout.visibility = View.INVISIBLE
+
+        /*
+        문자열로 user_idx를 하나의 String으로 만들어서 가져올 때 split(",")으로 arraylist에 넣어서 값을 확인?
+        */
     }
 
 }

@@ -260,5 +260,13 @@ interface IRetrofit {
     fun requestChatRoom(
             @Field("user_idx") user_idx: String
     ): Call<ArrayList<ChatRoom>>
+
+    //채팅방 만들기
+    @FormUrlEncoded
+    @POST("chatRoomCreate.php")
+    fun requestChatRoomCreate(
+        @Field("user_idx") user_idx: String,
+        @Field("room_name") room_name: String
+    ): Call<ArrayList<ChatRoom>>
 }
 

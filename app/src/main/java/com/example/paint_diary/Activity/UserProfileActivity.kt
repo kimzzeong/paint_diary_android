@@ -1,5 +1,6 @@
 package com.example.paint_diary.Activity
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.paint_diary.*
 import com.example.paint_diary.Adapter.UserProfileDiaryListAdapter
+import com.example.paint_diary.Data.ChatRoom
 import com.example.paint_diary.Data.DiaryList
 import com.example.paint_diary.Data.Profile
 import com.google.gson.Gson
@@ -28,15 +30,34 @@ class UserProfileActivity : AppCompatActivity() {
     private var diary_writer: Int? = null
     lateinit var userProfileDiaryListAdapter: UserProfileDiaryListAdapter
     var profile_photo : String? = null
+
+    var gson: Gson = GsonBuilder()
+        .setLenient()
+        .create()
+
+    var retrofit = Retrofit.Builder()
+        .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
+    var user_idx : String? = null
+    var diary_writer_nickname : String? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
+        val sharedPreferences = this.getSharedPreferences("user", Context.MODE_PRIVATE)
+        user_idx = sharedPreferences?.getString("user_idx", "")
+
         val intent = intent
         diary_writer = intent.getIntExtra("diary_writer",0)
+        Log.e("diary_writer",""+diary_writer)
+        Log.e("user_idx",""+user_idx)
         userProfileDiaryListAdapter = UserProfileDiaryListAdapter()
         requestProfile()
         requestDiary()
+
         val layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
         user_profile_diaryList.layoutManager = layoutManager
@@ -53,21 +74,36 @@ class UserProfileActivity : AppCompatActivity() {
         })
 
         user_profile_chat_btn.setOnClickListener {
+            //여기서 채팅방 추가시키기
+            //현재 로그인 중인 유저 아이디와 내가 채팅 할 유저 아이디를 묶어서 사용자로 보내기
+
+            requesstCreateChatRoom(user_idx+","+diary_writer)
             val intent = Intent(this@UserProfileActivity, ChatActivity::class.java)
             startActivity(intent)
         }
 
     }
 
-    private fun requestProfile() {
-        var gson: Gson = GsonBuilder()
-                .setLenient()
-                .create()
+    private fun requesstCreateChatRoom(users_idx : String){
+        var create_room = retrofit.create(IRetrofit::class.java)
+        create_room.requestChatRoomCreate(users_idx,diary_writer_nickname!!).enqueue(object : Callback<ArrayList<ChatRoom>>{
+            override fun onResponse(
+                call: Call<ArrayList<ChatRoom>>,
+                response: Response<ArrayList<ChatRoom>>
+            ) {
 
-        var retrofit = Retrofit.Builder()
-                .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
+            }
+
+            override fun onFailure(call: Call<ArrayList<ChatRoom>>, t: Throwable) {
+
+            }
+
+
+        })
+    }
+
+    private fun requestProfile() {
+
 
         var user_profile = retrofit.create(IRetrofit::class.java)
         if (diary_writer != null) {
@@ -77,6 +113,7 @@ class UserProfileActivity : AppCompatActivity() {
                     var profile = response.body()
                     user_profile_intro.text = profile?.user_introduction
                     user_profile_nickname.text = profile?.user_nickname
+                    diary_writer_nickname = profile?.user_nickname
                     if(profile?.user_profile == null){
                         user_profile_photo.setImageResource(R.drawable.basic_profile)
                         profile_photo = null
