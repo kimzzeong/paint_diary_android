@@ -26,9 +26,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -150,17 +152,13 @@ public class ChatActivity extends AppCompatActivity {
         @Override
         public void run() {
             //           chatView.setText(chatView.getText().toString()+msg+"\n");
-/*
-            // 현재 날짜 구하기
-            LocalDate now = LocalDate.now();
-            // 포맷 정의
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-            // 포맷 적용
-            String formatedNow = now.format(formatter);*/
 
+            Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
+            // 년월일시분초 14자리 포멧
+            SimpleDateFormat fourteen_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             if(room_idx.equals(message_room_idx)){
-                Chat chat = new Chat(msg,user_idx,"formatedNow","",nickname);
+                Chat chat = new Chat(msg,user_idx,fourteen_format.format(date_now),"",nickname);
                 list.add(chat);
                 adapter.notifyDataSetChanged();
             }
