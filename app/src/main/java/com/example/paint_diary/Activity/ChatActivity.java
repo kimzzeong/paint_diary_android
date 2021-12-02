@@ -151,7 +151,6 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            //           chatView.setText(chatView.getText().toString()+msg+"\n");
 
             Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
             // 년월일시분초 14자리 포멧
