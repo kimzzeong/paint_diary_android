@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.paint_diary.*
 import com.example.paint_diary.Adapter.UserProfileDiaryListAdapter
+import com.example.paint_diary.Data.Chat
 import com.example.paint_diary.Data.ChatRoom
 import com.example.paint_diary.Data.DiaryList
 import com.example.paint_diary.Data.Profile
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import retrofit2.Call
@@ -41,8 +43,10 @@ class UserProfileActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
     var user_idx : String? = null
+    var user_nickname : String? = null
     var diary_writer_nickname : String? = null
 
+    var my_chat_list : ArrayList<ChatRoom>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +54,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         val sharedPreferences = this.getSharedPreferences("user", Context.MODE_PRIVATE)
         user_idx = sharedPreferences?.getString("user_idx", "")
+        user_nickname = sharedPreferences?.getString("user_nickname", "")
 
         val intent = intent
         diary_writer = intent.getIntExtra("diary_writer",0)
@@ -83,27 +88,26 @@ class UserProfileActivity : AppCompatActivity() {
             user_profile_follow.visibility = View.VISIBLE
         }
 
+        //채팅하기 버튼 클릭 시 채팅방 생성
         user_profile_chat_btn.setOnClickListener {
-            //여기서 채팅방 추가시키기
-            //현재 로그인 중인 유저 아이디와 내가 채팅 할 유저 아이디를 묶어서 사용자로 보내기
-
-
-            requesstCreateChatRoom(user_idx+","+diary_writer)
+            requesstCreateChatRoom(user_idx+","+diary_writer, user_nickname+","+diary_writer_nickname)
             val intent = Intent(this@UserProfileActivity, ChatActivity::class.java)
             startActivity(intent)
         }
 
     }
 
-    private fun requesstCreateChatRoom(users_idx : String){
+    private fun requesstCreateChatRoom(users_idx : String, room_name : String){
+//
+//        for(i in requestChatRoom()){
+//
+//        }
+//
+//
+
         var create_room = retrofit.create(IRetrofit::class.java)
-        create_room.requestChatRoomCreate(users_idx,diary_writer_nickname!!).enqueue(object : Callback<ChatRoom>{
-            override fun onResponse(
-                call: Call<ChatRoom>,
-                response: Response<ChatRoom>
-            ) {
-                var room = response.body()
-                //Toast.makeText(this@UserProfileActivity,room?.message,Toast.LENGTH_SHORT).show()
+        create_room.requestChatRoomCreate(users_idx,room_name!!).enqueue(object : Callback<ChatRoom>{
+            override fun onResponse(call: Call<ChatRoom>, response: Response<ChatRoom>) {
 
             }
 
@@ -113,6 +117,39 @@ class UserProfileActivity : AppCompatActivity() {
 
 
         })
+    }
+
+    //채팅방 전체 리스트 불러오기
+    private fun requestChatRoom() : ArrayList<ChatRoom> {
+        val my_room_list = java.util.ArrayList<ChatRoom>()
+        val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
+        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
+        var room = ArrayList<ChatRoom>()
+        //loaderLayout.visibility = View.VISIBLE
+        var chatRoom_request = retrofit.create(IRetrofit::class.java)
+
+        chatRoom_request.requestChatRoom(user_idx!!).enqueue(object : Callback<java.util.ArrayList<ChatRoom>>{
+            override fun onResponse(call: Call<java.util.ArrayList<ChatRoom>>, response: Response<java.util.ArrayList<ChatRoom>>) {
+                room = response.body()!!
+
+                //코틀린의 for문. room list이고 i가 ChatRoom 객체임
+                for(i in room){
+                    if(i.room_user.contains(user_idx)){
+
+                        Log.e("room_user",i.room_user)
+                        my_room_list.add(i)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<java.util.ArrayList<ChatRoom>>, t: Throwable) {
+                Log.e("레트로핏 에러","채팅")
+            }
+
+        })
+
+        return my_room_list
+
     }
 
     private fun requestProfile() {

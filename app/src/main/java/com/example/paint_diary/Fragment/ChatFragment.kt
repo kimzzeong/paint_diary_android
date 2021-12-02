@@ -1,6 +1,7 @@
 package com.example.paint_diary.Fragment
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -11,8 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.paint_diary.Activity.ChatActivity
+import com.example.paint_diary.Activity.DiaryInfoActivity
 import com.example.paint_diary.Adapter.RoomAdapter
 import com.example.paint_diary.Data.ChatRoom
+import com.example.paint_diary.Data.Room
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
 import com.google.gson.Gson
@@ -96,6 +100,24 @@ class ChatFragment : Fragment() {
         //채팅방 목록 불러옴
         requestChatRoom()
 
+        roomAdapter.setItemClickListener(object : RoomAdapter.ItemClickListener{
+            override fun onClick(
+                view: View,
+                position: Int,
+                room_idx: Int,
+                room_user1: String,
+                room_user2: String
+            ) {
+                val intent = Intent(context, ChatActivity::class.java)
+                intent.putExtra("room_idx", room_idx)
+                intent.putExtra("room_user1", room_user1)
+                intent.putExtra("room_user2", room_user2)
+                Log.e("click", room_idx.toString())
+                startActivity(intent)
+            }
+
+        })
+
 
 
 
@@ -110,6 +132,8 @@ class ChatFragment : Fragment() {
 
     //채팅방 전체 리스트 불러오기
     private fun requestChatRoom() {
+
+        val my_room_list = ArrayList<ChatRoom>()
         val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
         var user_idx : String? = sharedPreferences?.getString("user_idx", "")
 
@@ -120,19 +144,34 @@ class ChatFragment : Fragment() {
             override fun onResponse(call: Call<ArrayList<ChatRoom>>, response: Response<ArrayList<ChatRoom>>) {
                 var room = response.body()!!
 
+
+                Log.e("user_idx",user_idx)
+                Log.e("room",""+room.size)
+
+                //코틀린의 for문. room list이고 i가 ChatRoom 객체임
+                for(i in room){
+                    if(i.room_user.contains(user_idx)){
+
+                        Log.e("room_user",i.room_user)
+                        my_room_list.add(i)
+                    }
+                }
+                Log.e("my_room_list",""+my_room_list.size)
+
+
                 chatroom_recyclerview.adapter = roomAdapter
-                roomAdapter.roomList = room
+                roomAdapter.roomList = my_room_list
                 roomAdapter.notifyDataSetChanged()
 
-
                 //채팅방이 없으면 진행중인 채팅방이 없다고 텍스트뷰로 알려줌
-                if(room.size <= 0){
-                    chatroom_textview.visibility = View.VISIBLE
-                    chatroom_recyclerview.visibility = View.INVISIBLE
-                }else{
-                    chatroom_textview.visibility = View.INVISIBLE
-                    chatroom_recyclerview.visibility = View.VISIBLE
-                }
+                    if(my_room_list.size == 0){
+                        chatroom_textview.visibility = View.VISIBLE
+                        chatroom_recyclerview.visibility = View.INVISIBLE
+                    }else{
+                        chatroom_textview.visibility = View.INVISIBLE
+                        chatroom_recyclerview.visibility = View.VISIBLE
+                    }
+
             }
 
             override fun onFailure(call: Call<ArrayList<ChatRoom>>, t: Throwable) {
@@ -141,11 +180,6 @@ class ChatFragment : Fragment() {
 
         })
 
-        //loaderLayout.visibility = View.INVISIBLE
-
-        /*
-        문자열로 user_idx를 하나의 String으로 만들어서 가져올 때 split(",")으로 arraylist에 넣어서 값을 확인?
-        */
     }
 
 }

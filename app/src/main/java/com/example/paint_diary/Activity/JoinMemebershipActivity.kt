@@ -50,7 +50,7 @@ class JoinMemebershipActivity : AppCompatActivity() {
         join_btn.setOnClickListener {
             if(join_password.text.toString().equals(join_password_check.text.toString())){ //비밀번호와 비밀번호 확인 값이 일치하면
                 var joinMembership = retrofit.create(IRetrofit::class.java)
-                joinMembership.requestJoinMembership(join_email.text.toString(),join_nickname.text.toString(),join_password.text.toString()).enqueue(object: Callback<JoinMembership> {
+                joinMembership.requestJoinMembership(join_email.text.toString(),join_password.text.toString(),join_nickname.text.toString()).enqueue(object: Callback<JoinMembership> {
                     //웹 통신 성공, 응답값을 받아옴
                     override fun onResponse(call: Call<JoinMembership>, response: Response<JoinMembership>) {
                         var join = response.body()

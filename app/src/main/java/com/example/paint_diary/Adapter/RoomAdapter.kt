@@ -16,11 +16,24 @@ class RoomAdapter : RecyclerView.Adapter<RoomAdapter.ViewHolder>() {
     var context : Context? = null
     var user_idx : Int = 0 //유저 고유 번호
 
+    var user_nickname : String = "" //유저 닉네임
+    interface ItemClickListener {
+        fun onClick(view: View, position: Int, room_idx: Int, room_user1: String, room_user2 : String)
+    }
+
+
+    private lateinit var itemClickListner: ItemClickListener
+
+    fun setItemClickListener(itemClickListener: ItemClickListener) {
+        this.itemClickListner = itemClickListener
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
         val sharedPreferences = context?.getSharedPreferences("user",0)
         user_idx = Integer.parseInt(sharedPreferences?.getString("user_idx", "0"))
+        user_nickname = sharedPreferences?.getString("user_nickname", "0").toString()
         val v = LayoutInflater.from(parent.context).inflate(R.layout.chat_room, parent, false)
         Log.e("onCreateViewHolder","onCreateViewHolder")
         return ViewHolder(v)
@@ -31,11 +44,34 @@ class RoomAdapter : RecyclerView.Adapter<RoomAdapter.ViewHolder>() {
         Log.e("onBindViewHolder","onBindViewHolder")
         holder.bind(roomList.get(position))
 
+        var user_split = roomList.get(position).room_user.split(",")
+        Log.e("user_split",user_split[0])
+        Log.e("user_split",user_split[1])
+
+
+
+
+        var split_nickname = roomList.get(position).room_name.split(",")
+        var room_name = String()
+
+        for(i in split_nickname){
+            if(!i.equals(user_nickname)){
+                room_name = i
+                break
+            }
+        }
+        holder.chat_nickname.text = room_name
+
+
+
+        holder.itemView.setOnClickListener {
+            itemClickListner.onClick(it,position,roomList.get(position).room_idx,user_split[0],user_split[1])
+        }
+
 
     }
 
     override fun getItemCount(): Int {
-        Log.e("getItemCount","getItemCount")
         return roomList.size
     }
 
@@ -50,7 +86,7 @@ class RoomAdapter : RecyclerView.Adapter<RoomAdapter.ViewHolder>() {
         fun bind(item: ChatRoom){
             chat_nickname.text = item.room_name
             chat_datetime.text = item.room_datetime
-            chat_content.text = "일단 비워져있으요"
+            chat_content.text = ""
 //            var uriToString : String = item.room_profilePhoto
 //            if(uriToString != null){
 //
