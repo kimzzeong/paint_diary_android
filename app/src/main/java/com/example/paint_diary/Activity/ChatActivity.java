@@ -9,9 +9,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.paint_diary.Adapter.ChatAdapter;
@@ -24,6 +26,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity {
@@ -31,13 +35,12 @@ public class ChatActivity extends AppCompatActivity {
     private Handler mHandler;
     Socket socket;
     PrintWriter sendWriter;
-    private String ip = "192.168.56.1"; //로컬
-    //private String ip = "3.36.52.195"; //aws ip 주소
+    //private String ip = "192.168.56.1"; //로컬
+    private String ip = "3.36.52.195"; //aws ip 주소
     private int port = 8888;
 
-    TextView textView;
     String UserID = "", user_nickname;
-    Button chatbutton;
+    ImageView chatbutton;
     //  TextView chatView;
     EditText message;
     String sendmsg;
@@ -45,6 +48,7 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<Chat> list = new ArrayList<>();
     RecyclerView recyclerView;
     ChatAdapter adapter;
+    String room_idx;
 
 
     private static final String SHARED_PREF_NAME = "user";
@@ -66,7 +70,6 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         mHandler = new Handler();
-        textView = (TextView) findViewById(R.id.textView);
         // chatView = (TextView) findViewById(R.id.chatView);
         message = (EditText) findViewById(R.id.message);
 //        Intent intent = getIntent();
@@ -75,14 +78,18 @@ public class ChatActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         UserID = sharedPreferences.getString("user_idx", String.valueOf(Context.MODE_PRIVATE));
         user_nickname = sharedPreferences.getString("user_nickname", String.valueOf(Context.MODE_PRIVATE));
-        textView.setText(UserID);
-        chatbutton = (Button) findViewById(R.id.chatbutton);
+        chatbutton = (ImageView) findViewById(R.id.chatbutton);
 
         recyclerView = findViewById(R.id.chatView) ;
         recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
 
         adapter = new ChatAdapter(list,this) ;
         recyclerView.setAdapter(adapter) ;
+
+        Intent intent = getIntent();
+        room_idx = String.valueOf(intent.getIntExtra("room_idx",0));
+        Log.e("room_idx",room_idx+"");
+
 
         new Thread() {
             public void run() {
@@ -94,12 +101,12 @@ public class ChatActivity extends AppCompatActivity {
                     BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while(true){
                         read = input.readLine();
-                        String[] msg = new String[2];
+                        String[] msg = new String[4];
                         msg = read.split(">>");
 
                         System.out.println("TTTTTTTT"+read);
                         if(read!=null){
-                            mHandler.post(new msgUpdate(msg[1],msg[0]));
+                            mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3]));
                         }
                     }
                 } catch (IOException e) {
@@ -116,7 +123,7 @@ public class ChatActivity extends AppCompatActivity {
                     public void run() {
                         super.run();
                         try {
-                            sendWriter.println(UserID +">>"+ sendmsg);
+                            sendWriter.println(UserID + ">>" +user_nickname +">>" + room_idx + ">>" + sendmsg);
                             sendWriter.flush();
                             message.setText("");
                         } catch (Exception e) {
@@ -131,17 +138,32 @@ public class ChatActivity extends AppCompatActivity {
     class msgUpdate implements Runnable{
         private String msg;
         private String user_idx;
-        public msgUpdate(String str, String user_idx) {
+        private String message_room_idx;
+        private String nickname;
+        public msgUpdate(String user_idx, String nickname, String room_idx, String str) {
             this.msg=str;
             this.user_idx = user_idx;
+            this.message_room_idx = room_idx;
+            this.nickname = nickname;
         }
 
         @Override
         public void run() {
             //           chatView.setText(chatView.getText().toString()+msg+"\n");
-            Chat chat = new Chat(msg,user_idx,String.valueOf(System.currentTimeMillis()),"",user_nickname);
-            list.add(chat);
-            adapter.notifyDataSetChanged();
+/*
+            // 현재 날짜 구하기
+            LocalDate now = LocalDate.now();
+            // 포맷 정의
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            // 포맷 적용
+            String formatedNow = now.format(formatter);*/
+
+
+            if(room_idx.equals(message_room_idx)){
+                Chat chat = new Chat(msg,user_idx,"formatedNow","",nickname);
+                list.add(chat);
+                adapter.notifyDataSetChanged();
+            }
 
         }
     }

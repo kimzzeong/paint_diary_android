@@ -100,6 +100,7 @@ class ChatFragment : Fragment() {
         //채팅방 목록 불러옴
         requestChatRoom()
 
+        //채팅 아이템 클릭 이벤트(채팅방으로 이동)
         roomAdapter.setItemClickListener(object : RoomAdapter.ItemClickListener{
             override fun onClick(
                 view: View,
