@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.paint_diary.Adapter.ChatAdapter;
 import com.example.paint_diary.Data.Chat;
@@ -37,8 +38,8 @@ public class ChatActivity extends AppCompatActivity {
     private Handler mHandler;
     Socket socket;
     PrintWriter sendWriter;
-    //private String ip = "192.168.56.1"; //로컬
-    private String ip = "3.36.52.195"; //aws ip 주소
+    private String ip = "192.168.56.1"; //로컬
+    //private String ip = "3.36.52.195"; //aws ip 주소
     private int port = 8888;
 
     String UserID = "", user_nickname;
@@ -50,32 +51,19 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<Chat> list = new ArrayList<>();
     RecyclerView recyclerView;
     ChatAdapter adapter;
-    String room_idx;
+    String room_idx, profile_photo = "";
 
 
     private static final String SHARED_PREF_NAME = "user";
     SharedPreferences sharedPreferences;
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        try {
-//            sendWriter.close();
-//            socket.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         mHandler = new Handler();
-        // chatView = (TextView) findViewById(R.id.chatView);
         message = (EditText) findViewById(R.id.message);
-//        Intent intent = getIntent();
-//        UserID = intent.getStringExtra("username");
 
         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         UserID = sharedPreferences.getString("user_idx", String.valueOf(Context.MODE_PRIVATE));
@@ -90,6 +78,9 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         room_idx = String.valueOf(intent.getIntExtra("room_idx",0));
+
+        Log.e("profile_photo",profile_photo);
+        profile_photo = sharedPreferences.getString("profile_photo","없음");
         Log.e("room_idx",room_idx+"");
 
 
@@ -103,12 +94,13 @@ public class ChatActivity extends AppCompatActivity {
                     BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while(true){
                         read = input.readLine();
-                        String[] msg = new String[4];
+                        String[] msg = new String[10];
                         msg = read.split(">>");
-
+                        Log.e("msg size",msg.length+"");
+                        Log.e("msg profile",msg[4]);
                         System.out.println("TTTTTTTT"+read);
                         if(read!=null){
-                            mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3]));
+                            mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3],msg[4]));
                         }
                     }
                 } catch (IOException e) {
@@ -120,19 +112,25 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendmsg = message.getText().toString();
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        try {
-                            sendWriter.println(UserID + ">>" +user_nickname +">>" + room_idx + ">>" + sendmsg);
-                            sendWriter.flush();
-                            message.setText("");
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                if(sendmsg.isEmpty()){
+                    Toast.makeText(ChatActivity.this,"메세지를 입력해 주세요.",Toast.LENGTH_SHORT).show();
+                }else {
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+
+                                Log.e("msg profile",profile_photo);
+                                sendWriter.println(UserID + ">>" +user_nickname +">>" + room_idx + ">>" + sendmsg + ">>" + profile_photo);
+                                sendWriter.flush();
+                                message.setText("");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }.start();
+                    }.start();
+                }
             }
         });
     }
@@ -142,11 +140,13 @@ public class ChatActivity extends AppCompatActivity {
         private String user_idx;
         private String message_room_idx;
         private String nickname;
-        public msgUpdate(String user_idx, String nickname, String room_idx, String str) {
+        private String photo;
+        public msgUpdate(String user_idx, String nickname, String room_idx, String str, String photo) {
             this.msg=str;
             this.user_idx = user_idx;
             this.message_room_idx = room_idx;
             this.nickname = nickname;
+            this.photo = photo;
         }
 
         @Override
@@ -157,11 +157,14 @@ public class ChatActivity extends AppCompatActivity {
             SimpleDateFormat fourteen_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             if(room_idx.equals(message_room_idx)){
-                Chat chat = new Chat(msg,user_idx,fourteen_format.format(date_now),"",nickname);
+                Chat chat = new Chat(msg,user_idx,fourteen_format.format(date_now),photo,nickname);
                 list.add(chat);
                 adapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(list.size()-1); // 제일 최근 채팅으로 포지션 이동
             }
 
         }
     }
+
+
 }

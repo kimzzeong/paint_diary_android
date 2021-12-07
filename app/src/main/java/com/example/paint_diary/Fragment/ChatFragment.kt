@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -107,15 +108,18 @@ class ChatFragment : Fragment() {
                 position: Int,
                 room_idx: Int,
                 room_user1: String,
-                room_user2: String
+                room_user2: String,
+                profile_photo: String
             ) {
                 val intent = Intent(context, ChatActivity::class.java)
                 intent.putExtra("room_idx", room_idx)
                 intent.putExtra("room_user1", room_user1)
                 intent.putExtra("room_user2", room_user2)
-                Log.e("click", room_idx.toString())
+                Log.e("Chat Fragment - room_idx",room_idx.toString())
+                //Toast.makeText(context,room_idx,Toast.LENGTH_SHORT).show()
                 startActivity(intent)
             }
+
 
         })
 

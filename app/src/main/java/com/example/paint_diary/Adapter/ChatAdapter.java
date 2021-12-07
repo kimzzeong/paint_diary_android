@@ -59,7 +59,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         Log.e("onBindViewHolder","onBindViewHolder");
 
         if(holder instanceof ChatAdapter.ViewHolder_left){
-            Glide.with(context).load(R.drawable.basic_profile).into(((ViewHolder_left) holder).chat_profile);
+            if(chat.getProfile_photo().equals("") || chat.getProfile_photo().isEmpty() || chat.getProfile_photo().equals("없음")){
+                Glide.with(context).load(R.drawable.basic_profile).into(((ViewHolder_left) holder).chat_profile);
+            }else{
+                Glide.with(context).load(chat.getProfile_photo()).into(((ViewHolder_left) holder).chat_profile); //http://3.36.52.195/profile/
+            }
             ((ViewHolder_left) holder).chat_nickname.setText(chat.getNickname());
             ((ViewHolder_left) holder).chatting_content.setText(chat.getContent());
             ((ViewHolder_left) holder).chatting_datetime.setText(chat.getDateTime());

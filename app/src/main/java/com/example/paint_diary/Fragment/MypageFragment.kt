@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -76,6 +77,7 @@ class MypageFragment : Fragment() {
         var user_profile = retrofit.create(IRetrofit::class.java)
 
         val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
         var user_idx : Int? =  Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
         if (user_idx != null) {
             user_profile.requestProfile(user_idx!!).enqueue(object: Callback<Profile> {
@@ -90,11 +92,16 @@ class MypageFragment : Fragment() {
                         var uriToString : String = profile?.user_profile
                         var uri : Uri = Uri.parse(uriToString)
                         profile_photo = "http://3.36.52.195/profile/"+uri
+
                         //profile_photo = "/data/user/0/com.example.paint_diary/cache/"+uri
                         Glide.with(activity!!) // context
                             .load(profile_photo) // 이미지 url
                             .into(mypage_profile_photo); // 붙일 imageView
                        // mypage_profile_photo.setImageResource(R.drawable.ic_baseline_add_24)
+                    }
+                    if (editor != null) {
+                        editor.putString("profile_photo",profile_photo)
+                        editor.apply()
                     }
                     mypage_nickname.setText(profile?.user_nickname)
                     mypage_count.text = "일기 수 : "+profile?.user_diary_count+"개"
@@ -172,6 +179,7 @@ class MypageFragment : Fragment() {
             intent.putExtra("user_introduction",user_introduction)
             intent.putExtra("profile_photo",profile_photo)
 
+
             Log.e("user_idx", user_idx.toString())
             startActivity(intent)
 //            var intent = Intent(this, RegisterActivity::class.java)
@@ -205,6 +213,7 @@ class MypageFragment : Fragment() {
 
                 userProfileDiaryListAdapter.diary_List = diary
                 userProfileDiaryListAdapter.notifyDataSetChanged()
+
             }
 
             override fun onFailure(call: Call<ArrayList<DiaryList>>, t: Throwable) {

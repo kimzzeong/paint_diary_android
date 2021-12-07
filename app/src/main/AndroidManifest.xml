@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Paint_diary"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.ChatActivity"></activity>
+        <activity android:name=".Activity.ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".Activity.AttendanceActivity" />
         <activity android:name=".Activity.AppPassWordActivity">
             <intent-filter>

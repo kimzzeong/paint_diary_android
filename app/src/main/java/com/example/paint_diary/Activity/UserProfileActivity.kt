@@ -33,6 +33,7 @@ class UserProfileActivity : AppCompatActivity() {
     private var diary_writer: Int? = null
     lateinit var userProfileDiaryListAdapter: UserProfileDiaryListAdapter
     var profile_photo : String? = null
+    var room_idx = 0
 
     var gson: Gson = GsonBuilder()
         .setLenient()
@@ -90,24 +91,25 @@ class UserProfileActivity : AppCompatActivity() {
 
         //채팅하기 버튼 클릭 시 채팅방 생성
         user_profile_chat_btn.setOnClickListener {
-            requesstCreateChatRoom(user_idx+","+diary_writer, user_nickname+","+diary_writer_nickname)
+            requesstCreateChatRoom(user_idx+","+diary_writer)
             val intent = Intent(this@UserProfileActivity, ChatActivity::class.java)
+            intent.putExtra("room_idx",room_idx)
             startActivity(intent)
         }
 
     }
 
-    private fun requesstCreateChatRoom(users_idx : String, room_name : String){
-//
-//        for(i in requestChatRoom()){
-//
-//        }
-//
-//
+    private fun requesstCreateChatRoom(users_idx : String){
 
         var create_room = retrofit.create(IRetrofit::class.java)
-        create_room.requestChatRoomCreate(users_idx,room_name!!).enqueue(object : Callback<ChatRoom>{
+        create_room.requestChatRoomCreate(users_idx).enqueue(object : Callback<ChatRoom>{
             override fun onResponse(call: Call<ChatRoom>, response: Response<ChatRoom>) {
+                var room = response.body()
+                if (room != null) {
+                    room_idx = room.room_idx
+                        Toast.makeText(this@UserProfileActivity,room.room_idx.toString(),Toast.LENGTH_SHORT).show()
+                }
+                //room_idx = room?.room_idx!!
 
             }
 

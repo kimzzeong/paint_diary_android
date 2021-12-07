@@ -265,8 +265,7 @@ interface IRetrofit {
     @FormUrlEncoded
     @POST("chatRoomCreate.php")
     fun requestChatRoomCreate(
-        @Field("user_idx") user_idx: String,
-        @Field("room_name") room_name: String
+        @Field("user_idx") user_idx: String
     ): Call<ChatRoom>
 }
 
