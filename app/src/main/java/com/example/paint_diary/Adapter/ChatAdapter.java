@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.paint_diary.Data.Chat;
+import com.example.paint_diary.Data.Chat2;
 import com.example.paint_diary.R;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     private static final int CHAT_RIGHT = 0;
     private static final int CHAT_LEFT = 1;
-    private ArrayList<Chat> mData = null ;
+    private ArrayList<Chat2> mData = null ;
     private String user_idx;
     Context context;
 
@@ -54,23 +55,23 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Chat chat = mData.get(position) ;
+        Chat2 chat = mData.get(position) ;
 
         Log.e("onBindViewHolder","onBindViewHolder");
 
         if(holder instanceof ChatAdapter.ViewHolder_left){
-            if(chat.getProfile_photo().equals("") || chat.getProfile_photo().isEmpty() || chat.getProfile_photo().equals("없음")){
+            if(chat.getChat_profile_photo() == null || chat.getChat_profile_photo().equals("없음")){
                 Glide.with(context).load(R.drawable.basic_profile).into(((ViewHolder_left) holder).chat_profile);
             }else{
-                Glide.with(context).load(chat.getProfile_photo()).into(((ViewHolder_left) holder).chat_profile); //http://3.36.52.195/profile/
+                Glide.with(context).load("http://3.36.52.195/profile/"+chat.getChat_profile_photo()).into(((ViewHolder_left) holder).chat_profile);
             }
-            ((ViewHolder_left) holder).chat_nickname.setText(chat.getNickname());
-            ((ViewHolder_left) holder).chatting_content.setText(chat.getContent());
-            ((ViewHolder_left) holder).chatting_datetime.setText(chat.getDateTime());
+            ((ViewHolder_left) holder).chat_nickname.setText(chat.getChat_nickname());
+            ((ViewHolder_left) holder).chatting_content.setText(chat.getChat_content());
+            ((ViewHolder_left) holder).chatting_datetime.setText(chat.getChat_dateTime());
 
         }else if(holder instanceof ChatAdapter.ViewHolder_right){
-            ((ViewHolder_right) holder).chatting_content.setText(chat.getContent());
-            ((ViewHolder_right) holder).chatting_datetime.setText(chat.getDateTime());
+            ((ViewHolder_right) holder).chatting_content.setText(chat.getChat_content());
+            ((ViewHolder_right) holder).chatting_datetime.setText(chat.getChat_dateTime());
 
         }
     }
@@ -82,7 +83,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         return mData.size() ;
     }
 
-    public ChatAdapter(ArrayList<Chat> list, Context context) {
+    public ChatAdapter(ArrayList<Chat2> list, Context context) {
         Log.e("ChatAdapter","ChatAdapter");
         mData = list ;
         this.context = context;
@@ -117,8 +118,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     public int getItemViewType(int position) {
         Log.e("getItemViewType","getItemViewType");
         Log.e("user_idx",""+user_idx);
-        Log.e("USERID",mData.get(position).getUser_idx());
-        if(user_idx.equals(mData.get(position).getUser_idx())){
+        Log.e("USERID",mData.get(position).getChat_user());
+        if(user_idx.equals(mData.get(position).getChat_user())){
             return CHAT_RIGHT;
         }else{
             return CHAT_LEFT;

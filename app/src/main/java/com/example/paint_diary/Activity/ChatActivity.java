@@ -19,7 +19,13 @@ import android.widget.Toast;
 
 import com.example.paint_diary.Adapter.ChatAdapter;
 import com.example.paint_diary.Data.Chat;
+import com.example.paint_diary.Data.Chat2;
+import com.example.paint_diary.IRetrofit;
 import com.example.paint_diary.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,6 +38,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -48,11 +61,13 @@ public class ChatActivity extends AppCompatActivity {
     EditText message;
     String sendmsg;
     String read;
-    ArrayList<Chat> list = new ArrayList<>();
+    ArrayList<Chat2> list = new ArrayList<>();
     RecyclerView recyclerView;
     ChatAdapter adapter;
     String room_idx, profile_photo = "";
-
+    Date date_now;
+    SimpleDateFormat fourteen_format;
+    String date;
 
     private static final String SHARED_PREF_NAME = "user";
     SharedPreferences sharedPreferences;
@@ -70,14 +85,18 @@ public class ChatActivity extends AppCompatActivity {
         user_nickname = sharedPreferences.getString("user_nickname", String.valueOf(Context.MODE_PRIVATE));
         chatbutton = (ImageView) findViewById(R.id.chatbutton);
 
+        Intent intent = getIntent();
+        room_idx = String.valueOf(intent.getIntExtra("room_idx",0));
+
         recyclerView = findViewById(R.id.chatView) ;
         recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
+
+
+        requestChat(room_idx,this);
 
         adapter = new ChatAdapter(list,this) ;
         recyclerView.setAdapter(adapter) ;
 
-        Intent intent = getIntent();
-        room_idx = String.valueOf(intent.getIntExtra("room_idx",0));
 
         Log.e("profile_photo",profile_photo);
         profile_photo = sharedPreferences.getString("profile_photo","없음");
@@ -92,6 +111,7 @@ public class ChatActivity extends AppCompatActivity {
                     socket = new Socket(serverAddr, port);
                     sendWriter = new PrintWriter(socket.getOutputStream());
                     BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
                     while(true){
                         read = input.readLine();
                         String[] msg = new String[10];
@@ -100,12 +120,13 @@ public class ChatActivity extends AppCompatActivity {
                         Log.e("msg profile",msg[4]);
                         System.out.println("TTTTTTTT"+read);
                         if(read!=null){
-                            mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3],msg[4]));
+                            mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3],msg[4],Integer.parseInt(msg[5])));
                         }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } }}.start();
+
 
         //내가 보내는 메세지
         chatbutton.setOnClickListener(new View.OnClickListener() {
@@ -121,8 +142,14 @@ public class ChatActivity extends AppCompatActivity {
                             super.run();
                             try {
 
+
+                                date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
+                                // 년월일시분초 14자리 포멧
+                                fourteen_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                date = fourteen_format.format(date_now);
+
                                 Log.e("msg profile",profile_photo);
-                                sendWriter.println(UserID + ">>" +user_nickname +">>" + room_idx + ">>" + sendmsg + ">>" + profile_photo);
+                                sendWriter.println(UserID + ">>" +user_nickname +">>" + room_idx + ">>" + sendmsg + ">>" + profile_photo + ">>" + 0 + ">>" + date);
                                 sendWriter.flush();
                                 message.setText("");
                             } catch (Exception e) {
@@ -136,28 +163,27 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     class msgUpdate implements Runnable{
-        private String msg;
-        private String user_idx;
-        private String message_room_idx;
-        private String nickname;
-        private String photo;
-        public msgUpdate(String user_idx, String nickname, String room_idx, String str, String photo) {
+        private final String msg;
+        private final String user_idx;
+        private final String message_room_idx;
+        private final String nickname;
+        private final String photo;
+        private int type;
+
+        public msgUpdate(String user_idx, String nickname, String room_idx, String str, String photo, int type) {
             this.msg=str;
             this.user_idx = user_idx;
             this.message_room_idx = room_idx;
             this.nickname = nickname;
             this.photo = photo;
+            this.type = type;
         }
 
         @Override
         public void run() {
 
-            Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
-            // 년월일시분초 14자리 포멧
-            SimpleDateFormat fourteen_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
             if(room_idx.equals(message_room_idx)){
-                Chat chat = new Chat(msg,user_idx,fourteen_format.format(date_now),photo,nickname);
+                Chat2 chat = new Chat2(msg,user_idx,date,photo,nickname,room_idx,type);
                 list.add(chat);
                 adapter.notifyDataSetChanged();
                 recyclerView.scrollToPosition(list.size()-1); // 제일 최근 채팅으로 포지션 이동
@@ -166,5 +192,52 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+
+    //채팅 리스트 불러오기
+    public void requestChat(String room_idx, Context context){
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+
+        IRetrofit api = retrofit.create(IRetrofit.class);
+
+        Call<ArrayList<Chat2>> call = api.requestChat(room_idx);
+
+        call.enqueue(new Callback<ArrayList<Chat2>>() {
+            @Override
+            public void onResponse(@NotNull Call<ArrayList<Chat2>> call, @NotNull Response<ArrayList<Chat2>> response) {
+                list = response.body();
+
+                if(response.body().isEmpty()){
+
+                    Log.e("채팅 리스트 size","비어있음");
+                }else{
+
+                    Log.e("채팅 리스트 size",""+list.size());
+                }
+
+                adapter = new ChatAdapter(list,context) ;
+                recyclerView.setAdapter(adapter) ;
+
+                adapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(list.size()-1); // 제일 최근 채팅으로 포지션 이동
+                Log.e("채팅 리스트 레트로핏","성공");
+                //Log.e("채팅 리스트 size",""+list.get(0).getType());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Chat2>> call, Throwable t) {
+                Log.e("채팅 리스트 레트로핏 실패",t.getLocalizedMessage());
+
+
+            }
+        });
+    }
 
 }
