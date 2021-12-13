@@ -60,10 +60,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         Log.e("onBindViewHolder","onBindViewHolder");
 
         if(holder instanceof ChatAdapter.ViewHolder_left){
-            if(chat.getChat_profile_photo() == null || chat.getChat_profile_photo().equals("없음")){
+            if(chat.getChat_profile_photo() == null || chat.getChat_profile_photo().equals("없음") || chat.getChat_profile_photo().equals("http://3.36.52.195/profile/")){
                 Glide.with(context).load(R.drawable.basic_profile).into(((ViewHolder_left) holder).chat_profile);
             }else{
-                Glide.with(context).load("http://3.36.52.195/profile/"+chat.getChat_profile_photo()).into(((ViewHolder_left) holder).chat_profile);
+                Glide.with(context).load(chat.getChat_profile_photo()).into(((ViewHolder_left) holder).chat_profile);
             }
             ((ViewHolder_left) holder).chat_nickname.setText(chat.getChat_nickname());
             ((ViewHolder_left) holder).chatting_content.setText(chat.getChat_content());

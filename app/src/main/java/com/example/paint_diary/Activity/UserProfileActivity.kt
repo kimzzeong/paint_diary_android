@@ -222,7 +222,6 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
         })
-        //diary_request.requestProfile()
 
     }
 }

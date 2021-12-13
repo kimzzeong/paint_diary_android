@@ -120,7 +120,7 @@ public class ChatActivity extends AppCompatActivity {
                         Log.e("msg profile",msg[4]);
                         System.out.println("TTTTTTTT"+read);
                         if(read!=null){
-                            mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3],msg[4],Integer.parseInt(msg[5])));
+                            mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3],msg[4],Integer.parseInt(msg[5]),msg[6]));
                         }
                     }
                 } catch (IOException e) {
@@ -168,15 +168,17 @@ public class ChatActivity extends AppCompatActivity {
         private final String message_room_idx;
         private final String nickname;
         private final String photo;
+        private final String date;
         private int type;
 
-        public msgUpdate(String user_idx, String nickname, String room_idx, String str, String photo, int type) {
+        public msgUpdate(String user_idx, String nickname, String room_idx, String str, String photo, int type, String date) {
             this.msg=str;
             this.user_idx = user_idx;
             this.message_room_idx = room_idx;
             this.nickname = nickname;
             this.photo = photo;
             this.type = type;
+            this.date = date;
         }
 
         @Override
@@ -213,14 +215,6 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<ArrayList<Chat2>> call, @NotNull Response<ArrayList<Chat2>> response) {
                 list = response.body();
-
-                if(response.body().isEmpty()){
-
-                    Log.e("채팅 리스트 size","비어있음");
-                }else{
-
-                    Log.e("채팅 리스트 size",""+list.size());
-                }
 
                 adapter = new ChatAdapter(list,context) ;
                 recyclerView.setAdapter(adapter) ;
