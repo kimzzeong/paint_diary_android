@@ -26,24 +26,18 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/comments_refresh"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:gravity="center_vertical"
         app:layout_constraintBottom_toTopOf="@+id/comments_layout"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/comments_toolbar">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chatView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="#D3E5ED" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+        app:layout_constraintTop_toBottomOf="@id/comments_toolbar"
+        android:paddingBottom="5dp"
+        android:background="#D3E5ED" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -53,6 +47,18 @@
         android:background="@color/white"
         android:weightSum="12"
         >
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:id="@+id/imagebutton"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:src="@drawable/plus"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            app:tint="@color/gray"
+            />
         <EditText
             android:layout_width="190dp"
             android:layout_height="?attr/actionBarSize"

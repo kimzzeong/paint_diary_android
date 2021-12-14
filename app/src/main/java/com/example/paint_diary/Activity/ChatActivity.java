@@ -1,10 +1,13 @@
 package com.example.paint_diary.Activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -56,18 +59,19 @@ public class ChatActivity extends AppCompatActivity {
     private int port = 8888;
 
     String UserID = "", user_nickname;
-    ImageView chatbutton;
-    //  TextView chatView;
+    ImageView chatbutton; // 채팅 보내기
+    ImageView imagebutton; // 채팅에 이미지 보낼 때 누를 아이콘
     EditText message;
     String sendmsg;
     String read;
-    ArrayList<Chat2> list = new ArrayList<>();
+    ArrayList<Chat2> list = new ArrayList<>(); // 채팅 리스트
     RecyclerView recyclerView;
     ChatAdapter adapter;
     String room_idx, profile_photo = "";
     Date date_now;
-    SimpleDateFormat fourteen_format;
+    SimpleDateFormat fourteen_format; //날짜 포맷
     String date;
+    String[] photo; //포토 다이얼로그 목록을 위한 배열
 
     private static final String SHARED_PREF_NAME = "user";
     SharedPreferences sharedPreferences;
@@ -83,7 +87,8 @@ public class ChatActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         UserID = sharedPreferences.getString("user_idx", String.valueOf(Context.MODE_PRIVATE));
         user_nickname = sharedPreferences.getString("user_nickname", String.valueOf(Context.MODE_PRIVATE));
-        chatbutton = (ImageView) findViewById(R.id.chatbutton);
+        chatbutton = findViewById(R.id.chatbutton);
+        imagebutton = findViewById(R.id.imagebutton);
 
         Intent intent = getIntent();
         room_idx = String.valueOf(intent.getIntExtra("room_idx",0));
@@ -101,6 +106,14 @@ public class ChatActivity extends AppCompatActivity {
         Log.e("profile_photo",profile_photo);
         profile_photo = sharedPreferences.getString("profile_photo","없음");
         Log.e("room_idx",room_idx+"");
+
+        //이미지 버튼 클릭 시 카메라, 갤러리 다이얼로그 띄우기
+        imagebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show_photo_Dialog();
+            }
+        });
 
 
         new Thread() {
@@ -234,4 +247,22 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    public void show_photo_Dialog() {
+        photo = getResources().getStringArray(R.array.photoArray);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.photoChoice)
+                .setItems(R.array.photoArray, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(photo[which].equals("카메라")){
+                            Toast.makeText(ChatActivity.this,photo[which],Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(ChatActivity.this,photo[which],Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
 }

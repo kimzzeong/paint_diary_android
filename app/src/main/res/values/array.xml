@@ -6,4 +6,9 @@
         <item>좋아요순</item>
         <item>댓글순</item>
     </string-array>
+
+    <string-array name="photoArray">
+        <item>카메라</item>
+        <item>갤러리</item>
+    </string-array>
 </resources>

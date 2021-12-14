@@ -3,4 +3,5 @@
     <string name="i">ㅡ</string>
     <string name="pre"><![CDATA[<]]></string>
     <string name="next"><![CDATA[>]]></string>
+    <string name="photoChoice">사진 가져오기</string>
 </resources>
