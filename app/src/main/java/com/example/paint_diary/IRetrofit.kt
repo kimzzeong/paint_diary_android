@@ -274,5 +274,11 @@ interface IRetrofit {
     fun requestChat(
             @Field("room_idx") room_idx: String
     ): Call<ArrayList<Chat2>>
+
+    @Multipart
+    @POST("chatImageUpload.php")
+    fun uploadChatImage(
+            @Part imageFile: MultipartBody.Part
+    ): Call<String>
 }
 

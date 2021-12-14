@@ -73,6 +73,16 @@ public class ChatActivity extends AppCompatActivity {
     String date;
     String[] photo; //포토 다이얼로그 목록을 위한 배열
 
+
+    Gson gson = new GsonBuilder()
+            .setLenient()
+            .create();
+
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build();
+
     private static final String SHARED_PREF_NAME = "user";
     SharedPreferences sharedPreferences;
 
@@ -210,14 +220,6 @@ public class ChatActivity extends AppCompatActivity {
 
     //채팅 리스트 불러오기
     public void requestChat(String room_idx, Context context){
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
 
 
         IRetrofit api = retrofit.create(IRetrofit.class);

@@ -25,6 +25,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     private static final int CHAT_RIGHT = 0;
     private static final int CHAT_LEFT = 1;
+    private static final int CHAT_IMAGE_RIGHT = 2;
+    private static final int CHAT_IMAGE_LEFT = 3;
     private ArrayList<Chat2> mData = null ;
     private String user_idx;
     Context context;
@@ -48,6 +50,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             View view = inflater.inflate(R.layout.chat_right_item, parent, false) ;
             return new ChatAdapter.ViewHolder_right(view) ;
 
+        }else if(viewType == CHAT_IMAGE_LEFT){
+            View view = inflater.inflate(R.layout.chat_image_left_item, parent, false) ;
+            return new ChatAdapter.ViewHolder_image_left(view) ;
+
+        }else if(viewType == CHAT_IMAGE_RIGHT){
+            View view = inflater.inflate(R.layout.chat_image_right_item, parent, false) ;
+            return new ChatAdapter.ViewHolder_image_right(view) ;
+
         }
         return null;
 
@@ -59,7 +69,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
         Log.e("onBindViewHolder","onBindViewHolder");
 
-        if(holder instanceof ChatAdapter.ViewHolder_left){
+        if(holder instanceof ChatAdapter.ViewHolder_left){ // 일반채팅 - 상대방
+
             if(chat.getChat_profile_photo() == null || chat.getChat_profile_photo().equals("없음") || chat.getChat_profile_photo().equals("http://3.36.52.195/profile/")){
                 Glide.with(context).load(R.drawable.basic_profile).into(((ViewHolder_left) holder).chat_profile);
             }else{
@@ -69,9 +80,26 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             ((ViewHolder_left) holder).chatting_content.setText(chat.getChat_content());
             ((ViewHolder_left) holder).chatting_datetime.setText(chat.getChat_dateTime());
 
-        }else if(holder instanceof ChatAdapter.ViewHolder_right){
+        }else if(holder instanceof ChatAdapter.ViewHolder_right){ //일반채팅 - 나
+
             ((ViewHolder_right) holder).chatting_content.setText(chat.getChat_content());
             ((ViewHolder_right) holder).chatting_datetime.setText(chat.getChat_dateTime());
+
+        }else if(holder instanceof  ChatAdapter.ViewHolder_image_left){ //이미지채팅 - 상대방
+
+            if(chat.getChat_profile_photo() == null || chat.getChat_profile_photo().equals("없음") || chat.getChat_profile_photo().equals("http://3.36.52.195/profile/")){
+                Glide.with(context).load(R.drawable.basic_profile).into(((ViewHolder_image_left) holder).chat_profile);
+            }else{
+                Glide.with(context).load(chat.getChat_profile_photo()).into(((ViewHolder_image_left) holder).chat_profile);
+            }
+            ((ViewHolder_image_left) holder).chat_nickname.setText(chat.getChat_nickname());
+            Glide.with(context).load(chat.getChat_profile_photo()).into(((ViewHolder_image_left) holder).chatting_content);
+            ((ViewHolder_image_left) holder).chatting_datetime.setText(chat.getChat_dateTime());
+
+        }else if(holder instanceof  ChatAdapter.ViewHolder_image_right){ //이미지채팅 - 나
+
+            Glide.with(context).load(chat.getChat_profile_photo()).into(((ViewHolder_image_right) holder).chatting_content);
+            ((ViewHolder_image_right) holder).chatting_datetime.setText(chat.getChat_dateTime());
 
         }
     }
@@ -93,6 +121,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     }
 
 
+    //일반채팅 - 상대방
     public class ViewHolder_left extends RecyclerView.ViewHolder {
         ImageView chat_profile;
         TextView chat_nickname, chatting_content, chatting_datetime;
@@ -105,9 +134,34 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         }
     }
 
+    //일반채팅 - 나
     public class ViewHolder_right extends RecyclerView.ViewHolder {
         TextView chatting_content,chatting_datetime ;
         public ViewHolder_right(View itemView) {
+            super(itemView);
+            chatting_content = itemView.findViewById(R.id.chatting_content) ;
+            chatting_datetime = itemView.findViewById(R.id.chatting_datetime) ;
+        }
+    }
+
+    //이미지채팅 - 상대방
+    public class ViewHolder_image_left extends RecyclerView.ViewHolder {
+        TextView chatting_datetime, chat_nickname ;
+        ImageView chatting_content,chat_profile;
+        public ViewHolder_image_left(View itemView) {
+            super(itemView);
+            chatting_content = itemView.findViewById(R.id.chatting_content) ;
+            chatting_datetime = itemView.findViewById(R.id.chatting_datetime) ;
+            chat_nickname = itemView.findViewById(R.id.chat_nickname) ;
+            chat_profile = itemView.findViewById(R.id.chat_profile) ;
+        }
+    }
+
+    //이미지채팅 - 나
+    public class ViewHolder_image_right extends RecyclerView.ViewHolder {
+        TextView chatting_datetime ;
+        ImageView chatting_content;
+        public ViewHolder_image_right(View itemView) {
             super(itemView);
             chatting_content = itemView.findViewById(R.id.chatting_content) ;
             chatting_datetime = itemView.findViewById(R.id.chatting_datetime) ;
@@ -119,10 +173,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         Log.e("getItemViewType","getItemViewType");
         Log.e("user_idx",""+user_idx);
         Log.e("USERID",mData.get(position).getChat_user());
-        if(user_idx.equals(mData.get(position).getChat_user())){
-            return CHAT_RIGHT;
-        }else{
-            return CHAT_LEFT;
+        if(mData.get(position).getChat_type() == 0){ // 텍스트 채팅
+
+            if(user_idx.equals(mData.get(position).getChat_user())){
+                return CHAT_RIGHT;
+            }else{
+                return CHAT_LEFT;
+            }
+        }else{ // 이미지 채팅
+
+            if(user_idx.equals(mData.get(position).getChat_user())){
+                return CHAT_IMAGE_RIGHT;
+            }else{
+                return CHAT_IMAGE_LEFT;
+            }
         }
 
     }
