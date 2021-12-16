@@ -93,12 +93,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
                 Glide.with(context).load(chat.getChat_profile_photo()).into(((ViewHolder_image_left) holder).chat_profile);
             }
             ((ViewHolder_image_left) holder).chat_nickname.setText(chat.getChat_nickname());
-            Glide.with(context).load(chat.getChat_profile_photo()).into(((ViewHolder_image_left) holder).chatting_content);
+            Glide.with(context).load(chat.getChat_content()).into(((ViewHolder_image_left) holder).chatting_content);
             ((ViewHolder_image_left) holder).chatting_datetime.setText(chat.getChat_dateTime());
 
         }else if(holder instanceof  ChatAdapter.ViewHolder_image_right){ //이미지채팅 - 나
 
-            Glide.with(context).load(chat.getChat_profile_photo()).into(((ViewHolder_image_right) holder).chatting_content);
+            Glide.with(context).load(chat.getChat_content()).into(((ViewHolder_image_right) holder).chatting_content);
             ((ViewHolder_image_right) holder).chatting_datetime.setText(chat.getChat_dateTime());
 
         }

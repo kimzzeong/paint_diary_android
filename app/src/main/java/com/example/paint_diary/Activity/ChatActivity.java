@@ -180,6 +180,7 @@ public class ChatActivity extends AppCompatActivity {
                         System.out.println("TTTTTTTT"+read);
                         if(read!=null){
                             mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3],msg[4],Integer.parseInt(msg[5]),msg[6]));
+
                         }
                     }
                 } catch (IOException e) {
@@ -411,7 +412,6 @@ public class ChatActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    //Glide.photo 처럼 여기서 이미지 채팅 추가
                     cropImage(Uri.fromFile(file)); //이미지를 선택하면 크롭 실행
                     try {
                         savePhoto(bitmap);
@@ -435,6 +435,15 @@ public class ChatActivity extends AppCompatActivity {
                     if(resultCode == RESULT_OK){
                         Uri resultUri = result.getUri();
                         System.out.println("crop resultUri : "+resultUri);
+
+                        date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
+                        // 년월일시분초 14자리 포멧
+                        fourteen_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        date = fourteen_format.format(date_now);
+
+                        mHandler.post(new msgUpdate(UserID,user_nickname,room_idx,resultUri.toString(),profile_photo,1,date));
+                       // uploadImage(resultUri);
+
                     }else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
                         Exception error = result.getError();
                         System.out.println("crop error : "+error);
@@ -500,6 +509,11 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         builder.show();
+
+    }
+
+    private void uploadImage(Uri uri){
+
 
     }
 }

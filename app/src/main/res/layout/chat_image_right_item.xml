@@ -3,35 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="end"
     android:layout_marginEnd="8dp"
     android:layout_marginTop="16dp">
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_gchat_message_me"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="0dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:id="@+id/layout_gchat_container_me"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/chatting_content"
-                android:maxWidth="200dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_launcher_background"
+                android:maxWidth="250dp"
+                android:adjustViewBounds="true"
                 />
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/chatting_datetime"
@@ -40,8 +25,9 @@
         android:text="10:00"
         android:textColor="#4A4A4A"
         android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/card_gchat_message_me"
-        app:layout_constraintEnd_toStartOf="@+id/card_gchat_message_me" />
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/chatting_content"
+        app:layout_constraintEnd_toStartOf="@+id/chatting_content" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

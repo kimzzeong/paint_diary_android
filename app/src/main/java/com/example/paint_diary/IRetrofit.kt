@@ -275,6 +275,7 @@ interface IRetrofit {
             @Field("room_idx") room_idx: String
     ): Call<ArrayList<Chat2>>
 
+    //채팅 이미지 업로드
     @Multipart
     @POST("chatImageUpload.php")
     fun uploadChatImage(
