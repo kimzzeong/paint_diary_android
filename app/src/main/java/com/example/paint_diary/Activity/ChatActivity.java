@@ -522,6 +522,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    //사진 업로드 메소드
     private void uploadImage(Uri uri){
         Log.e("uploadImage",uri.toString());
 
