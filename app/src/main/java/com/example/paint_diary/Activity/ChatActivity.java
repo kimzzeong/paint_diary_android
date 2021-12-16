@@ -1,17 +1,30 @@
 package com.example.paint_diary.Activity;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.solver.GoalRow;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.data.mediastore.MediaStoreUtil;
 import com.example.paint_diary.Adapter.ChatAdapter;
 import com.example.paint_diary.Data.Chat;
 import com.example.paint_diary.Data.Chat2;
@@ -27,10 +41,23 @@ import com.example.paint_diary.IRetrofit;
 import com.example.paint_diary.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.listener.single.PermissionListener;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -41,7 +68,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import kotlin.jvm.Throws;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,6 +86,13 @@ public class ChatActivity extends AppCompatActivity {
     private String ip = "192.168.56.1"; //로컬
     //private String ip = "3.36.52.195"; //aws ip 주소
     private int port = 8888;
+
+
+    private final int CAMERA_REQUEST_CODE = 1;
+    private final int GALLERY_REQUEST_CODE = 2;
+    private final int PAINT_REQUEST_CODE = 3;
+    String curPhotoPath; //문자열 형태의 사진 경로 값
+    File photoFile;
 
     String UserID = "", user_nickname;
     ImageView chatbutton; // 채팅 보내기
@@ -256,15 +292,214 @@ public class ChatActivity extends AppCompatActivity {
                 .setItems(R.array.photoArray, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if(photo[which].equals("카메라")){
-                            Toast.makeText(ChatActivity.this,photo[which],Toast.LENGTH_SHORT).show();
+                            cameraCheckPermission();
                         }else{
-                            Toast.makeText(ChatActivity.this,photo[which],Toast.LENGTH_SHORT).show();
+                            galleryCheckPermission();
                         }
                     }
                 });
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+    }
+
+
+    private void galleryCheckPermission() {
+
+        Dexter.withContext(this) .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE) .withListener(new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse response) {
+                gallery();
+            }
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse response) {
+                Toast.makeText(ChatActivity.this,"You have denied the storage permission to select image",Toast.LENGTH_SHORT).show();
+                showRotationalDialogForPermission();
+            }
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                showRotationalDialogForPermission();
+            }
+        }).check();
+
+    }
+
+    private void gallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
+    }
+
+
+    private void cameraCheckPermission() {
+
+
+        Dexter.withContext(this) .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA) .withListener(new MultiplePermissionsListener() {
+
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                camera();
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                showRotationalDialogForPermission();
+            }
+        }).onSameThread().check();
+    }
+
+
+    //카메라 촬영
+    private void camera() {
+//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        startActivityForResult(intent, CAMERA_REQUEST_CODE)
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try{
+            photoFile = createImageFile();
+        }catch (IOException e){
+            Toast.makeText(this,"다시 시도해주세요.",Toast.LENGTH_SHORT).show();
+            finish();
+            e.printStackTrace();
+        }
+
+        if(photoFile != null){
+            Uri photoURI = FileProvider.getUriForFile(this,"com.example.paint_diary.fileprovider",photoFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT,photoURI);
+            startActivityForResult(intent,CAMERA_REQUEST_CODE);
+        }
+    }
+
+    //이미지 파일 생성
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "PaintDiary_JPEG_"+timeStamp+"_";
+        File storageDir = new File( Environment.getExternalStorageDirectory().toString() + "/Pictures", "paint");
+
+        if(!storageDir.exists()){
+            storageDir.mkdirs();
+        }
+
+        File imageFile = File.createTempFile(imageFileName,".jpg",storageDir);
+        curPhotoPath = imageFile.getAbsolutePath();
+        return imageFile;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,  Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Activity.RESULT_OK){
+            switch(requestCode){
+                //카메라
+                case CAMERA_REQUEST_CODE :
+                    Bitmap bitmap = null;
+                    File file = new File(curPhotoPath);
+                    if(Build.VERSION.SDK_INT < 28){
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),Uri.fromFile(file));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }else{
+                        ImageDecoder.Source decode = ImageDecoder.createSource(this.getContentResolver(),Uri.fromFile(file));
+                        galleryAddPic();
+                        try {
+                            bitmap = ImageDecoder.decodeBitmap(decode);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    //Glide.photo 처럼 여기서 이미지 채팅 추가
+                    cropImage(Uri.fromFile(file)); //이미지를 선택하면 크롭 실행
+                    try {
+                        savePhoto(bitmap);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                //갤러리
+                case GALLERY_REQUEST_CODE :
+                    Uri uri = data.getData();
+
+                   cropImage(uri);
+                    break;
+
+                //이미지 크롭
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE :
+
+                    Log.e("CropImage", "CROP_IMAGE_ACTIVITY_REQUEST_CODE");
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    if(resultCode == RESULT_OK){
+                        Uri resultUri = result.getUri();
+                        System.out.println("crop resultUri : "+resultUri);
+                    }else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                        Exception error = result.getError();
+                        System.out.println("crop error : "+error);
+                    }
+                    break;
+
+            }
+        }
+    }
+
+    //이미지 크롭 메소드
+    private void cropImage(Uri uri){
+
+        CropImage.activity(uri).setGuidelines(CropImageView.Guidelines.ON)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
+                //사각형 모양으로 자른다
+                .start(this);
+
+    }
+
+    //최종 처리된 이미지를 경로의 폴더에 저장
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(curPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        sendBroadcast(mediaScanIntent);
+    }
+
+    //갤러리에 저장
+    private void savePhoto(Bitmap bitmap) throws FileNotFoundException {
+        String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/"; //사진저장 경로
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fileName = "${timestamp}.jpeg";
+        File folder = new File(folderPath);
+        if(!folder.exists()){ //현재 해당 경로의 폴더가 존재하는지 확인
+            folder.mkdirs(); // make Directory 줄임말로 해당 경로에 자동으로 디렉토리 생성
+        }
+        //실제적인 저장 처리
+        FileOutputStream out = new FileOutputStream(folderPath + fileName);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+        //Toast.makeText(this,"사진이 저장되었습니다.",Toast.LENGTH_SHORT).show()
+    }
+
+    private void showRotationalDialogForPermission() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("앱 설정에서 권한을 허용해 주세요")
+                .setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package",getPackageName(),null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                });
+
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
 
     }
 }
