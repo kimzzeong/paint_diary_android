@@ -35,10 +35,20 @@
                 android:id="@+id/chatting_content"
                 app:layout_constraintTop_toBottomOf="@+id/chat_profile"
                 app:layout_constraintLeft_toLeftOf="@+id/chat_nickname"
-                android:maxWidth="250dp"
+                android:maxWidth="200dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_launcher_background"
                 />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressbar"
+            app:layout_constraintTop_toTopOf="@+id/chatting_content"
+            app:layout_constraintBottom_toBottomOf="@+id/chatting_content"
+            app:layout_constraintLeft_toLeftOf="@+id/chatting_content"
+            app:layout_constraintRight_toRightOf="@+id/chatting_content"
+            />
     <TextView
         android:id="@+id/chatting_datetime"
         android:layout_width="wrap_content"

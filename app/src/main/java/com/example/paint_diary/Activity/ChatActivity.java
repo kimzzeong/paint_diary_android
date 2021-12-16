@@ -71,6 +71,9 @@ import java.util.Date;
 import java.util.List;
 
 import kotlin.jvm.Throws;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -172,6 +175,7 @@ public class ChatActivity extends AppCompatActivity {
                     BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                     while(true){
+
                         read = input.readLine();
                         String[] msg = new String[10];
                         msg = read.split(">>");
@@ -180,7 +184,6 @@ public class ChatActivity extends AppCompatActivity {
                         System.out.println("TTTTTTTT"+read);
                         if(read!=null){
                             mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3],msg[4],Integer.parseInt(msg[5]),msg[6]));
-
                         }
                     }
                 } catch (IOException e) {
@@ -201,7 +204,6 @@ public class ChatActivity extends AppCompatActivity {
                         public void run() {
                             super.run();
                             try {
-
 
                                 date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
                                 // 년월일시분초 14자리 포멧
@@ -272,8 +274,16 @@ public class ChatActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter) ;
 
                 adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(list.size()-1); // 제일 최근 채팅으로 포지션 이동
-                Log.e("채팅 리스트 레트로핏","성공");
+
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+                        recyclerView.scrollToPosition(list.size()-1);
+//                    }
+//                }, 50); //sometime not working, need some delay
+
+               // recyclerView.scrollToPosition(list.size()-1); // 제일 최근 채팅으로 포지션 이동
+
                 //Log.e("채팅 리스트 size",""+list.get(0).getType());
             }
 
@@ -442,7 +452,7 @@ public class ChatActivity extends AppCompatActivity {
                         date = fourteen_format.format(date_now);
 
                         mHandler.post(new msgUpdate(UserID,user_nickname,room_idx,resultUri.toString(),profile_photo,1,date));
-                       // uploadImage(resultUri);
+                        uploadImage(resultUri);
 
                     }else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
                         Exception error = result.getError();
@@ -513,7 +523,53 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void uploadImage(Uri uri){
+        Log.e("uploadImage",uri.toString());
 
+        String[] split_uriPath = uri.toString().split("file://");
+        String image = split_uriPath[1]; // 경로 예시 : /storage/emulated/0/Download/filename.pdf <- 이걸 잘라주지 않으면 파일을 못찾고 서버에 업로드가 안됨
+
+        File file = new File(image);
+        RequestBody requestfile = RequestBody.create(MediaType.parse("image/*"),file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("chat_image",file.getName(),requestfile);
+
+        IRetrofit api = retrofit.create(IRetrofit.class);
+
+        Call<String> call = api.uploadChatImage(body);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String img_name = response.body();
+                Log.e("img_name",img_name);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        try {
+
+                            date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
+                            // 년월일시분초 14자리 포멧
+                            fourteen_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            date = fourteen_format.format(date_now);
+
+                            sendWriter.println(UserID + ">>" +user_nickname +">>" + room_idx + ">>" + img_name + ">>" + profile_photo + ">>" + 1 + ">>" + date);
+                            sendWriter.flush();
+                            message.setText("");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("img_name","에러");
+                t.printStackTrace();
+
+            }
+        });
 
     }
+
 }

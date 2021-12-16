@@ -346,6 +346,7 @@ class ProfileModifyActivity : AppCompatActivity() {
                         }
 
                         uriPath = result.uri.toString()
+                        Log.e("프로필 경로", uriPath!!)
 
                         paint_flag = false
                     }

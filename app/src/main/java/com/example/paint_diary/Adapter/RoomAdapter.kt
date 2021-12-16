@@ -123,7 +123,7 @@ class RoomAdapter : RecyclerView.Adapter<RoomAdapter.ViewHolder>() {
         fun bind(item: ChatRoom){
             chat_nickname.text = item.room_name
             chat_datetime.text = item.room_datetime
-            chat_content.text = "" //나중에 jdbc 연결했을 때 마지막 메세지 보여주기
+            chat_content.text = item.message //나중에 jdbc 연결했을 때 마지막 메세지 보여주기
         }
 
     }

@@ -136,28 +136,28 @@ class ChatFragment : Fragment() {
 
         })
 
-        object : Thread() {
-            override fun run() {
-                try {
-                    val serverAddr = InetAddress.getByName(ip)
-                    socket = Socket(serverAddr, port)
-                    sendWriter = PrintWriter(socket!!.getOutputStream())
-                    val input = BufferedReader(InputStreamReader(socket!!.getInputStream()))
-                    while (true) {
-                        read = input.readLine()
-                        var msg = arrayOfNulls<String>(10)
-                        msg = read.split(">>".toRegex()).toTypedArray()
-                        println("TTTTTTTT"+read)
-                        if (read != null) {
-                            println("TTTTTTTT"+msg[2])
-                           //mHandler.post(msgUpdate(msg[0], msg[1], msg[2], msg[3], msg[4], msg[5]!!.toInt(), msg[6])) //msg[2]가 room_idx인듯?
-                        }
-                    }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
-        }.start()
+//        object : Thread() {
+//            override fun run() {
+//                try {
+//                    val serverAddr = InetAddress.getByName(ip)
+//                    socket = Socket(serverAddr, port)
+//                    sendWriter = PrintWriter(socket!!.getOutputStream())
+//                    val input = BufferedReader(InputStreamReader(socket!!.getInputStream()))
+//                    while (true) {
+//                        read = input.readLine()
+//                        var msg = arrayOfNulls<String>(10)
+//                        msg = read.split(">>".toRegex()).toTypedArray()
+//                        println("TTTTTTTT"+read)
+//                        if (read != null) {
+//                            println("TTTTTTTT"+msg[2])
+//                           //mHandler.post(msgUpdate(msg[0], msg[1], msg[2], msg[3], msg[4], msg[5]!!.toInt(), msg[6])) //msg[2]가 room_idx인듯?
+//                        }
+//                    }
+//                } catch (e: IOException) {
+//                    e.printStackTrace()
+//                }
+//            }
+//        }.start()
 
 
 /*        //하드코딩으로 리스트 테스트

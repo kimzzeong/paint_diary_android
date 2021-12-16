@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,7 +37,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.e("onCreateViewHolder","onCreateViewHolder");
         //context = parent.getContext() ;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
 
@@ -67,7 +67,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Chat2 chat = mData.get(position) ;
 
-        Log.e("onBindViewHolder","onBindViewHolder");
 
         if(holder instanceof ChatAdapter.ViewHolder_left){ // 일반채팅 - 상대방
 
@@ -93,26 +92,28 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
                 Glide.with(context).load(chat.getChat_profile_photo()).into(((ViewHolder_image_left) holder).chat_profile);
             }
             ((ViewHolder_image_left) holder).chat_nickname.setText(chat.getChat_nickname());
-            Glide.with(context).load(chat.getChat_content()).into(((ViewHolder_image_left) holder).chatting_content);
+            ((ViewHolder_image_left) holder).progressBar.setVisibility(View.VISIBLE);
+            Glide.with(context).load("http://3.36.52.195/chat_photo/"+chat.getChat_content()).into(((ViewHolder_image_left) holder).chatting_content);
+            ((ViewHolder_image_left) holder).progressBar.setVisibility(View.INVISIBLE);
             ((ViewHolder_image_left) holder).chatting_datetime.setText(chat.getChat_dateTime());
 
         }else if(holder instanceof  ChatAdapter.ViewHolder_image_right){ //이미지채팅 - 나
 
-            Glide.with(context).load(chat.getChat_content()).into(((ViewHolder_image_right) holder).chatting_content);
+            ((ViewHolder_image_right) holder).progressBar.setVisibility(View.VISIBLE);
+            Glide.with(context).load("http://3.36.52.195/chat_photo/"+chat.getChat_content()).into(((ViewHolder_image_right) holder).chatting_content);
+            ((ViewHolder_image_right) holder).progressBar.setVisibility(View.INVISIBLE);
             ((ViewHolder_image_right) holder).chatting_datetime.setText(chat.getChat_dateTime());
+            Log.e("파일 경로",chat.getChat_content());
 
         }
     }
 
     @Override
     public int getItemCount() {
-        Log.e("count",mData.size()+"");
-        Log.e("getItemCount","getItemCount");
         return mData.size() ;
     }
 
     public ChatAdapter(ArrayList<Chat2> list, Context context) {
-        Log.e("ChatAdapter","ChatAdapter");
         mData = list ;
         this.context = context;
 
@@ -148,12 +149,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     public class ViewHolder_image_left extends RecyclerView.ViewHolder {
         TextView chatting_datetime, chat_nickname ;
         ImageView chatting_content,chat_profile;
+        ProgressBar progressBar;
         public ViewHolder_image_left(View itemView) {
             super(itemView);
             chatting_content = itemView.findViewById(R.id.chatting_content) ;
             chatting_datetime = itemView.findViewById(R.id.chatting_datetime) ;
             chat_nickname = itemView.findViewById(R.id.chat_nickname) ;
             chat_profile = itemView.findViewById(R.id.chat_profile) ;
+            progressBar = itemView.findViewById(R.id.progressbar);
         }
     }
 
@@ -161,18 +164,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     public class ViewHolder_image_right extends RecyclerView.ViewHolder {
         TextView chatting_datetime ;
         ImageView chatting_content;
+        ProgressBar progressBar;
         public ViewHolder_image_right(View itemView) {
             super(itemView);
             chatting_content = itemView.findViewById(R.id.chatting_content) ;
             chatting_datetime = itemView.findViewById(R.id.chatting_datetime) ;
+            progressBar = itemView.findViewById(R.id.progressbar);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        Log.e("getItemViewType","getItemViewType");
-        Log.e("user_idx",""+user_idx);
-        Log.e("USERID",mData.get(position).getChat_user());
         if(mData.get(position).getChat_type() == 0){ // 텍스트 채팅
 
             if(user_idx.equals(mData.get(position).getChat_user())){
