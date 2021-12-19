@@ -81,13 +81,13 @@ class UserProfileActivity : AppCompatActivity() {
         })
 
         //현재 로그인 중인 유저와 사용자 프로필의 유저가 같을 경우 채팅하기 버튼 안보이게 함
-        if(user_idx.equals(""+diary_writer)){
-            user_profile_chat_btn.visibility = View.GONE
-            user_profile_follow.visibility = View.GONE
-        }else{
-            user_profile_chat_btn.visibility = View.VISIBLE
-            user_profile_follow.visibility = View.VISIBLE
-        }
+//        if(user_idx.equals(""+diary_writer)){
+//            user_profile_chat_btn.visibility = View.GONE
+//            user_profile_follow.visibility = View.GONE
+//        }else{
+//            user_profile_chat_btn.visibility = View.VISIBLE
+//            user_profile_follow.visibility = View.VISIBLE
+//        }
 
         //채팅하기 버튼 클릭 시 채팅방 생성
         user_profile_chat_btn.setOnClickListener {

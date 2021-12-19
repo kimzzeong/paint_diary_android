@@ -81,7 +81,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnListItemSelectedInterface {
 
     private Handler mHandler;
     Socket socket;
@@ -148,7 +148,8 @@ public class ChatActivity extends AppCompatActivity {
 
         requestChat(room_idx,this);
 
-        adapter = new ChatAdapter(list,this) ;
+        adapter = new ChatAdapter(list,this,this) ;
+
         recyclerView.setAdapter(adapter) ;
 
 
@@ -163,6 +164,8 @@ public class ChatActivity extends AppCompatActivity {
                 show_photo_Dialog();
             }
         });
+
+
 
 
         new Thread() {
@@ -270,7 +273,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onResponse(@NotNull Call<ArrayList<Chat2>> call, @NotNull Response<ArrayList<Chat2>> response) {
                 list = response.body();
 
-                adapter = new ChatAdapter(list,context) ;
+                adapter = new ChatAdapter(list,ChatActivity.this,ChatActivity.this) ;
                 recyclerView.setAdapter(adapter) ;
 
                 adapter.notifyDataSetChanged();
@@ -570,6 +573,16 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+    @Override
+    public void onItemSelected(View v, int chat_type, String url) {
+        //이미지 클릭 이벤트
+        Log.e("chat_type",chat_type+"");
+        Log.e("url",url);
+        Intent intent = new Intent(ChatActivity.this,ViewPagerActivity.class);
+        intent.putExtra("url",url);
+        startActivity(intent);
 
     }
 

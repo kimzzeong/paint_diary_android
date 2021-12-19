@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.paint_diary.Activity.ChatActivity;
 import com.example.paint_diary.Data.Chat;
 import com.example.paint_diary.Data.Chat2;
 import com.example.paint_diary.R;
@@ -33,6 +35,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     Context context;
 
     private static final String SHARED_PREF_NAME = "user";
+
+
+    public interface OnListItemSelectedInterface {
+        void onItemSelected(View v, int chat_type, String url);
+    }
+
+    private OnListItemSelectedInterface mListener;
 
     @NonNull
     @Override
@@ -97,6 +106,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             ((ViewHolder_image_left) holder).progressBar.setVisibility(View.INVISIBLE);
             ((ViewHolder_image_left) holder).chatting_datetime.setText(chat.getChat_dateTime());
 
+
         }else if(holder instanceof  ChatAdapter.ViewHolder_image_right){ //이미지채팅 - 나
 
             ((ViewHolder_image_right) holder).progressBar.setVisibility(View.VISIBLE);
@@ -113,9 +123,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         return mData.size() ;
     }
 
-    public ChatAdapter(ArrayList<Chat2> list, Context context) {
+    public ChatAdapter(ArrayList<Chat2> list, Context context, OnListItemSelectedInterface listener) {
         mData = list ;
         this.context = context;
+        this.mListener = listener;
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         user_idx = sharedPreferences.getString("user_idx", "0");
@@ -152,11 +163,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         ProgressBar progressBar;
         public ViewHolder_image_left(View itemView) {
             super(itemView);
-            chatting_content = itemView.findViewById(R.id.chatting_content) ;
-            chatting_datetime = itemView.findViewById(R.id.chatting_datetime) ;
-            chat_nickname = itemView.findViewById(R.id.chat_nickname) ;
-            chat_profile = itemView.findViewById(R.id.chat_profile) ;
-            progressBar = itemView.findViewById(R.id.progressbar);
+
+            this.chatting_content = itemView.findViewById(R.id.chatting_content);
+            this.chatting_datetime = itemView.findViewById(R.id.chatting_datetime);
+            this.chat_nickname = itemView.findViewById(R.id.chat_nickname);
+            this.chat_profile = itemView.findViewById(R.id.chat_profile);
+            this.progressBar = itemView.findViewById(R.id.progressbar);
+
+            chatting_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Chat2 chat = mData.get(position);
+                    mListener.onItemSelected(v,chat.getChat_type(),"http://3.36.52.195/chat_photo/"+chat.getChat_content());
+                }
+            });
+
         }
     }
 
@@ -170,6 +192,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             chatting_content = itemView.findViewById(R.id.chatting_content) ;
             chatting_datetime = itemView.findViewById(R.id.chatting_datetime) ;
             progressBar = itemView.findViewById(R.id.progressbar);
+
+            chatting_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Chat2 chat = mData.get(position);
+                    mListener.onItemSelected(v,chat.getChat_type(),"http://3.36.52.195/chat_photo/"+chat.getChat_content());
+                }
+            });
+
         }
     }
 
