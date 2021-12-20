@@ -83,6 +83,7 @@ class ViewPagerActivity : AppCompatActivity() {
 //        Log.e("download","1")
 
         Log.e("image",image!!)
+        //Glide를 이용해서 비트맵 만들기
         Glide.with(this)
             .asBitmap()
             .load(image)
@@ -96,6 +97,7 @@ class ViewPagerActivity : AppCompatActivity() {
                     }
                     bitmap = resource
 
+                    //보통 안드로이드에서 이미지 파일은 비트맵을 이용해서 다루는데 비트맵 객체를 파일로 저장하고 싶을 때 compress 메소드를 이용함
                     bitmap?.compress(Bitmap.CompressFormat.JPEG,100,fileOutputStream)
                     Toast.makeText(this@ViewPagerActivity,"다운로드가 완료되었습니다.",Toast.LENGTH_SHORT).show()
 
