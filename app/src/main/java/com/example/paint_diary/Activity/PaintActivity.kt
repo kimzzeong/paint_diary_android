@@ -1,12 +1,14 @@
 package com.example.paint_diary.Activity
 
 import android.app.Activity
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
-import android.util.Base64
 import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
@@ -15,7 +17,10 @@ import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.example.paint_diary.NotiService
 import com.example.paint_diary.Paint.PaintView
 import com.example.paint_diary.R
 import kotlinx.android.synthetic.main.activity_paint.*
@@ -33,9 +38,55 @@ class PaintActivity : AppCompatActivity(){
     var metrics = DisplayMetrics()
     var switch_brush_option : Boolean = false
 
+    //노티 테스트
+    private val CHANNEL_ID = "channel_id_example_01"
+    private val notificationId = 101
+    private var notificationManager: NotificationManager? = null
+    private var channel : NotificationChannel? = null
+
     companion object {
         var paintactivity: Activity? = null
     }
+
+
+
+
+    //노티 테스트
+    private fun createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            val name = "Notification Title"
+            val descriptionText = "Notification Description"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+
+        }
+
+    }
+
+
+    private fun sendNotification(){
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.sketching)
+            .setContentTitle("Example Title")
+            .setContentText("Example Description")
+            .setPriority(Notification.PRIORITY_MAX) //NotificationCompat.PRIORITY_HIGH
+            .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
+
+        with(NotificationManagerCompat.from(this)){
+            notify(notificationId, builder.build())
+        }
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager!!.createNotificationChannel(channel!!)
+    }
+
+
+
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     //    binding = ActivityPaintBinding.inflate(layoutInflater)
@@ -43,6 +94,11 @@ class PaintActivity : AppCompatActivity(){
         setSupportActionBar(paint_toolbar)
         supportActionBar?.title = "그림그리기"
         paintactivity = this@PaintActivity
+
+
+        //노티티
+       createNotificationChannel()
+
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics)
         paintView = findViewById(R.id.paint_view)
@@ -57,6 +113,20 @@ class PaintActivity : AppCompatActivity(){
 
             paintView?.currentColor = defaultColor
             openColorPicker()
+        }
+
+        //노티테스트
+        test_btn.setOnClickListener {
+            sendNotification()
+        }
+        test2_btn.setOnClickListener {
+            var intent = Intent(this,NotiService::class.java)
+            startService(intent)
+        }
+        test3_btn.setOnClickListener {
+            var intent = Intent(this,NotiService::class.java)
+            stopService(intent)
+
         }
 
         //지우개
@@ -177,16 +247,16 @@ class PaintActivity : AppCompatActivity(){
         when (item.getItemId()) {
             R.id.paint_save -> {
                 var profile = intent.getStringExtra("paint")
-                if(profile.equals("paint")){
+                if (profile.equals("paint")) {
                     val stream = ByteArrayOutputStream()
                     paintView!!.mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
                     val byteArray = stream.toByteArray()
                     val in1 = Intent(applicationContext, ProfileModifyActivity::class.java)
                     in1.putExtra("image", byteArray)
-                    setResult(RESULT_OK,in1)
+                    setResult(RESULT_OK, in1)
                     finish()
                     return true
-                }else {
+                } else {
                     val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
                     var user_idx: Int? =
                         Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
