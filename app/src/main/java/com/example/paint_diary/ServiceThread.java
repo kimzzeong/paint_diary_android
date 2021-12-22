@@ -1,5 +1,6 @@
 package com.example.paint_diary;
 
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
 
@@ -13,14 +14,17 @@ import java.net.Socket;
 public class ServiceThread extends Thread{
     Handler mHandler;
     boolean isRun = true;
-    private String ip = "192.168.56.1"; //로컬
+    private String ip = "3.36.52.195"; //aws ip 주소
     Socket socket;
     private int port = 8888;
     PrintWriter sendWriter;
     String read;
+    String user_idx;
+    String room_idx;
 
-    public ServiceThread(Handler handler){
+    public ServiceThread(Handler handler, String user_idx){
         this.mHandler = handler;
+        this.user_idx = user_idx;
     }
 
     public void stopForever(){
@@ -47,10 +51,12 @@ public class ServiceThread extends Thread{
                 Log.e("msg profile",msg[4]);
                 System.out.println("TTTTTTTT"+read);
                 if(read!=null){
-                    mHandler.sendEmptyMessage(0);//쓰레드에 있는 핸들러에게 메세지를 보냄
-                    try{
-                        Thread.sleep(5000); //10초씩 쉰다.
-                    }catch (Exception e) {}
+                    if(!user_idx.equals(msg[0]) && room_idx.equals(msg[2])){ //이러면 일단 아마 다른방 채팅도 내가 보낸거 아니면 다 올듯
+                        mHandler.sendEmptyMessage(0);//쓰레드에 있는 핸들러에게 메세지를 보냄
+                    }
+//                    try{
+//                        Thread.sleep(5000); //10초씩 쉰다.
+//                    }catch (Exception e) {}
 
 
                     //mHandler.post(new msgUpdate(msg[0],msg[1],msg[2],msg[3],msg[4],Integer.parseInt(msg[5]),msg[6]));

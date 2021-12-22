@@ -10,6 +10,7 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -45,11 +46,11 @@ class PaintActivity : AppCompatActivity(){
     private val notificationId = 101
     private var notificationManager: NotificationManager? = null
     private var channel : NotificationChannel? = null
+    var user_idx : String? = null
 
     companion object {
         var paintactivity: Activity? = null
     }
-
 
 
 
@@ -98,9 +99,11 @@ class PaintActivity : AppCompatActivity(){
         paintactivity = this@PaintActivity
 
 
-        //노티티
-       createNotificationChannel()
-
+        //노티
+        createNotificationChannel()
+        val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
+        user_idx = sharedPreferences?.getString("user_idx", "")
+        Log.e("oncreate",user_idx!!)
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics)
         paintView = findViewById(R.id.paint_view)
@@ -124,6 +127,7 @@ class PaintActivity : AppCompatActivity(){
         test2_btn.setOnClickListener {
             Toast.makeText(getApplicationContext(),"Service 시작",Toast.LENGTH_SHORT).show()
             var intent = Intent(this,MyService::class.java)
+            intent.putExtra("user_idx",user_idx)
             startService(intent)
         }
         test3_btn.setOnClickListener {

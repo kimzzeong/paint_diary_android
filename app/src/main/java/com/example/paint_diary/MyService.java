@@ -24,10 +24,10 @@ public class MyService extends Service {
     Notification Notifi ;
     NotificationChannel channel;
     private final String CHANNEL_ID = "channel_id_example_01";
+    String user_idx;
 
 
     public MyService(){
-
     }
 
     @Override
@@ -37,11 +37,12 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        user_idx = intent.getStringExtra("user_idx");
         channel = new NotificationChannel(CHANNEL_ID,"ㅎㅇ",NotificationManager.IMPORTANCE_HIGH);
         myServiceHandler handler = new myServiceHandler();
         Notifi_M = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Notifi_M.createNotificationChannel(channel);
-        thread = new ServiceThread(handler);
+        thread = new ServiceThread(handler,user_idx);
         thread.start();
         return START_STICKY;
     }
@@ -59,13 +60,13 @@ public class MyService extends Service {
 
 
             Intent intent = new Intent(MyService.this, ChatActivity.class);
+            //intent.putExtra("room_idx",);
             PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
             Notifi = new Notification.Builder(getApplicationContext(),CHANNEL_ID)
                     .setContentTitle("Content Title")
                     .setContentText("Content Text")
-                    .setSmallIcon(R.drawable.sun)
-                    .setTicker("알림!!!")
+                    .setSmallIcon(R.drawable.sketching)
                     .setContentIntent(pendingIntent)
                     .build();
 
