@@ -43,7 +43,7 @@ class RoomAdapter : RecyclerView.Adapter<RoomAdapter.ViewHolder>() {
 
     var user_nickname : String = "" //유저 닉네임
     interface ItemClickListener {
-        fun onClick(view: View, position: Int, room_idx: Int, room_user1: String, room_user2 : String, profile_photo : String)
+        fun onClick(view: View, position: Int, room_idx: Int, room_user1: String, room_user2 : String, profile_photo : String, nickname : String)
     }
 
 
@@ -99,7 +99,7 @@ class RoomAdapter : RecyclerView.Adapter<RoomAdapter.ViewHolder>() {
 
 
         holder.itemView.setOnClickListener {
-            itemClickListner.onClick(it,position,roomList.get(position).room_idx,user_split[0],user_split[1],profile_photo)
+            itemClickListner.onClick(it,position,roomList.get(position).room_idx,user_split[0],user_split[1],profile_photo,roomList.get(position).room_name)
 
             Log.e("Adapter - profile_photo",profile_photo)
         }

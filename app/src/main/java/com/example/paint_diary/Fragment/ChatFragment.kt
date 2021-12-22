@@ -122,12 +122,14 @@ class ChatFragment : Fragment() {
                     room_idx: Int,
                     room_user1: String,
                     room_user2: String,
-                    profile_photo: String
+                    profile_photo: String,
+                    nickname : String
             ) {
                 val intent = Intent(context, ChatActivity::class.java)
                 intent.putExtra("room_idx", room_idx)
                 intent.putExtra("room_user1", room_user1)
                 intent.putExtra("room_user2", room_user2)
+                intent.putExtra("room_name",nickname)
                 Log.e("Chat Fragment - room_idx", room_idx.toString())
                 //Toast.makeText(context,room_idx,Toast.LENGTH_SHORT).show()
                 startActivity(intent)

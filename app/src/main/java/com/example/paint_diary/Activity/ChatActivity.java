@@ -111,6 +111,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
     SimpleDateFormat fourteen_format; //날짜 포맷
     String date;
     String[] photo; //포토 다이얼로그 목록을 위한 배열
+    TextView chat_room_name;
 
 
     Gson gson = new GsonBuilder()
@@ -138,9 +139,11 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
         user_nickname = sharedPreferences.getString("user_nickname", String.valueOf(Context.MODE_PRIVATE));
         chatbutton = findViewById(R.id.chatbutton);
         imagebutton = findViewById(R.id.imagebutton);
+        chat_room_name = findViewById(R.id.chat_room_name);
 
         Intent intent = getIntent();
         room_idx = String.valueOf(intent.getIntExtra("room_idx",0));
+        chat_room_name.setText(intent.getStringExtra("room_name"));
 
         recyclerView = findViewById(R.id.chatView) ;
         recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
@@ -299,6 +302,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
         });
     }
 
+    //이미지 보내는 채팅을 위한 카메라/갤러리 선택 다이얼로그 띄우기
     public void show_photo_Dialog() {
         photo = getResources().getStringArray(R.array.photoArray);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -471,8 +475,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
     private void cropImage(Uri uri){
 
         CropImage.activity(uri).setGuidelines(CropImageView.Guidelines.ON)
-                .setCropShape(CropImageView.CropShape.RECTANGLE)
-                //사각형 모양으로 자른다
+                .setCropShape(CropImageView.CropShape.RECTANGLE) //사각형 모양으로 자른다
                 .start(this);
 
     }
