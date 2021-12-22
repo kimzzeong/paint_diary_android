@@ -14,12 +14,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.example.paint_diary.MyService
 import com.example.paint_diary.NotiService
 import com.example.paint_diary.Paint.PaintView
 import com.example.paint_diary.R
@@ -120,11 +122,13 @@ class PaintActivity : AppCompatActivity(){
             sendNotification()
         }
         test2_btn.setOnClickListener {
-            var intent = Intent(this,NotiService::class.java)
+            Toast.makeText(getApplicationContext(),"Service 시작",Toast.LENGTH_SHORT).show()
+            var intent = Intent(this,MyService::class.java)
             startService(intent)
         }
         test3_btn.setOnClickListener {
-            var intent = Intent(this,NotiService::class.java)
+            Toast.makeText(getApplicationContext(),"Service 끝",Toast.LENGTH_SHORT).show()
+            var intent = Intent(this,MyService::class.java)
             stopService(intent)
 
         }

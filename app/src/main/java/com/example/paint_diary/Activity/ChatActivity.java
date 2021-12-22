@@ -1,17 +1,13 @@
 package com.example.paint_diary.Activity;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.solver.GoalRow;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,15 +23,12 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.load.data.mediastore.MediaStoreUtil;
 import com.example.paint_diary.Adapter.ChatAdapter;
-import com.example.paint_diary.Data.Chat;
 import com.example.paint_diary.Data.Chat2;
 import com.example.paint_diary.IRetrofit;
 import com.example.paint_diary.R;
@@ -64,13 +57,10 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import kotlin.jvm.Throws;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -79,7 +69,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnListItemSelectedInterface {
 
@@ -230,7 +219,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
         });
     }
 
-    class msgUpdate implements Runnable{
+    public class msgUpdate implements Runnable{
         private final String msg;
         private final String user_idx;
         private final String message_room_idx;

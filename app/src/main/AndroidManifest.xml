@@ -63,7 +63,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <service android:name=".NotiService"/>
+        <service android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>
