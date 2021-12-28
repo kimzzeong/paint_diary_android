@@ -54,7 +54,7 @@ public class MyService extends Service {
     ServiceThread thread;
     NotificationChannel channel;
     private final String CHANNEL_ID = "channel_id_example_01";
-    String user_idx,room_idx;
+    String user_idx;
     String GROUP_KEY_WORK_EMAIL = "com.example.paint_diary";
     Bitmap bitmap; // 비트맵 얻어서 노티의 라지아이콘에 넣기
     ArrayList<String> room = new ArrayList<>();
@@ -99,7 +99,7 @@ public class MyService extends Service {
 //    }
 
     class MyServiceHandler extends Handler {
-        ArrayList<String> room = new ArrayList<>();
+        ArrayList<String> room;
         ArrayList<String> room_chatActivity;
         @Override
         public void handleMessage(android.os.Message msg) {
@@ -116,6 +116,7 @@ public class MyService extends Service {
             List<ActivityManager.RunningTaskInfo> info = manager.getRunningTasks(1);
             ComponentName componentName= info.get(0).topActivity;
             String activityName = componentName.getShortClassName().substring(1);
+            room = new ArrayList<>();
             room = bundle.getStringArrayList("room_list");
             Log.e("activity_name",activityName);
             Log.e("핸들러 룸 사이즈",room.size()+"");
@@ -174,7 +175,7 @@ public class MyService extends Service {
 
                 //채팅방이 켜저있을 땐 내가 현재 속한 값을 제외한 값에서 메세지가 와야 노티주기
             }else if(activityName.equals("Activity.ChatActivity")){
-                room_idx = ((ChatActivity)ChatActivity.context).room_idx;
+                String room_idx = ((ChatActivity)ChatActivity.context).room_idx;
                 room_chatActivity = new ArrayList<>();
                 room_chatActivity = room;
                 //Toast.makeText(getApplicationContext(),room_idx,Toast.LENGTH_SHORT).show();
@@ -182,53 +183,59 @@ public class MyService extends Service {
                 for (int i = 0; i < room_chatActivity.size(); i++){
                     Log.e("채팅방목록",room_chatActivity.get(i));
                 }
-                if(room_chatActivity.contains(room_idx)){
-                    room_chatActivity.remove(room_idx);
-                }
+
+                //소켓으로 보낸 룸넘버랑 현재 채팅방 룸 넘버랑 비교해서 같으면
+//               if(room_chatActivity.contains(room_idx)){
+//                    if(room_idx.equals(bundle.getString("room_idx"))){
+//                        room_chatActivity.remove(room_idx);
+//                    }
+//                }
                 if(room_chatActivity.contains(bundle.getString("room_idx"))){
+                    if(!room_idx.equals(bundle.getString("room_idx"))){
+                        if(bundle.getString("room_photo").equals("없음")){ //프로필 사진이 없으면 기본 프로필 사진으로 세팅
+                            //drawable to bitmap
+                            Drawable drawable = getResources().getDrawable(R.drawable.basic_profile);
+                            bitmap = ((BitmapDrawable)drawable).getBitmap();
 
-                    if(bundle.getString("room_photo").equals("없음")){ //프로필 사진이 없으면 기본 프로필 사진으로 세팅
-                        //drawable to bitmap
-                        Drawable drawable = getResources().getDrawable(R.drawable.basic_profile);
-                        bitmap = ((BitmapDrawable)drawable).getBitmap();
+                        }else{ //프로필 사진이 있으면 프로필 사진을 LargeIcon으로 세팅
 
-                    }else{ //프로필 사진이 있으면 프로필 사진을 LargeIcon으로 세팅
+                            Glide.with(getApplicationContext())
+                                    .asBitmap()
+                                    .load(bundle.getString("room_photo"))
+                                    .into(new CustomTarget<Bitmap>() {
+                                        @Override
+                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                            bitmap = resource;
+                                        }
 
-                        Glide.with(getApplicationContext())
-                                .asBitmap()
-                                .load(bundle.getString("room_photo"))
-                                .into(new CustomTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        bitmap = resource;
-                                    }
+                                        @Override
+                                        public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                                        }
+                                    });
+                        }
 
-                                    }
-                                });
+                        Notification Notifi = new Notification.Builder(getApplicationContext(),CHANNEL_ID)
+                                .setContentTitle(bundle.getString("room_name")) //노티의 제목은 채팅방 이름(=상대 유저 닉네임)
+                                .setContentText(bundle.getString("content")) //노티의 내용은 채팅 내용
+                                .setSmallIcon(R.drawable.sketching)
+                                .setContentIntent(pendingIntent)
+                                .setGroup(GROUP_KEY_WORK_EMAIL)
+                                .setLargeIcon(bitmap)
+                                .build();
+
+                        //소리추가
+                        Notifi.defaults = Notification.DEFAULT_SOUND;
+
+                        //알림 소리를 한번만 내도록
+                        Notifi.flags = Notification.FLAG_ONLY_ALERT_ONCE;
+
+                        //확인하면 자동으로 알림이 제거 되도록
+                        //  Notifi.flags = Notification.FLAG_AUTO_CANCEL;
+
+                        Notifi_M.notify( 777 , Notifi);
                     }
 
-                    Notification Notifi = new Notification.Builder(getApplicationContext(),CHANNEL_ID)
-                            .setContentTitle(bundle.getString("room_name")) //노티의 제목은 채팅방 이름(=상대 유저 닉네임)
-                            .setContentText(bundle.getString("content")) //노티의 내용은 채팅 내용
-                            .setSmallIcon(R.drawable.sketching)
-                            .setContentIntent(pendingIntent)
-                            .setGroup(GROUP_KEY_WORK_EMAIL)
-                            .setLargeIcon(bitmap)
-                            .build();
-
-                    //소리추가
-                    Notifi.defaults = Notification.DEFAULT_SOUND;
-
-                    //알림 소리를 한번만 내도록
-                    Notifi.flags = Notification.FLAG_ONLY_ALERT_ONCE;
-
-                    //확인하면 자동으로 알림이 제거 되도록
-                    //  Notifi.flags = Notification.FLAG_AUTO_CANCEL;
-
-                    Notifi_M.notify( 777 , Notifi);
 
                 }
             }
