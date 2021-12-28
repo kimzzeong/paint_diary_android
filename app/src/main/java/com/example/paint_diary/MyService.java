@@ -106,7 +106,15 @@ public class MyService extends Service {
             super.handleMessage(msg);
 
             Bundle bundle = msg.getData();
+
+            room = new ArrayList<>();
+            room = bundle.getStringArrayList("room_list");
+
             Intent intent = new Intent(MyService.this, ChatActivity.class);
+            intent.putExtra("room_idx",bundle.getString("room_idx"));
+            intent.putExtra("room_name",bundle.getString("room_name"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putStringArrayListExtra("room_list",bundle.getStringArrayList("room_list"));
             PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
             /*현재 켜져있는 최상위 액티비티가 뭔지 구하는 코드
@@ -116,8 +124,6 @@ public class MyService extends Service {
             List<ActivityManager.RunningTaskInfo> info = manager.getRunningTasks(1);
             ComponentName componentName= info.get(0).topActivity;
             String activityName = componentName.getShortClassName().substring(1);
-            room = new ArrayList<>();
-            room = bundle.getStringArrayList("room_list");
             Log.e("activity_name",activityName);
             Log.e("핸들러 룸 사이즈",room.size()+"");
 
@@ -169,8 +175,6 @@ public class MyService extends Service {
 //                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
 //                notificationManager.notify((int)(System.currentTimeMillis()/1000), Notifi);
                 Notifi_M.notify(0, Notifi);
-//                room_idx = ((ChatActivity)ChatActivity.context).room_idx;
-//            Toast.makeText(getApplicationContext(),room_idx,Toast.LENGTH_SHORT).show();}
 
 
                 //채팅방이 켜저있을 땐 내가 현재 속한 값을 제외한 값에서 메세지가 와야 노티주기
@@ -184,12 +188,7 @@ public class MyService extends Service {
                     Log.e("채팅방목록",room_chatActivity.get(i));
                 }
 
-                //소켓으로 보낸 룸넘버랑 현재 채팅방 룸 넘버랑 비교해서 같으면
-//               if(room_chatActivity.contains(room_idx)){
-//                    if(room_idx.equals(bundle.getString("room_idx"))){
-//                        room_chatActivity.remove(room_idx);
-//                    }
-//                }
+                //내가 속해있는 채팅방에서 현재 켜고 있는 채팅방 제외하고 노티보내주기
                 if(room_chatActivity.contains(bundle.getString("room_idx"))){
                     if(!room_idx.equals(bundle.getString("room_idx"))){
                         if(bundle.getString("room_photo").equals("없음")){ //프로필 사진이 없으면 기본 프로필 사진으로 세팅
@@ -221,7 +220,9 @@ public class MyService extends Service {
                                 .setSmallIcon(R.drawable.sketching)
                                 .setContentIntent(pendingIntent)
                                 .setGroup(GROUP_KEY_WORK_EMAIL)
+                                .setGroupSummary(true)
                                 .setLargeIcon(bitmap)
+                                .setAutoCancel(true)
                                 .build();
 
                         //소리추가
@@ -233,7 +234,7 @@ public class MyService extends Service {
                         //확인하면 자동으로 알림이 제거 되도록
                         //  Notifi.flags = Notification.FLAG_AUTO_CANCEL;
 
-                        Notifi_M.notify( 777 , Notifi);
+                        Notifi_M.notify( 0 , Notifi);
                     }
 
 

@@ -147,25 +147,6 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
         imagebutton = findViewById(R.id.imagebutton);
         chat_room_name = findViewById(R.id.chat_room_name);
 
-        Intent intent = getIntent();
-        room_idx = String.valueOf(intent.getIntExtra("room_idx",0));
-        chat_room_name.setText(intent.getStringExtra("room_name"));
-        room = intent.getStringArrayListExtra("room_list");
-
-        recyclerView = findViewById(R.id.chatView) ;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
-
-
-        requestChat(room_idx,this);
-
-        adapter = new ChatAdapter(list,this,this) ;
-
-        recyclerView.setAdapter(adapter) ;
-
-
-        Log.e("profile_photo",profile_photo);
-        profile_photo = sharedPreferences.getString("profile_photo","없음");
-        Log.e("room_idx",room_idx+"");
 
         //이미지 버튼 클릭 시 카메라, 갤러리 다이얼로그 띄우기
         imagebutton.setOnClickListener(new View.OnClickListener() {
@@ -270,6 +251,31 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent intent = getIntent();
+        room_idx = String.valueOf(intent.getIntExtra("room_idx",0));
+        chat_room_name.setText(intent.getStringExtra("room_name"));
+        room = intent.getStringArrayListExtra("room_list");
+
+        recyclerView = findViewById(R.id.chatView) ;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
+
+
+        adapter = new ChatAdapter(list,this,this) ;
+
+        recyclerView.setAdapter(adapter) ;
+
+
+        Log.e("profile_photo",profile_photo);
+        profile_photo = sharedPreferences.getString("profile_photo","없음");
+        Log.e("room_idx",room_idx+"");
+
+        requestChat(room_idx,this);
+
+    }
 
     //채팅 리스트 불러오기
     public void requestChat(String room_idx, Context context){
