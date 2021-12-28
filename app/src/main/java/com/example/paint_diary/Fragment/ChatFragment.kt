@@ -37,6 +37,7 @@ import java.io.PrintWriter
 import java.net.InetAddress
 import java.net.Socket
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ChatFragment : Fragment() {
     companion object {
@@ -46,14 +47,6 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private val mHandler: Handler? = null
-    var socket: Socket? = null
-    var sendWriter: PrintWriter? = null
-    private val ip = "192.168.56.1" //로컬
-    var read = String()
-
-    //private String ip = "3.36.52.195"; //aws ip 주소
-    private val port = 8888
 
     var gson: Gson = GsonBuilder()
             .setLenient()
@@ -66,6 +59,7 @@ class ChatFragment : Fragment() {
 
     lateinit var roomAdapter: RoomAdapter
     var roomList = mutableListOf<ChatRoom>()
+    var room_list = ArrayList<String>()
 
     //메모리에 올라갔을 때
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,6 +124,7 @@ class ChatFragment : Fragment() {
                 intent.putExtra("room_user1", room_user1)
                 intent.putExtra("room_user2", room_user2)
                 intent.putExtra("room_name",nickname)
+                intent.putStringArrayListExtra("room_list",room_list)
                 Log.e("Chat Fragment - room_idx", room_idx.toString())
                 //Toast.makeText(context,room_idx,Toast.LENGTH_SHORT).show()
                 startActivity(intent)
@@ -195,6 +190,7 @@ class ChatFragment : Fragment() {
 
                         Log.e("room_user", i.room_user)
                         my_room_list.add(i)
+                        room_list.add(i.room_idx.toString())
                     }
                 }
                 Log.e("my_room_list", "" + my_room_list.size)

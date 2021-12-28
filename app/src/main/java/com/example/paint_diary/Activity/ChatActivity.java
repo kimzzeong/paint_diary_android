@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,7 +33,9 @@ import android.widget.Toast;
 import com.example.paint_diary.Adapter.ChatAdapter;
 import com.example.paint_diary.Data.Chat2;
 import com.example.paint_diary.IRetrofit;
+import com.example.paint_diary.MyService;
 import com.example.paint_diary.R;
+import com.example.paint_diary.ServiceThread;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.karumi.dexter.Dexter;
@@ -75,8 +79,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
     private Handler mHandler;
     Socket socket;
     PrintWriter sendWriter;
-    //private String ip = "192.168.56.1"; //로컬
-    private String ip = "3.36.52.195"; //aws ip 주소
+    private String ip = "192.168.56.1"; //로컬
+    //private String ip = "3.36.52.195"; //aws ip 주소
     private int port = 8888;
 
 
@@ -95,12 +99,23 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
     ArrayList<Chat2> list = new ArrayList<>(); // 채팅 리스트
     RecyclerView recyclerView;
     ChatAdapter adapter;
-    String room_idx, profile_photo = "";
+
+//    public String getRoom_idx() {
+//        return room_idx;
+//    }
+//
+//    public void setRoom_idx(String room_idx) {
+//        this.room_idx = room_idx;
+//    }
+
+    public String room_idx, profile_photo = "";
     Date date_now;
     SimpleDateFormat fourteen_format; //날짜 포맷
     String date;
     String[] photo; //포토 다이얼로그 목록을 위한 배열
     TextView chat_room_name;
+    public static Context context;
+    ArrayList<String>room = new ArrayList<>();
 
 
     Gson gson = new GsonBuilder()
@@ -122,6 +137,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
         setContentView(R.layout.activity_chat);
         mHandler = new Handler();
         message = (EditText) findViewById(R.id.message);
+        context = this;
+
 
         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         UserID = sharedPreferences.getString("user_idx", String.valueOf(Context.MODE_PRIVATE));
@@ -133,6 +150,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
         Intent intent = getIntent();
         room_idx = String.valueOf(intent.getIntExtra("room_idx",0));
         chat_room_name.setText(intent.getStringExtra("room_name"));
+        room = intent.getStringArrayListExtra("room_list");
 
         recyclerView = findViewById(R.id.chatView) ;
         recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
@@ -164,6 +182,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
             public void run() {
                 try {
 
+                   // ServiceThread serviceThread = new ServiceThread(mHandler,UserID,room);
                     InetAddress serverAddr = InetAddress.getByName(ip);
                     socket = new Socket(serverAddr, port);
                     sendWriter = new PrintWriter(socket.getOutputStream());

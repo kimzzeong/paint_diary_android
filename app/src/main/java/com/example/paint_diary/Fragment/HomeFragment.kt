@@ -18,6 +18,7 @@ import com.example.paint_diary.Activity.PaintActivity
 import com.example.paint_diary.Adapter.DiaryRecyclerviewAdapter
 import com.example.paint_diary.Data.DiaryRequest
 import com.example.paint_diary.IRetrofit
+import com.example.paint_diary.MyService
 import com.example.paint_diary.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -211,6 +212,8 @@ class HomeFragment : Fragment() {
             //프래그먼트 -> 액티비티 화면 이동
             val intent = Intent(context, PaintActivity::class.java)
             startActivity(intent)
+
+
 
         }
 

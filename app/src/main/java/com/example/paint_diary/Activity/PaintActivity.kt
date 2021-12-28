@@ -15,22 +15,29 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.MyService
-import com.example.paint_diary.NotiService
 import com.example.paint_diary.Paint.PaintView
 import com.example.paint_diary.R
+import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_paint.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 import java.io.ByteArrayOutputStream
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class PaintActivity : AppCompatActivity(){
@@ -47,48 +54,40 @@ class PaintActivity : AppCompatActivity(){
     private var notificationManager: NotificationManager? = null
     private var channel : NotificationChannel? = null
     var user_idx : String? = null
-
     companion object {
         var paintactivity: Activity? = null
     }
 
-
-
-    //노티 테스트
-    private fun createNotificationChannel(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val name = "Notification Title"
-            val descriptionText = "Notification Description"
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-
-        }
-
-    }
-
-
-    private fun sendNotification(){
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.sketching)
-            .setContentTitle("Example Title")
-            .setContentText("Example Description")
-            .setPriority(Notification.PRIORITY_MAX) //NotificationCompat.PRIORITY_HIGH
-            .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
-
-        with(NotificationManagerCompat.from(this)){
-            notify(notificationId, builder.build())
-        }
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager!!.createNotificationChannel(channel!!)
-    }
-
-
-
-
-
-
+//
+//    //노티 테스트
+//    private fun createNotificationChannel(){
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            val name = "Notification Title"
+//            val descriptionText = "Notification Description"
+//            val importance = NotificationManager.IMPORTANCE_HIGH
+//            channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+//                description = descriptionText
+//            }
+//
+//        }
+//
+//    }
+//
+//
+//    private fun sendNotification(){
+//        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+//            .setSmallIcon(R.drawable.sketching)
+//            .setContentTitle("Example Title")
+//            .setContentText("Example Description")
+//            .setPriority(Notification.PRIORITY_MAX) //NotificationCompat.PRIORITY_HIGH
+//            .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
+//
+//        with(NotificationManagerCompat.from(this)){
+//            notify(notificationId, builder.build())
+//        }
+//        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager!!.createNotificationChannel(channel!!)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,12 +97,11 @@ class PaintActivity : AppCompatActivity(){
         supportActionBar?.title = "그림그리기"
         paintactivity = this@PaintActivity
 
-
-        //노티
-        createNotificationChannel()
+//        //노티
+//        createNotificationChannel()
         val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
         user_idx = sharedPreferences?.getString("user_idx", "")
-        Log.e("oncreate",user_idx!!)
+        Log.e("oncreate", user_idx!!)
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics)
         paintView = findViewById(R.id.paint_view)
@@ -120,22 +118,19 @@ class PaintActivity : AppCompatActivity(){
             openColorPicker()
         }
 
-        //노티테스트
-        test_btn.setOnClickListener {
-            sendNotification()
-        }
-        test2_btn.setOnClickListener {
-            Toast.makeText(getApplicationContext(),"Service 시작",Toast.LENGTH_SHORT).show()
-            var intent = Intent(this,MyService::class.java)
-            intent.putExtra("user_idx",user_idx)
-            startService(intent)
-        }
-        test3_btn.setOnClickListener {
-            Toast.makeText(getApplicationContext(),"Service 끝",Toast.LENGTH_SHORT).show()
-            var intent = Intent(this,MyService::class.java)
-            stopService(intent)
-
-        }
+//        //노티테스트
+//        test_btn.setOnClickListener {
+//            sendNotification()
+//        }
+//        test2_btn.setOnClickListener {
+//            //Toast.makeText(getApplicationContext(),"Service 시작",Toast.LENGTH_SHORT).show()
+//        }
+//        test3_btn.setOnClickListener {
+//            //Toast.makeText(getApplicationContext(),"Service 끝",Toast.LENGTH_SHORT).show()
+//            var intent = Intent(this, MyService::class.java)
+//            stopService(intent)
+//
+//        }
 
         //지우개
         btnEraser.setOnClickListener {
@@ -267,7 +262,7 @@ class PaintActivity : AppCompatActivity(){
                 } else {
                     val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
                     var user_idx: Int? =
-                        Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
+                            Integer.parseInt(sharedPreferences?.getString("user_idx", ""))
                     val stream = ByteArrayOutputStream()
                     paintView!!.mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
                     val byteArray = stream.toByteArray()
@@ -290,4 +285,6 @@ class PaintActivity : AppCompatActivity(){
         menuInflater.inflate(R.menu.paint_save_menu, menu)
         return true
     }
+
+
 }

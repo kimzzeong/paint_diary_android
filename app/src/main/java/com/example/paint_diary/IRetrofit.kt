@@ -275,6 +275,13 @@ interface IRetrofit {
             @Field("room_idx") room_idx: String
     ): Call<ArrayList<Chat2>>
 
+    //내 채팅방 불러오기
+    @FormUrlEncoded
+    @POST("mychatRoomList.php")
+    fun requestMyChatRoom(
+            @Field("user_idx") user_idx: String
+    ): Call<ArrayList<String>>
+
     //채팅 이미지 업로드
     @Multipart
     @POST("chatImageUpload.php")

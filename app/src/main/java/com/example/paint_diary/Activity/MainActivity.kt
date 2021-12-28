@@ -1,6 +1,8 @@
 package com.example.paint_diary.Activity
 
+import android.app.ActivityManager
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,8 +15,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.paint_diary.Fragment.ChatFragment
 import com.example.paint_diary.Fragment.HomeFragment
 import com.example.paint_diary.Fragment.MypageFragment
+import com.example.paint_diary.IRetrofit
+import com.example.paint_diary.MyService
 import com.example.paint_diary.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.GsonBuilder
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -22,7 +27,11 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.activity_main.*
-import java.text.SimpleDateFormat
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSelectedListener {
@@ -30,6 +39,21 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
     private lateinit var chatFragment: ChatFragment
     private lateinit var mypageFragment: MypageFragment
     var btn: String? = "bottom_nav_home"
+
+    var user_idx : String? = null
+    var room : ArrayList<String> ?= null
+
+    var gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+    var retrofit = Retrofit.Builder()
+            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+
+    var serviceIsRun : String = MyService::class.java.name
 
     //val editor = sharedPreferences.edit()
 
@@ -42,6 +66,47 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         bottom_nav.setOnNavigationItemSelectedListener(this)
         homeFragment = HomeFragment.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.main_fragment, homeFragment, "home").commit()
+
+
+
+
+        val sharedPreferences = this.getSharedPreferences("user", Context.MODE_PRIVATE)
+        user_idx = sharedPreferences?.getString("user_idx", "")
+
+        if(!user_idx!!.isEmpty()){
+
+            requestChatRoom(user_idx!!)
+        }
+        //isServiceRunning(serviceIsRun)
+
+    }
+
+    //서비스가 실행중인지 확인하는 메소드
+    private fun isServiceRunning(serviceIsRun: String) : Boolean {
+
+
+        // 시스템 내부의 액티비티 상태를 파악하는 ActivityManager객체를 생성한다.
+        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+
+        //  manager.getRunningServices(가져올 서비스 목록 개수) - 현재 시스템에서 동작 중인 모든 서비스 목록을 얻을 수 있다.
+
+
+        // 리턴값은 List<ActivityManager.RunningServiceInfo>이다. (ActivityManager.RunningServiceInfo의 객체를 담은 List)
+
+
+        //  manager.getRunningServices(가져올 서비스 목록 개수) - 현재 시스템에서 동작 중인 모든 서비스 목록을 얻을 수 있다.
+
+
+        // 리턴값은 List<ActivityManager.RunningServiceInfo>이다. (ActivityManager.RunningServiceInfo의 객체를 담은 List)
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+
+
+            // ActivityManager.RunningServiceInfo의 객체를 통해 현재 실행중인 서비스의 정보를 가져올 수 있다.
+            if (serviceIsRun == service.service.className) {
+                return true
+            }
+        }
+        return false
 
     }
 
@@ -63,9 +128,9 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
                     Log.d("TAG", "MainActivity = 홈")
                     homeFragment = HomeFragment.newInstance()
                     supportFragmentManager.beginTransaction().replace(
-                        R.id.main_fragment,
-                        homeFragment,
-                        "home"
+                            R.id.main_fragment,
+                            homeFragment,
+                            "home"
                     ).commit()
                 }
             }
@@ -75,9 +140,9 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
                     Log.d("TAG", "MainActivity = 채팅")
                     chatFragment = ChatFragment.newInstance()
                     supportFragmentManager.beginTransaction().replace(
-                        R.id.main_fragment,
-                        chatFragment,
-                        "chat"
+                            R.id.main_fragment,
+                            chatFragment,
+                            "chat"
                     ).commit()
                 }
             }
@@ -88,9 +153,9 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
                         Log.d("TAG", "MainActivity = 마이페이지")
                         mypageFragment = MypageFragment.newInstance()
                         supportFragmentManager.beginTransaction().replace(
-                            R.id.main_fragment,
-                            mypageFragment,
-                            "mypage"
+                                R.id.main_fragment,
+                                mypageFragment,
+                                "mypage"
                         ).commit()
                     }
                 } else {//로그인 상태가 아니면 다이얼로그를 이용해 로그인 페이지로 이동
@@ -122,22 +187,22 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
     private fun readCheckPermission() {
 
         Dexter.withContext(this).withPermission(
-            android.Manifest.permission.READ_EXTERNAL_STORAGE
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
         ).withListener(object : PermissionListener {
             override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
             }
 
             override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
                 Toast.makeText(
-                    this@MainActivity,
-                    "You have denied the storage permission to select image",
-                    Toast.LENGTH_SHORT
+                        this@MainActivity,
+                        "You have denied the storage permission to select image",
+                        Toast.LENGTH_SHORT
                 ).show()
                 showRotationalDialogForPermission()
             }
 
             override fun onPermissionRationaleShouldBeShown(
-                p0: PermissionRequest?, p1: PermissionToken?
+                    p0: PermissionRequest?, p1: PermissionToken?
             ) {
                 showRotationalDialogForPermission()
             }
@@ -146,22 +211,22 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
     private fun writeCheckPermission() {
 
         Dexter.withContext(this).withPermission(
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
         ).withListener(object : PermissionListener {
             override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
             }
 
             override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
                 Toast.makeText(
-                    this@MainActivity,
-                    "You have denied the storage permission to select image",
-                    Toast.LENGTH_SHORT
+                        this@MainActivity,
+                        "You have denied the storage permission to select image",
+                        Toast.LENGTH_SHORT
                 ).show()
                 showRotationalDialogForPermission()
             }
 
             override fun onPermissionRationaleShouldBeShown(
-                p0: PermissionRequest?, p1: PermissionToken?
+                    p0: PermissionRequest?, p1: PermissionToken?
             ) {
                 showRotationalDialogForPermission()
             }
@@ -187,5 +252,37 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
             .setNegativeButton("취소") { dialog, _ ->
                 dialog.dismiss()
             }.show()
+    }
+
+    //room 불러오기
+    private fun requestChatRoom(user_idx: String) {
+
+        var api = retrofit.create(IRetrofit::class.java)
+
+        api.requestMyChatRoom(user_idx).enqueue(object : Callback<ArrayList<String>> {
+            override fun onResponse(call: Call<ArrayList<String>>, response: Response<ArrayList<String>>) {
+                room = response.body()
+                Log.e("MainActivity room size", room?.size.toString())
+                //서비스가 실행되어 있는 상태 && 로그인이 되어있는 상태일 때 서비스 시작
+                if(!isServiceRunning(serviceIsRun) && !user_idx.equals("")){
+
+                    Log.e("user_idx",user_idx)
+                    var intent = Intent(applicationContext, MyService::class.java)
+                    intent.putExtra("user_idx", user_idx)
+                    intent.putStringArrayListExtra("room_list",room)
+                    // intent.putStringArrayListExtra("room_list",room)
+                    if(!user_idx.equals("") && !user_idx.isEmpty()){
+                        startService(intent)
+                    }
+                }
+                Log.e("서비스 상태",isServiceRunning(serviceIsRun).toString())
+
+            }
+
+            override fun onFailure(call: Call<ArrayList<String>>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }
