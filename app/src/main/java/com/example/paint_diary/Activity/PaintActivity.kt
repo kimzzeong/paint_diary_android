@@ -48,46 +48,11 @@ class PaintActivity : AppCompatActivity(){
     var metrics = DisplayMetrics()
     var switch_brush_option : Boolean = false
 
-    //노티 테스트
-    private val CHANNEL_ID = "channel_id_example_01"
-    private val notificationId = 101
-    private var notificationManager: NotificationManager? = null
-    private var channel : NotificationChannel? = null
     var user_idx : String? = null
     companion object {
         var paintactivity: Activity? = null
     }
 
-//
-//    //노티 테스트
-//    private fun createNotificationChannel(){
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-//            val name = "Notification Title"
-//            val descriptionText = "Notification Description"
-//            val importance = NotificationManager.IMPORTANCE_HIGH
-//            channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-//                description = descriptionText
-//            }
-//
-//        }
-//
-//    }
-//
-//
-//    private fun sendNotification(){
-//        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-//            .setSmallIcon(R.drawable.sketching)
-//            .setContentTitle("Example Title")
-//            .setContentText("Example Description")
-//            .setPriority(Notification.PRIORITY_MAX) //NotificationCompat.PRIORITY_HIGH
-//            .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
-//
-//        with(NotificationManagerCompat.from(this)){
-//            notify(notificationId, builder.build())
-//        }
-//        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        notificationManager!!.createNotificationChannel(channel!!)
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,8 +62,6 @@ class PaintActivity : AppCompatActivity(){
         supportActionBar?.title = "그림그리기"
         paintactivity = this@PaintActivity
 
-//        //노티
-//        createNotificationChannel()
         val sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE)
         user_idx = sharedPreferences?.getString("user_idx", "")
         Log.e("oncreate", user_idx!!)

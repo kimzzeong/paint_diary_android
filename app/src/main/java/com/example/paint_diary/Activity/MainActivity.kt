@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.paint_diary.Fragment.ChatFragment
 import com.example.paint_diary.Fragment.HomeFragment
 import com.example.paint_diary.Fragment.MypageFragment
@@ -33,6 +34,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
+
 
 class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSelectedListener {
     private lateinit var homeFragment: HomeFragment
@@ -77,7 +79,7 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
 
             requestChatRoom(user_idx!!)
         }
-        //isServiceRunning(serviceIsRun)
+        isServiceRunning(serviceIsRun)
 
     }
 
@@ -87,14 +89,6 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
 
         // 시스템 내부의 액티비티 상태를 파악하는 ActivityManager객체를 생성한다.
         val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
-
-        //  manager.getRunningServices(가져올 서비스 목록 개수) - 현재 시스템에서 동작 중인 모든 서비스 목록을 얻을 수 있다.
-
-
-        // 리턴값은 List<ActivityManager.RunningServiceInfo>이다. (ActivityManager.RunningServiceInfo의 객체를 담은 List)
-
-
-        //  manager.getRunningServices(가져올 서비스 목록 개수) - 현재 시스템에서 동작 중인 모든 서비스 목록을 얻을 수 있다.
 
 
         // 리턴값은 List<ActivityManager.RunningServiceInfo>이다. (ActivityManager.RunningServiceInfo의 객체를 담은 List)
@@ -264,18 +258,19 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
                 room = response.body()
                 Log.e("MainActivity room size", room?.size.toString())
                 //서비스가 실행되어 있는 상태 && 로그인이 되어있는 상태일 때 서비스 시작
-                if(!isServiceRunning(serviceIsRun) && !user_idx.equals("")){
+                if (!isServiceRunning(serviceIsRun) && !user_idx.equals("")) {
 
-                    Log.e("user_idx",user_idx)
+                    Log.e("user_idx", user_idx)
                     var intent = Intent(applicationContext, MyService::class.java)
                     intent.putExtra("user_idx", user_idx)
-                    intent.putStringArrayListExtra("room_list",room)
+                    intent.putStringArrayListExtra("room_list", room)
                     // intent.putStringArrayListExtra("room_list",room)
-                    if(!user_idx.equals("") && !user_idx.isEmpty()){
+                    if (!user_idx.equals("") && !user_idx.isEmpty()) {
+                        //서비스 실행
                         startService(intent)
                     }
                 }
-                Log.e("서비스 상태",isServiceRunning(serviceIsRun).toString())
+                Log.e("서비스 상태", isServiceRunning(serviceIsRun).toString())
 
             }
 

@@ -79,8 +79,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
     private Handler mHandler;
     Socket socket;
     PrintWriter sendWriter;
-    private String ip = "192.168.56.1"; //로컬
-    //private String ip = "3.36.52.195"; //aws ip 주소
+    //private String ip = "192.168.56.1"; //로컬
+    private String ip = "3.36.52.195"; //aws ip 주소
     private int port = 8888;
 
 
@@ -163,7 +163,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
             public void run() {
                 try {
 
-                   // ServiceThread serviceThread = new ServiceThread(mHandler,UserID,room);
+                    //ServiceThread serviceThread = new ServiceThread(mHandler,UserID,room);
                     InetAddress serverAddr = InetAddress.getByName(ip);
                     socket = new Socket(serverAddr, port);
                     sendWriter = new PrintWriter(socket.getOutputStream());
@@ -206,6 +206,12 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
                                 date = fourteen_format.format(date_now);
 
                                 Log.e("msg profile",profile_photo);
+                                Log.e("msg UserID",UserID);
+                                Log.e("msg user_nickname",user_nickname);
+                                Log.e("msg room_idx",room_idx);
+                                Log.e("msg sendmsg",sendmsg);
+                                Log.e("msg date",date);
+                                Log.e("total",UserID + ">>" +user_nickname +">>" + room_idx + ">>" + sendmsg + ">>" + profile_photo + ">>" + 0 + ">>" + date);
                                 sendWriter.println(UserID + ">>" +user_nickname +">>" + room_idx + ">>" + sendmsg + ">>" + profile_photo + ">>" + 0 + ">>" + date);
                                 sendWriter.flush();
                                 message.setText("");

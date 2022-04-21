@@ -112,7 +112,7 @@ class HomeFragment : Fragment() {
             Log.e("datePicker","2")
 
             var date_split : Array<String>? = null
-            datePicker = DatePickerDialog(activity!!, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            datePicker = DatePickerDialog(requireActivity(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
 
 
                 Log.e("datePicker","3")
@@ -144,9 +144,10 @@ class HomeFragment : Fragment() {
                     datePicker.maxDate = System.currentTimeMillis()
                 }
 
+            //전체글 누르면 필터링 안하고 다시 전체글 불러오기
             content_view.setOnClickListener {
-                content_view.visibility = View.INVISIBLE
-                requestDiary()
+                content_view.visibility = View.GONE
+                requestDiary() // 다이어리 불러오기
                 listing_spinner.adapter = activity?.let {
                     ArrayAdapter.createFromResource(
                         it,
@@ -160,6 +161,8 @@ class HomeFragment : Fragment() {
                     }
                 }
                 date = null
+                home_info_text.visibility = View.INVISIBLE
+                diary_list.visibility = View.VISIBLE
             }
 
 
@@ -291,6 +294,8 @@ class HomeFragment : Fragment() {
 //        val sharedPreferences = activity?.getSharedPreferences("user", Context.MODE_PRIVATE)
 //        var user_idx : String? = sharedPreferences?.getString("user_idx", "")
 
+        Log.d("requestDiary","들어옴")
+        Log.d("listing_num",listing_num.toString())
         loaderLayout.visibility = View.VISIBLE
         var diary_request = retrofit.create(IRetrofit::class.java)
 
@@ -299,6 +304,7 @@ class HomeFragment : Fragment() {
                 call: Call<ArrayList<DiaryRequest>>, response: Response<ArrayList<DiaryRequest>>
             ) {
 
+                Log.d("requestDiary","성공")
                 var diary = response.body()!!
 
                 diary_list.adapter = diaryRecyclerview

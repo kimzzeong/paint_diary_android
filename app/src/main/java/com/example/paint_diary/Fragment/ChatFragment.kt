@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.paint_diary.Activity.ChatActivity
 import com.example.paint_diary.Adapter.RoomAdapter
-import com.example.paint_diary.Data.Chat2
 import com.example.paint_diary.Data.ChatRoom
 import com.example.paint_diary.IRetrofit
 import com.example.paint_diary.R
@@ -30,14 +28,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import java.io.PrintWriter
-import java.net.InetAddress
-import java.net.Socket
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 class ChatFragment : Fragment() {
     companion object {
@@ -91,6 +84,12 @@ class ChatFragment : Fragment() {
 
         val activity = activity as AppCompatActivity?
 
+        //현재 최상위 프래그먼트 구하기
+        for(fragment: Fragment in activity!!.supportFragmentManager.fragments) {
+            if (fragment.isVisible) {
+                Log.e("프래그먼트", fragment.toString())
+            }
+        }
 
         //메뉴이름 변경 해야함
         //chat_toolbar.inflateMenu(R.menu.home_menu)
@@ -117,14 +116,14 @@ class ChatFragment : Fragment() {
                     room_user1: String,
                     room_user2: String,
                     profile_photo: String,
-                    nickname : String
+                    nickname: String
             ) {
                 val intent = Intent(context, ChatActivity::class.java)
                 intent.putExtra("room_idx", room_idx)
                 intent.putExtra("room_user1", room_user1)
                 intent.putExtra("room_user2", room_user2)
-                intent.putExtra("room_name",nickname)
-                intent.putStringArrayListExtra("room_list",room_list)
+                intent.putExtra("room_name", nickname)
+                intent.putStringArrayListExtra("room_list", room_list)
                 Log.e("Chat Fragment - room_idx", room_idx.toString())
                 //Toast.makeText(context,room_idx,Toast.LENGTH_SHORT).show()
                 startActivity(intent)

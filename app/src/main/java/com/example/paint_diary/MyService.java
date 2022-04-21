@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -59,15 +60,6 @@ public class MyService extends Service {
     Bitmap bitmap; // 비트맵 얻어서 노티의 라지아이콘에 넣기
     ArrayList<String> room = new ArrayList<>();
 
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://ec2-3-36-52-195.ap-northeast-2.compute.amazonaws.com/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
-
     public MyService(){
     }
 
@@ -79,10 +71,14 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+
+
+
         user_idx = intent.getStringExtra("user_idx");
         room = intent.getStringArrayListExtra("room_list");
         Log.e("서비스 룸 사이즈",room.size()+"");
-        channel = new NotificationChannel(CHANNEL_ID,"ㅎㅇ",NotificationManager.IMPORTANCE_HIGH);
+        channel = new NotificationChannel(CHANNEL_ID,"채팅알림",NotificationManager.IMPORTANCE_HIGH);
         MyServiceHandler handler = new MyServiceHandler();
         Notifi_M = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Notifi_M.createNotificationChannel(channel);
@@ -117,9 +113,6 @@ public class MyService extends Service {
             intent.putStringArrayListExtra("room_list",bundle.getStringArrayList("room_list"));
             PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
-            /*현재 켜져있는 최상위 액티비티가 뭔지 구하는 코드
-            * 현재 액티비티가 채팅방 액티비티면 노티 알람 오지 않게 되어있음.
-            * room_idx도 받아서 다른 유저와의 채팅방에서는 알림이 오게 해야함*/
             ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             List<ActivityManager.RunningTaskInfo> info = manager.getRunningTasks(1);
             ComponentName componentName= info.get(0).topActivity;
@@ -243,32 +236,4 @@ public class MyService extends Service {
         }
     }
 
-    //room 불러오기
-//    private void requestChatRoom(String user_idx) {
-//
-//
-//        IRetrofit api = retrofit.create(IRetrofit.class);
-//
-//        Call<ArrayList<String>> call = api.requestMyChatRoom(user_idx);
-//
-//        call.enqueue(new Callback<ArrayList<String>>() {
-//            @Override
-//            public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
-//                room = response.body();
-//                room_chatActivity = new ArrayList<>();
-//                room_chatActivity = room;
-//
-//                Log.e("레트로핏 내부 룸 사이즈",room.size()+"");
-//                for (int i = 0; i < room.size(); i++){
-//                    Log.e("방리스트",room.get(i));
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ArrayList<String>> call, Throwable t) {
-//
-//            }
-//        });
-//
-//    }
 }

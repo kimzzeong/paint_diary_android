@@ -38,30 +38,18 @@
         android:paddingLeft="25dp"
         android:background="?attr/selectableItemBackground"
         />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:id="@+id/setting_board_secret"
-        android:text="전체 게시물 비공개"
-        android:textSize="18dp"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/setting_change_PW"
-        android:paddingLeft="25dp"
-        android:background="?attr/selectableItemBackground"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:id="@+id/setting_notification"
-        android:text="알림 설정"
-        android:textSize="18dp"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/setting_board_secret"
-        android:paddingLeft="25dp"
-        android:background="?attr/selectableItemBackground"
-        />
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:id="@+id/setting_board_secret"-->
+<!--        android:text="전체 게시물 비공개"-->
+<!--        android:textSize="18dp"-->
+<!--        android:textColor="@color/black"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/setting_change_PW"-->
+<!--        android:paddingLeft="25dp"-->
+<!--        android:background="?attr/selectableItemBackground"-->
+<!--        />-->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -70,7 +58,7 @@
         android:text="로그아웃"
         android:textSize="18dp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/setting_notification"
+        app:layout_constraintTop_toBottomOf="@id/setting_change_PW"
         android:paddingLeft="25dp"
         android:background="?attr/selectableItemBackground"
         />

@@ -23,8 +23,8 @@ import java.util.List;
 public class ServiceThread extends Thread{
     Handler mHandler;
     boolean isRun = true;
-    private String ip = "192.168.56.1"; //로컬
-    //private String ip = "3.36.52.195"; //aws ip 주소
+    //private String ip = "192.168.56.1"; //로컬
+    private String ip = "3.36.52.195"; //aws ip 주소
     public Socket socket;
     private int port = 8888;
     public PrintWriter sendWriter;
