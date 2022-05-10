@@ -81,20 +81,6 @@ class PaintActivity : AppCompatActivity(){
             openColorPicker()
         }
 
-//        //노티테스트
-//        test_btn.setOnClickListener {
-//            sendNotification()
-//        }
-//        test2_btn.setOnClickListener {
-//            //Toast.makeText(getApplicationContext(),"Service 시작",Toast.LENGTH_SHORT).show()
-//        }
-//        test3_btn.setOnClickListener {
-//            //Toast.makeText(getApplicationContext(),"Service 끝",Toast.LENGTH_SHORT).show()
-//            var intent = Intent(this, MyService::class.java)
-//            stopService(intent)
-//
-//        }
-
         //지우개
         btnEraser.setOnClickListener {
             canvasPopup.setOnMenuItemClickListener { menuItem ->
