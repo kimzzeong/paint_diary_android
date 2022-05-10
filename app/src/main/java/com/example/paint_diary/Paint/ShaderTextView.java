@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.View;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.example.paint_diary.Paint.Brush;
-import com.example.paint_diary.Paint.BrushType;
 import com.example.paint_diary.R;
 
 
