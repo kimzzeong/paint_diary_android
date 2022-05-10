@@ -81,7 +81,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnLis
     PrintWriter sendWriter;
     //private String ip = "192.168.56.1"; //로컬
     private String ip = "3.36.52.195"; //aws ip 주소
-    private int port = 8888;
+    private int port = 8888; //포트번호
 
 
     private final int CAMERA_REQUEST_CODE = 1;
