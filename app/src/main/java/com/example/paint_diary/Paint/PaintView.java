@@ -43,7 +43,6 @@ public class PaintView extends View {
     private ArrayList<PathXY> pathXYList=new ArrayList<>();
 
     public Bitmap mBitmap;
-    public String stringToBitmap = "http://3.36.52.195/diary/20210813_024732.jpeg";
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
@@ -206,8 +205,6 @@ public class PaintView extends View {
     }
 
     private void listToJson(){
-        //filter에는 숫자로 넣어서 브러쉬 타입 넣으면 될 것 같음
-        //path는 어떻게 저장하지
         try {
             JSONArray jArray = new JSONArray();//배열
             for (int i = 0; i < paths.size(); i++) {
